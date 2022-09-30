@@ -14,5 +14,5 @@ updates:
     - dependency-update
     versioning-strategy: increase
     commit-message:
-      prefix: dependabot-dependency
+      prefix: dependabot
       include: scope
