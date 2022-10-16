@@ -17,7 +17,15 @@ public class Unit : MonoBehaviour
 
     void Attack(Unit target)
     {
+        // Hitting enemy
         target.Hit(attack);
+        
+        // TODO think if we want to implement getting hit back this way
+        // Getting hit by enemy
+        if (target != null)
+        {
+            Hit(target.attack);
+        }
     }
 
     void Hit(int damage)
