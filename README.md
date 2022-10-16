@@ -2,6 +2,10 @@
 Game project in the Game Development &amp; Design course  
 Project owners: Richard Kuklane, Markus Sulg, Rasmus Talioja
 
+## Other links
+ - Wiki: https://courses.cs.ut.ee/2022/gamedev/fall/Conquestinare/Conquestinare
+ - Itch.io: TODO
+
 ## Summary
 
 A game description for you as a player:
