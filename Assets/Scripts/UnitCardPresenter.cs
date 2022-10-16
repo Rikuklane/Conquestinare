@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitCardPresenter : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class UnitCardPresenter : MonoBehaviour
     public TextMeshProUGUI attackText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI costText;
+    public Image image;
 
     private void Awake()
     {
@@ -23,6 +25,7 @@ public class UnitCardPresenter : MonoBehaviour
             attackText.text = unitData.attack.ToString();
             healthText.text = unitData.health.ToString();
             costText.text = unitData.cost.ToString();
+            image.sprite = unitData.sprite;
         }
     }
 }

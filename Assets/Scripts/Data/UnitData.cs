@@ -7,4 +7,5 @@ public class UnitData : CardData
 {
     public int attack;
     public int health;
+    public Sprite sprite;
 }
