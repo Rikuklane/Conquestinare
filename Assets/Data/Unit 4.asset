@@ -17,3 +17,4 @@ MonoBehaviour:
   cost: 3
   attack: 3
   health: 2
+  sprite: {fileID: 1508980885, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
