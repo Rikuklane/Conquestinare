@@ -152,8 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795d5a3a37f5c174fb004aeb44ffe53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routes:
-  - {fileID: 1657234458}
+  routes: []
 --- !u!4 &113371956
 Transform:
   m_ObjectHideFlags: 0
@@ -331,6 +330,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoint: {fileID: 113371955}
+  color: {r: 0.9254902, g: 0.039215688, b: 0.039215688, a: 1}
+  territories:
+  - {fileID: 1720461735}
+  enemyTerritories: []
+  isEnemy: 1
 --- !u!212 &272322126
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -580,9 +584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795d5a3a37f5c174fb004aeb44ffe53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routes:
-  - {fileID: 1657234458}
-  - {fileID: 925087996}
+  routes: []
 --- !u!4 &427403538
 Transform:
   m_ObjectHideFlags: 0
@@ -854,9 +856,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 730098662}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5521df45957562146b272ed5b60d78af, type: 3}
+  m_Script: {fileID: 11500000, guid: 1158c6853298b68458f323908bd020bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedFrom: {fileID: 0}
+  selectedTo: {fileID: 0}
 --- !u!1 &811154559
 GameObject:
   m_ObjectHideFlags: 0
@@ -942,6 +946,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoint: {fileID: 427403537}
+  color: {r: 0.025157154, g: 0.16485962, b: 1, a: 1}
+  territories:
+  - {fileID: 1720461735}
+  - {fileID: 1279435962}
+  enemyTerritories: []
+  isEnemy: 0
 --- !u!60 &811154563
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1050,8 +1060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795d5a3a37f5c174fb004aeb44ffe53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routes:
-  - {fileID: 427403537}
+  routes: []
 --- !u!4 &925087997
 Transform:
   m_ObjectHideFlags: 0
@@ -1457,6 +1466,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoint: {fileID: 925087996}
+  color: {r: 0.023529412, g: 0.16470589, b: 1, a: 1}
+  territories:
+  - {fileID: 811154562}
+  enemyTerritories: []
+  isEnemy: 0
 --- !u!212 &1279435963
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1538,9 +1552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795d5a3a37f5c174fb004aeb44ffe53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  routes:
-  - {fileID: 427403537}
-  - {fileID: 113371955}
+  routes: []
 --- !u!4 &1657234459
 Transform:
   m_ObjectHideFlags: 0
@@ -1633,6 +1645,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoint: {fileID: 1657234458}
+  color: {r: 0.9245283, g: 0.040702417, b: 0.040702417, a: 1}
+  territories:
+  - {fileID: 811154562}
+  - {fileID: 272322125}
+  enemyTerritories: []
+  isEnemy: 1
 --- !u!212 &1720461736
 SpriteRenderer:
   m_ObjectHideFlags: 0

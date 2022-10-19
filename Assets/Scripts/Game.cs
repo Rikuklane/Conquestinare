@@ -31,25 +31,26 @@ public class Game : MonoBehaviour
         if(selectedFrom == null)
         {
             selectedFrom = newSelected;
-            selectedFrom.waypoint.SetLines(true);
+            selectedFrom.showAttackOptions();
             return;
 
         }
-        if(selectedFrom.waypoint.routes.Contains(newSelected.waypoint))
+        // Check if can attack
+        if(selectedFrom.enemyTerritories.Contains(newSelected.transform.position) && selectedFrom.color != newSelected.color)
         {
             Debug.Log("Contains");
 
             selectedTo = newSelected;
             // clear old lines
-            selectedFrom.waypoint.SetLines(false);
+            selectedFrom.hideAttackOptions();
             selectedFrom.waypoint.SetLine(selectedTo.waypoint.transform.position, true);
         } else
         {
             Debug.Log("Contains not");
 
             // clear old lines
-            selectedFrom.waypoint.SetLines(false);
-            newSelected.waypoint.SetLines(true);
+            selectedFrom.hideAttackOptions();
+            newSelected.showAttackOptions();
             selectedFrom = newSelected;
         }
     }

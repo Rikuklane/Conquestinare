@@ -7,11 +7,6 @@ public class Waypoint : MonoBehaviour
     public List<Waypoint> routes = new List<Waypoint>();
     private List<LineRenderer> lines = new List<LineRenderer>();
 
-    private void Start()
-    {
-        CreateLines();
-    }
-
     public List<Waypoint> GetNextWaypoints()
     {
         return routes;
@@ -31,6 +26,7 @@ public class Waypoint : MonoBehaviour
         GameObject child = new GameObject();
         child.transform.parent = gameObject.transform;
         LineRenderer lineRenderer = child.AddComponent<LineRenderer>();
+        lineRenderer.material.color = Color.white;
         lineRenderer.widthMultiplier = 0.1f;
         lineRenderer.SetPosition(0, transform.position);
         lineRenderer.SetPosition(1, lineTo.transform.position);
@@ -48,32 +44,31 @@ public class Waypoint : MonoBehaviour
         Debug.Log(lines.Capacity);
     }
 
-    public void ToggleLines()
-    {
-        Debug.Log(lines.Capacity);
-        foreach (LineRenderer line in lines)
-        {
-            line.enabled = !line.enabled;
-        }
-    }
-
     public void SetLine(Vector3 toPosition, bool isEnabled)
     {
         foreach (LineRenderer line in lines)
         {
             if(line.GetPosition(1) == toPosition)
             {
+
+                line.widthMultiplier = 0.3f;
+
                 line.enabled = isEnabled;
 
             }
         }
     }
 
-    public void SetLines(bool isEnabled)
+    public void SetLines(List<Vector3> targets, bool isEnabled)
     {
         foreach (LineRenderer line in lines)
         {
-            line.enabled = isEnabled;
+            if(targets.Contains(line.GetPosition(1)))
+            {
+                line.enabled = isEnabled;
+            }
+            line.widthMultiplier = 0.1f;
+
         }
     }
 }
