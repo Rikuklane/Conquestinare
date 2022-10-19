@@ -29,6 +29,12 @@ public class Territory : MonoBehaviour
 
     }
 
+    public void setColor(Color _color)
+    {
+        color = _color;
+        spriteRenderer.material.color = color;
+    }
+
     public void showAttackOptions()
     {
         waypoint.SetLines(enemyTerritories, true);
@@ -55,7 +61,7 @@ public class Territory : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Game.instance.newSelected(this);
+            Game.instance.SelectTerritory(this);
             //waypoint.ToggleLines();
             spriteRenderer.material.color = new Color(200 / 255f, 200 / 255f, 200 / 255f);
         }
