@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Game : MonoBehaviour
 {
     public static Game instance;
-    public Territory selectedFrom;
-    public Territory selectedTo;
+    public Territory selectedTerritory;
+    public Territory attackTerritory;
+
+    public Button attackButton;
     // Start is called before the first frame update
     void Awake()
     {
@@ -26,31 +28,60 @@ public class Game : MonoBehaviour
             
         }
     }
-    public void newSelected(Territory newSelected)
+    public void SelectTerritory(Territory newSelected)
     {
-        if(selectedFrom == null)
+        if(selectedTerritory == null)
         {
-            selectedFrom = newSelected;
-            selectedFrom.waypoint.SetLines(true);
+            selectedTerritory = newSelected;
+            selectedTerritory.showAttackOptions();
             return;
 
-        }
-        if(selectedFrom.waypoint.routes.Contains(newSelected.waypoint))
-        {
-            Debug.Log("Contains");
-
-            selectedTo = newSelected;
-            // clear old lines
-            selectedFrom.waypoint.SetLines(false);
-            selectedFrom.waypoint.SetLine(selectedTo.waypoint.transform.position, true);
         } else
         {
-            Debug.Log("Contains not");
-
-            // clear old lines
-            selectedFrom.waypoint.SetLines(false);
-            newSelected.waypoint.SetLines(true);
-            selectedFrom = newSelected;
+            if (IsEnemyTerritory(newSelected))
+            {
+                attackTerritory = newSelected;
+                attackButton.gameObject.SetActive(true);
+                // attack line only
+                selectedTerritory.hideAttackOptions();
+                selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
+            }
+            else 
+            {
+                // change selected
+                selectedTerritory.hideAttackOptions();
+                newSelected.showAttackOptions();
+                selectedTerritory = newSelected;
+            }
         }
+
+    }
+
+    bool IsEnemyTerritory(Territory territory)
+    {
+        return selectedTerritory.enemyTerritories.Contains(territory.transform.position)
+            && selectedTerritory.color != territory.color;
+    }
+
+    void ResetLines()
+    {
+        selectedTerritory.hideAttackOptions();
+        attackTerritory.hideAttackOptions();
+        attackTerritory.isEnemy = selectedTerritory.isEnemy;
+        attackTerritory.UpdateEnemyTerritories();
+        foreach (Territory territory in attackTerritory.territories)
+        {
+            territory.UpdateEnemyTerritories();
+        }
+    }
+
+    public void AttackPressed()
+    {
+        // winCondition
+        ResetLines();
+        attackButton.gameObject.SetActive(false);
+        attackTerritory.setColor(selectedTerritory.color);
+        selectedTerritory = null;
+        attackTerritory = null;
     }
 }
