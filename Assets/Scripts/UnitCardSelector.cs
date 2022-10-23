@@ -1,18 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Security;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitCardSelector : MonoBehaviour
 {
+    public UnitCardPresenter unitCardPrefab;
+    public static UnitCardSelector Instance;
     private List<UnitData> _unitSelection;
-    private UnitCardPresenter[] _unitCardPresenters;
     private HorizontalLayoutGroup _layoutGroup;
     private void Awake()
     {
+        Instance = this;
         _layoutGroup = gameObject.GetComponent<HorizontalLayoutGroup>();
-        _unitCardPresenters = gameObject.GetComponentsInChildren<UnitCardPresenter>();
+        gameObject.transform.DetachChildren();
         Events.OnReceiveUnitsSelection += ReceiveUnitsSelection;
         SetActive(false);
     }
@@ -24,23 +27,22 @@ public class UnitCardSelector : MonoBehaviour
 
     private void ReceiveUnitsSelection()
     {
-        print(_unitCardPresenters.Length);
-        _unitSelection = CardCollection.Instance.GetSelectionOfUnits(_unitCardPresenters.Length);
-        print(_unitSelection);
-        for (var i = 0; i < _unitSelection.Count; i++)
+        const int count = 3;
+        
+        _unitSelection = CardCollection.Instance.GetSelectionOfUnits(count);
+        foreach (var child in GetComponentsInChildren<UnitCardPresenter>())
         {
-            var unitCard = _unitCardPresenters[i];
-            unitCard.SetSelectionListener(this);
-            unitCard.Button.onClick.AddListener(SelectReceivedUnit);
-            unitCard.SetData(_unitSelection[i]);
+            Debug.Log("Destroyed child");
+            Destroy(child.gameObject);
+        }
+        foreach (var unitData in _unitSelection)
+        {
+            Debug.Log("Create child");
+            var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
+            unitCard.SwitchState(unitCard.CardInSelection);
+            unitCard.SetData(unitData);
         }
         SetActive(true);
-    }
-
-    private void SelectReceivedUnit()
-    {
-        // TODO add card to hand
-        SetActive(false);
     }
 
     public void SetActive(bool value)
