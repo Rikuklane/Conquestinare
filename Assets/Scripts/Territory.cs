@@ -12,13 +12,13 @@ public class Territory : MonoBehaviour
     public List<Vector3> enemyTerritories = new List<Vector3>();
     public bool isEnemy;
 
-    public GameObject cardPrefab;
-    public List<Unit> units = new List<Unit>();
+    public List<UnitCardPresenter> startUnits = new List<UnitCardPresenter>();
+    public List<UnitCardPresenter> presentUnits = new List<UnitCardPresenter>();
+    private List<Unit> units = new List<Unit>();
 
-    public GameObject hoverPanel;
+
     public TextMeshProUGUI summaryText;
     
-
     private SpriteRenderer spriteRenderer;
     
     void Awake()
@@ -33,43 +33,81 @@ public class Territory : MonoBehaviour
         waypoint.CreateLines();
 
         UpdateEnemyTerritories();
+    }
 
-        setSummary();
+    private void Start()
+    {
 
-        Debug.Log(enemyTerritories);
+        int attack = 0;
+        int health = 0;
+        foreach (UnitCardPresenter unit in startUnits)
+        {
 
+            attack += unit.unitData.attack;
+            health += unit.unitData.health;
+        }
+        summaryText.text = attack.ToString() + "AD/" + health.ToString() + "HP";
+
+        List<Unit> newUnits = new List<Unit>();
+        foreach (UnitCardPresenter unit in startUnits)
+
+        {
+            UnitCardPresenter card = GameObject.Instantiate<UnitCardPresenter>(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
+            card.gameObject.SetActive(false);
+            presentUnits.Add(card);
+
+            Unit newUnit = new Unit();
+            newUnit.attack = unit.unitData.attack;
+            newUnit.health = unit.unitData.health;
+            newUnits.Add(newUnit);
+
+        }
+        units = newUnits;
 
     }
 
-    public void addCard(CardData card)
+    public List<Unit> GetUnits()
     {
+        return units;
+    }
+
+    public void AddCard(UnitCardPresenter unit)
+    {
+        UnitCardPresenter card = GameObject.Instantiate<UnitCardPresenter>(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
+        card.gameObject.SetActive(false);
+        presentUnits.Add(card);
+        Unit newUnit = new Unit();
+        newUnit.attack = unit.unitData.attack;
+        newUnit.health = unit.unitData.health;
+        units.Add(newUnit);
+        SetSummary();
         //TODO
     }
 
-    public void setSummary()
+    public void SetSummary()
     {
         int attack = 0;
         int health = 0;
         foreach(Unit unit in units)
         {
-            attack += unit.unitData.attack;
-            health += unit.unitData.health;
+            attack += unit.attack;
+            health += unit.health;
         }
         summaryText.text = attack.ToString() + "AD/" + health.ToString() + "HP";
     }
 
-    public void setColor(Color _color)
+    public void SetColor(Color _color)
     {
         color = _color;
         spriteRenderer.material.color = color;
     }
 
-    public void showAttackOptions()
+    public void ShowAttackOptions()
     {
         waypoint.SetLines(enemyTerritories, true);
     }
 
-    public void hideAttackOptions()
+    public void HideAttackOptions()
     {
         waypoint.SetLines(enemyTerritories, false);
     }
@@ -105,18 +143,18 @@ public class Territory : MonoBehaviour
     private void OnMouseEnter()
     {
         spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-        AttackLogic.instance.showCards(units, cardPrefab);
+        AttackLogic.instance.showCards(presentUnits,  AttackLogic.instance.TerritoryHoverPanel);
 
     }
     private void OnMouseExit()
     {
         spriteRenderer.material.color = color;
-        AttackLogic.instance.hideCards();
+        AttackLogic.instance.hideCards(presentUnits);
     }
 
     void OnDrawGizmos()
     {
-        if (territories.Capacity == 0) return;
+        if (territories.Count == 0) return;
         Gizmos.color = Color.red;
         foreach (Territory area in territories)
         {
