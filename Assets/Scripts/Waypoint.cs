@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Waypoint : MonoBehaviour
 {
-    public List<Waypoint> routes = new List<Waypoint>();
-    private List<LineRenderer> lines = new List<LineRenderer>();
+    public List<Waypoint> routes = new();
+    private List<LineRenderer> lines = new();
 
     public List<Waypoint> GetNextWaypoints()
     {
