@@ -131,9 +131,9 @@ public class AttackLogic : MonoBehaviour
     private bool SimulateBattle()
     {
         // show panel with cards
-        showCards(selectedTerritory.presentUnits, ArenaBottomPanel);
-        showCards(attackTerritory.presentUnits, ArenaTopPanel);
-        ArenaPanel.gameObject.SetActive(true);
+        //showCards(selectedTerritory.presentUnits, ArenaBottomPanel);
+        //showCards(attackTerritory.presentUnits, ArenaTopPanel);
+        //ArenaPanel.gameObject.SetActive(true);
         int playerCards = selectedTerritory.presentUnits.Count;
         int enemyCards = attackTerritory.presentUnits.Count;
 
