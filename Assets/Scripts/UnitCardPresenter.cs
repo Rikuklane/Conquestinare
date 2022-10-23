@@ -87,4 +87,11 @@ public class UnitCardPresenter : MonoBehaviour
         _button.onClick.RemoveAllListeners();
         _button.onClick.AddListener(Selected);
     }
+
+
+
+    public void CardPressed()
+    {
+        CardHand.Instance.cardSelected = this;
+    }
 }

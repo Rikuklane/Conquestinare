@@ -6,7 +6,16 @@ using UnityEngine;
 public class CardHand : MonoBehaviour
 {
     public static CardHand Instance;
-    
+    public UnitCardPresenter cardSelected;
+
+    public void DestroySelected()
+    {
+        if(cardSelected)
+        {
+            Destroy(cardSelected.gameObject);
+            CardHand.Instance.cardSelected = null;
+        }
+    }
 
     private void Awake()
     {
