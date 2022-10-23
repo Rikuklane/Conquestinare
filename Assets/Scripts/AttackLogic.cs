@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class Game : MonoBehaviour
+public class AttackLogic : MonoBehaviour
 {
-    public static Game instance;
+    public static AttackLogic instance;
     public Territory selectedTerritory;
     public Territory attackTerritory;
 
     public Button attackButton;
+    public GameObject TerritoryHoverPanel;
     // Start is called before the first frame update
     void Awake()
     {
@@ -83,5 +84,25 @@ public class Game : MonoBehaviour
         attackTerritory.setColor(selectedTerritory.color);
         selectedTerritory = null;
         attackTerritory = null;
+    }
+
+    public void showCards(List<Unit> units, GameObject cardPrefab)
+    {
+        foreach(Transform child in TerritoryHoverPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach(Unit unit in units)
+        {
+            cardPrefab.GetComponent<UnitCardPresenter>().unitData = unit.unitData;
+            GameObject.Instantiate(cardPrefab, TerritoryHoverPanel.transform);
+
+        }
+        TerritoryHoverPanel.SetActive(true);
+        
+    }
+    public void hideCards()
+    {
+        TerritoryHoverPanel.SetActive(false);
     }
 }
