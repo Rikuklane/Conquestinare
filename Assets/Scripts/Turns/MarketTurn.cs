@@ -7,6 +7,7 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
+            // TODO open market place
             EndState(turnManager, player);
             return base.EnterState(turnManager, player);
         }

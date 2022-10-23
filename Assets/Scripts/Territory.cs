@@ -11,14 +11,14 @@ public class Territory : MonoBehaviour
     public Color playerColor;
     public Color enemyColor;
 
-    public List<Territory> territories = new List<Territory>();
-    public List<Vector3> enemyTerritories = new List<Vector3>();
+    public List<Territory> territories = new();
+    public List<Vector3> enemyTerritories = new();
     public bool isEnemy;
     public bool isNeutral = false;
-
-    public List<UnitCardPresenter> startUnits = new List<UnitCardPresenter>();
-    public List<UnitCardPresenter> presentUnits = new List<UnitCardPresenter>();
-    public List<Unit> units = new List<Unit>();
+    
+    public List<UnitCardPresenter> startUnits = new();
+    public List<UnitCardPresenter> presentUnits = new();
+    public List<Unit> units = new();
 
     public TextMeshProUGUI summaryText;
     
@@ -40,7 +40,6 @@ public class Territory : MonoBehaviour
 
     private void Start()
     {
-
         int attack = 0;
         int health = 0;
         foreach (UnitCardPresenter unit in startUnits)
@@ -49,13 +48,13 @@ public class Territory : MonoBehaviour
             attack += unit.unitData.attack;
             health += unit.unitData.health;
         }
-        summaryText.text = attack.ToString() + "AD/" + health.ToString() + "HP";
+        summaryText.text = attack + "AD / " + health + "HP";
 
         List<Unit> newUnits = new List<Unit>();
         foreach (UnitCardPresenter unit in startUnits)
 
         {
-            UnitCardPresenter card = GameObject.Instantiate<UnitCardPresenter>(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
+            UnitCardPresenter card = Instantiate(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
             card.gameObject.SetActive(false);
             presentUnits.Add(card);
 
@@ -76,7 +75,7 @@ public class Territory : MonoBehaviour
 
     public void AddCard(UnitCardPresenter unit)
     {
-        UnitCardPresenter card = GameObject.Instantiate<UnitCardPresenter>(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
+        UnitCardPresenter card = Instantiate(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
         card.gameObject.SetActive(false);
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
@@ -107,7 +106,7 @@ public class Territory : MonoBehaviour
             attack += unit.attack;
             health += unit.health;
         }
-        summaryText.text = attack.ToString() + "AD/" + health.ToString() + "HP";
+        summaryText.text = attack + "AD / " + health + "HP";
     }
 
     public void SetColor(Color _color)
