@@ -26,9 +26,6 @@ public class UnitCardPresenter : MonoBehaviour
     public CardInTerritory CardInTerritory = new();
     private AbstractCardState _currentState;
 
-    public int attack;
-    public int health;
-
     private void Awake()
     {
         if (_currentState == null)
@@ -89,5 +86,12 @@ public class UnitCardPresenter : MonoBehaviour
         _button = GetComponent<Button>();
         _button.onClick.RemoveAllListeners();
         _button.onClick.AddListener(Selected);
+    }
+
+
+
+    public void CardPressed()
+    {
+        CardHand.Instance.cardSelected = this;
     }
 }

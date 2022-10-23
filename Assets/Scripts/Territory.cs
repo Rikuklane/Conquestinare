@@ -16,7 +16,6 @@ public class Territory : MonoBehaviour
     public List<UnitCardPresenter> presentUnits = new List<UnitCardPresenter>();
     private List<Unit> units = new List<Unit>();
 
-
     public TextMeshProUGUI summaryText;
     
     private SpriteRenderer spriteRenderer;
@@ -75,6 +74,8 @@ public class Territory : MonoBehaviour
     {
         UnitCardPresenter card = GameObject.Instantiate<UnitCardPresenter>(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
         card.gameObject.SetActive(false);
+        // overwrite scale
+        card.transform.localScale = new Vector3(2, 2, 2);
         presentUnits.Add(card);
         Unit newUnit = new Unit();
         newUnit.attack = unit.unitData.attack;
@@ -128,7 +129,15 @@ public class Territory : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            AttackLogic.instance.SelectTerritory(this);
+            if(CardHand.Instance.cardSelected)
+            {
+                AddCard(CardHand.Instance.cardSelected);
+                CardHand.Instance.DestroySelected();
+            } else
+            {
+                AttackLogic.instance.SelectTerritory(this);
+            }
+
             //waypoint.ToggleLines();
             spriteRenderer.material.color = new Color(200 / 255f, 200 / 255f, 200 / 255f);
         }
