@@ -9,6 +9,7 @@ namespace Turns
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
             // TODO only interact with your own territories
+            EndState(turnManager, player);
             return base.EnterState(turnManager, player);
         }
 
