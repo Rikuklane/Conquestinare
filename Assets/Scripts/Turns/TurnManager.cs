@@ -9,7 +9,7 @@ namespace Turns
     public class TurnManager: MonoBehaviour
     {
         public Button nextTurnButton;
-        
+        public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
         public readonly ReceiveUnitsTurn ReceiveUnitsTurn = new();
         public readonly MarketTurn MarketTurn = new();
@@ -23,7 +23,14 @@ namespace Turns
 
         private void Awake()
         {
+            Instance = this;
+            Events.OnRequestPlayer += GetPlayer;
             nextTurnButton.onClick.AddListener(TriggerEndState);
+        }
+
+        private void OnDestroy()
+        {
+            Events.OnRequestPlayer -= GetPlayer;
         }
 
         private void Start()
@@ -46,6 +53,11 @@ namespace Turns
                 nextIndex = 0;
             }
             _currentPlayer = _players[nextIndex];
+        }
+
+        private Player GetPlayer()
+        {
+            return _currentPlayer;
         }
 
         public void TriggerEndState()
