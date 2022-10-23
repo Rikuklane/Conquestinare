@@ -9,13 +9,8 @@ namespace Turns
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
             // TODO only interact with your own territories
+            EndState(turnManager, player);
             return base.EnterState(turnManager, player);
-        }
-
-        public override IEnumerator Action(TurnManager turnManager, Player player)
-        {
-            // TODO move troops from one territory to another one
-            return base.Action(turnManager, player);
         }
 
         public override IEnumerator EndState(TurnManager turnManager, Player player)

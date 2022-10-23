@@ -18,7 +18,7 @@ namespace Turns
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             turnManager.SwitchTurnState(turnManager.ReceiveUnitsTurn);
-            return base.Action(turnManager, player);
+            return base.EndState(turnManager, player);
         }
     }
 }
