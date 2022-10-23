@@ -9,23 +9,28 @@ public class UnitCardPresenter : MonoBehaviour
 {
     public UnitData unitData;
 
-    public MeshRenderer titleMesh;
-    public MeshRenderer descriptionMesh;
-    public MeshRenderer attackMesh;
-    public MeshRenderer healthMesh;
-    public MeshRenderer costMesh;
-    public SpriteRenderer image;
+    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI descriptionText;
+    public TextMeshProUGUI attackText;
+    public TextMeshProUGUI healthText;
+    public TextMeshProUGUI costText;
+    public Image image;
 
     private void Awake()
     {
         if (unitData != null)
         {
-            titleMesh.GetComponent<TextMeshPro>().text = unitData.title;
-            descriptionMesh.GetComponent<TextMeshPro>().text = unitData.description;
-            attackMesh.GetComponent<TextMeshPro>().text = unitData.attack.ToString();
-            healthMesh.GetComponent<TextMeshPro>().text = unitData.health.ToString();
-            costMesh.GetComponent<TextMeshPro>().text = unitData.cost.ToString();
-            image.sprite = unitData.sprite;
+            setData(unitData);
         }
+    }
+
+    public void setData(UnitData data)
+    {
+        titleText.text = unitData.title;
+        descriptionText.text = unitData.description;
+        attackText.text = unitData.attack.ToString();
+        healthText.text = unitData.health.ToString();
+        costText.text = unitData.cost.ToString();
+        image.sprite = unitData.sprite;
     }
 }
