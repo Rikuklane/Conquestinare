@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class UnitCardPresenter : MonoBehaviour
 {
     public UnitData unitData;
-
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI attackText;
@@ -20,11 +19,11 @@ public class UnitCardPresenter : MonoBehaviour
     {
         if (unitData != null)
         {
-            setData(unitData);
+            SetData();
         }
     }
 
-    public void setData(UnitData data)
+    private void SetData()
     {
         titleText.text = unitData.title;
         descriptionText.text = unitData.description;

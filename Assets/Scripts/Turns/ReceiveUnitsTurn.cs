@@ -10,7 +10,7 @@ namespace Turns
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
             Debug.Log("Start ReceiveUnitsTurn for: " + player.Name);
-            // TODO get a selection of 3 cards
+            Events.DisplayUnitSelection(null);
             return base.EnterState(turnManager, player);
         }
 
