@@ -3,11 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player
 {
+    private string _playerName;
     private int _territoriesOwned;
     private int _bonusFromAreasController;
     private int _gold;
+
+    public Player(string playerName)
+    {
+        _playerName = playerName;
+    }
 
     public int Gold
     {
