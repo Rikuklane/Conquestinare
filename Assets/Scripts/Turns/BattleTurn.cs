@@ -9,12 +9,15 @@ namespace Turns
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
             // TODO now only see the map and be able to attack
+            AttackLogic.instance.territoryManager.SetActive(true);
+            AttackLogic.instance.isPlacementTurn = false;
             return base.EnterState(turnManager, player);
         }
 
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             // TODO press next phase button
+            AttackLogic.instance.territoryManager.SetActive(false);
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
         }

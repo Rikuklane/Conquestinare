@@ -15,6 +15,11 @@ public class AttackLogic : MonoBehaviour
     public GameObject ArenaTopPanel;
     public GameObject ArenaBottomPanel;
 
+    public GameObject territoryManager;
+
+    public bool isPlacementTurn = true;
+
+
     void Awake()
     {
         instance = this;
@@ -34,6 +39,7 @@ public class AttackLogic : MonoBehaviour
         {
             if (IsEnemyTerritory(newSelected))
             {
+                if (selectedTerritory.GetUnits().Count == 0) return;
                 attackTerritory = newSelected;
                 attackButton.gameObject.SetActive(true);
                 // attack line only
@@ -155,7 +161,7 @@ public class AttackLogic : MonoBehaviour
 
             if (selectedTerritory.GetUnits()[0].health <= 0)
             {
-                selectedTerritory.GetUnits().RemoveAt(0);
+                selectedTerritory.units.RemoveAt(0);
                 Destroy(selectedTerritory.presentUnits[0].gameObject);
                 selectedTerritory.presentUnits.RemoveAt(0);
 
@@ -175,7 +181,7 @@ public class AttackLogic : MonoBehaviour
 
             if (attackTerritory.GetUnits()[0].health <= 0)
             {
-                attackTerritory.GetUnits().RemoveAt(0);
+                attackTerritory.units.RemoveAt(0);
                 Destroy(attackTerritory.presentUnits[0].gameObject);
                 attackTerritory.presentUnits.RemoveAt(0);
 

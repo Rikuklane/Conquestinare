@@ -18,7 +18,7 @@ public class Territory : MonoBehaviour
 
     public List<UnitCardPresenter> startUnits = new List<UnitCardPresenter>();
     public List<UnitCardPresenter> presentUnits = new List<UnitCardPresenter>();
-    private List<Unit> units = new List<Unit>();
+    public List<Unit> units = new List<Unit>();
 
     public TextMeshProUGUI summaryText;
     
@@ -142,10 +142,13 @@ public class Territory : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(CardHand.Instance.cardSelected)
+            if(AttackLogic.instance.isPlacementTurn)
             {
-                AddCard(CardHand.Instance.cardSelected);
-                CardHand.Instance.DestroySelected();
+                if (CardHand.Instance.cardSelected)
+                {
+                    AddCard(CardHand.Instance.cardSelected);
+                    CardHand.Instance.DestroySelected();
+                }
             } else
             {
                 AttackLogic.instance.SelectTerritory(this);

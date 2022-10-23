@@ -8,6 +8,8 @@ namespace Turns
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
             // TODO see your cards & the map
+            AttackLogic.instance.territoryManager.SetActive(true);
+            AttackLogic.instance.isPlacementTurn = true;
             return base.EnterState(turnManager, player);
         }
 
