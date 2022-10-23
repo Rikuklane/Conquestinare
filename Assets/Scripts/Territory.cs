@@ -1,14 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Territory : MonoBehaviour
 {
     public Waypoint waypoint;
     public Color color;
+
     public List<Territory> territories = new List<Territory>();
     public List<Vector3> enemyTerritories = new List<Vector3>();
     public bool isEnemy;
+
+    public GameObject cardPrefab;
+    public List<Unit> units = new List<Unit>();
+
+    public GameObject hoverPanel;
+    public TextMeshProUGUI summaryText;
+    
+
     private SpriteRenderer spriteRenderer;
     
     void Awake()
@@ -24,9 +34,28 @@ public class Territory : MonoBehaviour
 
         UpdateEnemyTerritories();
 
+        setSummary();
+
         Debug.Log(enemyTerritories);
 
 
+    }
+
+    public void addCard(CardData card)
+    {
+        //TODO
+    }
+
+    public void setSummary()
+    {
+        int attack = 0;
+        int health = 0;
+        foreach(Unit unit in units)
+        {
+            attack += unit.unitData.attack;
+            health += unit.unitData.health;
+        }
+        summaryText.text = attack.ToString() + "AD/" + health.ToString() + "HP";
     }
 
     public void setColor(Color _color)
@@ -61,7 +90,7 @@ public class Territory : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Game.instance.SelectTerritory(this);
+            AttackLogic.instance.SelectTerritory(this);
             //waypoint.ToggleLines();
             spriteRenderer.material.color = new Color(200 / 255f, 200 / 255f, 200 / 255f);
         }
@@ -76,11 +105,13 @@ public class Territory : MonoBehaviour
     private void OnMouseEnter()
     {
         spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+        AttackLogic.instance.showCards(units, cardPrefab);
 
     }
     private void OnMouseExit()
     {
         spriteRenderer.material.color = color;
+        AttackLogic.instance.hideCards();
     }
 
     void OnDrawGizmos()
