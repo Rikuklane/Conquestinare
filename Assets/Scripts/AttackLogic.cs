@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,31 +11,24 @@ public class AttackLogic : MonoBehaviour
 
     public Button attackButton;
     public GameObject TerritoryHoverPanel;
-    // Start is called before the first frame update
+    public GameObject ArenaPanel;
+    public GameObject ArenaTopPanel;
+    public GameObject ArenaBottomPanel;
+
+    public GameObject cardPrefab;
+
+
     void Awake()
     {
         instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void ClearLines()
-    {
-        foreach(Transform child in transform)
-        {
-            
-        }
-    }
     public void SelectTerritory(Territory newSelected)
     {
         if(selectedTerritory == null)
         {
             selectedTerritory = newSelected;
-            selectedTerritory.showAttackOptions();
+            selectedTerritory.ShowAttackOptions();
             return;
 
         } else
@@ -44,14 +38,14 @@ public class AttackLogic : MonoBehaviour
                 attackTerritory = newSelected;
                 attackButton.gameObject.SetActive(true);
                 // attack line only
-                selectedTerritory.hideAttackOptions();
+                selectedTerritory.HideAttackOptions();
                 selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
             }
             else 
             {
                 // change selected
-                selectedTerritory.hideAttackOptions();
-                newSelected.showAttackOptions();
+                selectedTerritory.HideAttackOptions();
+                newSelected.ShowAttackOptions();
                 selectedTerritory = newSelected;
             }
         }
@@ -66,8 +60,8 @@ public class AttackLogic : MonoBehaviour
 
     void ResetLines()
     {
-        selectedTerritory.hideAttackOptions();
-        attackTerritory.hideAttackOptions();
+        selectedTerritory.HideAttackOptions();
+        attackTerritory.HideAttackOptions();
         attackTerritory.isEnemy = selectedTerritory.isEnemy;
         attackTerritory.UpdateEnemyTerritories();
         foreach (Territory territory in attackTerritory.territories)
@@ -78,31 +72,155 @@ public class AttackLogic : MonoBehaviour
 
     public void AttackPressed()
     {
+        bool isWin = SimulateBattle();
+
+        selectedTerritory.SetSummary();
+        attackTerritory.SetSummary();
+
         // winCondition
-        ResetLines();
+        if (isWin && selectedTerritory.GetUnits().Count > 1)
+        {
+            attackTerritory.SetColor(selectedTerritory.color);
+            ResetLines();
+            // transfer 2nd troop over
+            attackTerritory.AddCard(selectedTerritory.presentUnits[01]);
+            // remove old
+            selectedTerritory.GetUnits().RemoveAt(1);
+            Destroy(selectedTerritory.presentUnits[1].gameObject);
+            selectedTerritory.presentUnits.RemoveAt(1);
+            selectedTerritory.SetSummary();
+        }
+        else if (isWin)
+        {
+            // Win without territory gain
+            selectedTerritory.HideAttackOptions();
+            attackTerritory.HideAttackOptions();
+            attackTerritory.SetColor(Color.gray);
+            attackTerritory.enemyTerritories = null;
+        }
+        else 
+        { 
+            // LOSE
+            selectedTerritory.HideAttackOptions();
+            attackTerritory.HideAttackOptions();
+            selectedTerritory.SetColor(Color.gray);
+            selectedTerritory.enemyTerritories = null;
+        }
+        // cleanup
+        hideCards(selectedTerritory.presentUnits);
+        hideCards(attackTerritory.presentUnits);
+        ArenaPanel.gameObject.SetActive(false);
         attackButton.gameObject.SetActive(false);
-        attackTerritory.setColor(selectedTerritory.color);
         selectedTerritory = null;
         attackTerritory = null;
+
+        // weird fix
+        TerritoryHoverPanel.gameObject.SetActive(false);
+
+
     }
 
-    public void showCards(List<Unit> units, GameObject cardPrefab)
+    private bool SimulateBattle()
     {
-        foreach(Transform child in TerritoryHoverPanel.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        foreach(Unit unit in units)
-        {
-            cardPrefab.GetComponent<UnitCardPresenter>().unitData = unit.unitData;
-            GameObject.Instantiate(cardPrefab, TerritoryHoverPanel.transform);
+        // show panel with cards
+        showCards(selectedTerritory.presentUnits, ArenaBottomPanel);
+        showCards(attackTerritory.presentUnits, ArenaTopPanel);
+        ArenaPanel.gameObject.SetActive(true);
+        int playerCards = selectedTerritory.presentUnits.Count;
+        int enemyCards = attackTerritory.presentUnits.Count;
 
+        print(playerCards + " " + enemyCards);
+        print(selectedTerritory.GetUnits()[0].attack);
+        print(selectedTerritory.GetUnits()[0].health);
+
+        print(attackTerritory.GetUnits()[0].attack);
+        print(attackTerritory.GetUnits()[0].health);
+
+        int i = 0; // dont want to write if true
+        while (i<10)
+        {
+            // defence attacks
+            int playerAttack = attackTerritory.GetUnits()[0].attack;
+            selectedTerritory.GetUnits()[0].health -= playerAttack;
+            selectedTerritory.presentUnits[0].SetHealth(selectedTerritory.GetUnits()[0].health);
+
+
+
+            if (selectedTerritory.GetUnits()[0].health <= 0)
+            {
+                selectedTerritory.GetUnits().RemoveAt(0);
+                Destroy(selectedTerritory.presentUnits[0].gameObject);
+                selectedTerritory.presentUnits.RemoveAt(0);
+
+                playerCards--;
+                print("attacker died");
+            }
+
+            if (selectedTerritory.presentUnits.Count <= 0)
+            {
+                return false;
+            }
+
+            // attacker attacks
+            int enemyAttack = selectedTerritory.GetUnits()[0].attack;
+            attackTerritory.GetUnits()[0].health -= enemyAttack;
+            attackTerritory.presentUnits[0].SetHealth(attackTerritory.GetUnits()[0].health);
+
+            if (attackTerritory.GetUnits()[0].health <= 0)
+            {
+                attackTerritory.GetUnits().RemoveAt(0);
+                Destroy(attackTerritory.presentUnits[0].gameObject);
+                attackTerritory.presentUnits.RemoveAt(0);
+
+
+                enemyCards--;
+                print("defence died");
+
+            }
+
+            if (attackTerritory.presentUnits.Count <= 0)
+            {
+                return true;
+            }
+            print("end of turn " + i.ToString());
+            i++;
+        }
+
+        return false;
+
+
+
+    }
+
+    public void showCards(List<UnitCardPresenter> units, GameObject parent)
+    {
+        //foreach(Transform child in parent.transform)
+        ///{
+        //    Destroy(child.gameObject);
+        //}
+        foreach(UnitCardPresenter unit in units)
+        {
+            //unit.transform.parent = parent.transform;
+            unit.gameObject.SetActive(true);
         }
         TerritoryHoverPanel.SetActive(true);
         
     }
-    public void hideCards()
+    public void hideCards(List<UnitCardPresenter> units)
     {
+        foreach (UnitCardPresenter unit in units)
+        {
+            //unit.transform.parent = parent.transform;
+            unit.gameObject.SetActive(false);
+        }
         TerritoryHoverPanel.SetActive(false);
     }
+
+
+}
+
+public class Unit
+{
+    public int attack;
+    public int health;
 }
