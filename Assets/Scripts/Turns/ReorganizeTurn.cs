@@ -2,25 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReorganizeTurn : AbstractTurnState
+namespace Turns
 {
-    public override IEnumerator EnterState(TurnManager turnManager, Player player)
+    public class ReorganizeTurn : AbstractTurnState
     {
-        // TODO only interact with your own territories
-        return base.EnterState(turnManager, player);
-    }
+        public override IEnumerator EnterState(TurnManager turnManager, Player player)
+        {
+            Debug.Log("Start ReorganizeTurn for: " + player.Name);
+            // TODO only interact with your own territories
+            return base.EnterState(turnManager, player);
+        }
 
-    public override IEnumerator Action(TurnManager turnManager, Player player)
-    {
-        // TODO move troops from one territory to another one
-        return base.Action(turnManager, player);
-    }
+        public override IEnumerator Action(TurnManager turnManager, Player player)
+        {
+            // TODO move troops from one territory to another one
+            return base.Action(turnManager, player);
+        }
 
-    public override IEnumerator EndState(TurnManager turnManager, Player player)
-    {
-        // TODO press end turn button (Next player turn)
-        turnManager.SwitchPlayerTurn();
-        turnManager.SwitchTurnState(turnManager.PlayerStartTurn);
-        return base.EndState(turnManager, player);
+        public override IEnumerator EndState(TurnManager turnManager, Player player)
+        {
+            // TODO press end turn button (Next player turn)
+            turnManager.SwitchPlayerTurn();
+            turnManager.SwitchTurnState(turnManager.PlayerStartTurn);
+            return base.EndState(turnManager, player);
+        }
     }
 }

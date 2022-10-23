@@ -1,11 +1,13 @@
 ﻿using System.Collections;
+using UnityEngine;
 
-namespace States
+namespace Turns
 {
     public class PlaceUnitsTurn: AbstractTurnState
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
+            Debug.Log("Start PlaceUnitsTurn for: " + player.Name);
             // TODO see your cards & the map
             return base.EnterState(turnManager, player);
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player
@@ -13,6 +14,11 @@ public class Player
     public Player(string playerName)
     {
         _playerName = playerName;
+    }
+
+    public string Name
+    {
+        get => _playerName;
     }
 
     public int Gold
