@@ -14,14 +14,27 @@ public class UnitCardPresenter : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI costText;
     public Image image;
+    private Button _button;
 
     private void Awake()
     {
+        _button = GetComponent<Button>();
         if (unitData != null)
         {
             SetData();
         }
     }
+
+    public Button Button => _button;
+
+    public void SetData(UnitData data)
+    {
+        unitData = data;
+        if (unitData != null)
+        {
+            SetData();
+        }
+    } 
 
     private void SetData()
     {
@@ -31,5 +44,11 @@ public class UnitCardPresenter : MonoBehaviour
         healthText.text = unitData.health.ToString();
         costText.text = unitData.cost.ToString();
         image.sprite = unitData.sprite;
+    }
+
+    public void SetSelectionListener(UnitCardSelector selector)
+    {
+        
+        selector.SetActive(false);
     }
 }

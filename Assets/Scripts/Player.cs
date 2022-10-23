@@ -6,33 +6,18 @@ using UnityEngine;
 
 public class Player
 {
-    private string _playerName;
-    private int _territoriesOwned;
     private int _bonusFromAreasController;
-    private int _gold;
 
     public Player(string playerName)
     {
-        _playerName = playerName;
+        Name = playerName;
     }
 
-    public string Name
-    {
-        get => _playerName;
-    }
+    public string Name { get; }
+    public int Gold { get; set; }
+    public int Territories { get; set; }
+    public CardData Cards { get; set; }
 
-    public int Gold
-    {
-        get => _gold;
-        set => _gold = value;
-    }
-    
-    public int Territories
-    {
-        get => _territoriesOwned;
-        set => _territoriesOwned = value;
-    }
-    
     // This method defines the value of unit cards given at the start of the round
     public int GetPrestige()
     {
