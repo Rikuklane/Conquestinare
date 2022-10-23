@@ -20,12 +20,17 @@ public class UnitCardPresenter : MonoBehaviour
     {
         if (unitData != null)
         {
-            titleText.text = unitData.title;
-            descriptionText.text = unitData.description;
-            attackText.text = unitData.attack.ToString();
-            healthText.text = unitData.health.ToString();
-            costText.text = unitData.cost.ToString();
-            image.sprite = unitData.sprite;
+            setData(unitData);
         }
+    }
+
+    public void setData(UnitData data)
+    {
+        titleText.text = unitData.title;
+        descriptionText.text = unitData.description;
+        attackText.text = unitData.attack.ToString();
+        healthText.text = unitData.health.ToString();
+        costText.text = unitData.cost.ToString();
+        image.sprite = unitData.sprite;
     }
 }
