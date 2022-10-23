@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
+
 public class AttackLogic : MonoBehaviour
 {
     public static AttackLogic instance;
@@ -19,10 +22,43 @@ public class AttackLogic : MonoBehaviour
 
     public bool isPlacementTurn = true;
 
+    public GameObject WinScreen;
+    public TextMeshProUGUI WinScreenText;
+
 
     void Awake()
     {
         instance = this;
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void checkWin()
+    {
+        int enemyTerritories = 0;
+        int playerTerritories = 0;
+        foreach(Transform t in territoryManager.transform)
+        {
+            if (t.GetComponent<Territory>().isNeutral) continue;
+            if (t.GetComponent<Territory>().isEnemy)
+            {
+                enemyTerritories++;
+            } else
+            {
+                playerTerritories++;
+            }
+        }
+        if (enemyTerritories == 0)
+        {
+            WinScreen.SetActive(true);
+            WinScreenText.text = "You Win!";
+        }
+        if (playerTerritories == 0)
+        {
+            WinScreen.SetActive(true);
+            WinScreenText.text = "You lose";
+        }
     }
 
     public void SelectTerritory(Territory newSelected)
@@ -125,15 +161,15 @@ public class AttackLogic : MonoBehaviour
         // weird fix
         TerritoryHoverPanel.gameObject.SetActive(false);
 
-
+        checkWin();
     }
 
     private bool SimulateBattle()
     {
         // show panel with cards
-        showCards(selectedTerritory.presentUnits, ArenaBottomPanel);
-        showCards(attackTerritory.presentUnits, ArenaTopPanel);
-        ArenaPanel.gameObject.SetActive(true);
+        //showCards(selectedTerritory.presentUnits, ArenaBottomPanel);
+        //showCards(attackTerritory.presentUnits, ArenaTopPanel);
+        //ArenaPanel.gameObject.SetActive(true);
         int playerCards = selectedTerritory.presentUnits.Count;
         int enemyCards = attackTerritory.presentUnits.Count;
 
