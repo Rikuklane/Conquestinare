@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,9 @@ namespace Turns
     public class TurnManager: MonoBehaviour
     {
         public Button nextTurnButton;
+        public TextMeshProUGUI playerNameText;
+        public TextMeshProUGUI turnNameText;
+        
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
         public readonly ReceiveUnitsTurn ReceiveUnitsTurn = new();
@@ -37,12 +41,14 @@ namespace Turns
         {
             _currentPlayer = _players[0];
             SwitchTurnState(PlayerStartTurn);
+            playerNameText.text = _currentPlayer.Name;
         }
 
         public void SwitchTurnState(AbstractTurnState state)
         {
             _currentState = state;
             StartCoroutine(_currentState.EnterState(this, _currentPlayer));
+            turnNameText.text = _currentState.ToString();
         }
 
         public void SwitchPlayerTurn()
@@ -53,6 +59,7 @@ namespace Turns
                 nextIndex = 0;
             }
             _currentPlayer = _players[nextIndex];
+            playerNameText.text = _currentPlayer.Name;
         }
 
         private Player GetPlayer()

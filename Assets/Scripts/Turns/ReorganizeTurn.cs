@@ -8,7 +8,6 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            Debug.Log("Start ReorganizeTurn for: " + player.Name);
             // TODO only interact with your own territories
             return base.EnterState(turnManager, player);
         }

@@ -9,7 +9,6 @@ namespace Turns
     
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            Debug.Log("Start PlayerStartTurn for: " + player.Name);
             CardHand.Instance.LoadHand(player);
             // TODO show Player start turn smth
             // TODO increase gold based on territories owned

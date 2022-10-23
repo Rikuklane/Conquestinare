@@ -9,7 +9,6 @@ namespace Turns
     
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            Debug.Log("Start ReceiveUnitsTurn for: " + player.Name);
             Events.DisplayUnitSelection();
             return base.EnterState(turnManager, player);
         }
