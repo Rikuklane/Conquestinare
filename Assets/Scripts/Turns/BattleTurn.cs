@@ -18,6 +18,8 @@ namespace Turns
         {
             // TODO press next phase button
             AttackLogic.instance.territoryManager.SetActive(false);
+            // temporary bug fix
+            AttackLogic.instance.attackButton.gameObject.SetActive(false);
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
         }
