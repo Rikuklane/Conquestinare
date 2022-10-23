@@ -8,9 +8,13 @@ public class Territory : MonoBehaviour
     public Waypoint waypoint;
     public Color color;
 
+    public Color playerColor;
+    public Color enemyColor;
+
     public List<Territory> territories = new List<Territory>();
     public List<Vector3> enemyTerritories = new List<Vector3>();
     public bool isEnemy;
+    public bool isNeutral = false;
 
     public List<UnitCardPresenter> startUnits = new List<UnitCardPresenter>();
     public List<UnitCardPresenter> presentUnits = new List<UnitCardPresenter>();
@@ -82,6 +86,15 @@ public class Territory : MonoBehaviour
         newUnit.health = unit.unitData.health;
         units.Add(newUnit);
         SetSummary();
+        if (isNeutral) isNeutral = false;
+        if(isEnemy)
+        {
+            SetColor(enemyColor);
+        } else
+        {
+            SetColor(playerColor);
+        }
+        UpdateEnemyTerritories();
         //TODO
     }
 
@@ -118,7 +131,7 @@ public class Territory : MonoBehaviour
         enemyTerritories.Clear();
         foreach(Territory area in territories)
         {
-            if (isEnemy != area.isEnemy)
+            if (isEnemy != area.isEnemy || area.isNeutral)
             {
                 enemyTerritories.Add(area.waypoint.transform.position);
             }

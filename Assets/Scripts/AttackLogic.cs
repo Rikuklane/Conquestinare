@@ -15,9 +15,6 @@ public class AttackLogic : MonoBehaviour
     public GameObject ArenaTopPanel;
     public GameObject ArenaBottomPanel;
 
-    public GameObject cardPrefab;
-
-
     void Awake()
     {
         instance = this;
@@ -25,7 +22,9 @@ public class AttackLogic : MonoBehaviour
 
     public void SelectTerritory(Territory newSelected)
     {
-        if(selectedTerritory == null)
+        newSelected.UpdateEnemyTerritories();
+
+        if (selectedTerritory == null)
         {
             selectedTerritory = newSelected;
             selectedTerritory.ShowAttackOptions();
@@ -96,7 +95,8 @@ public class AttackLogic : MonoBehaviour
             selectedTerritory.HideAttackOptions();
             attackTerritory.HideAttackOptions();
             attackTerritory.SetColor(Color.gray);
-            attackTerritory.enemyTerritories = null;
+            attackTerritory.isNeutral = true;
+            attackTerritory.enemyTerritories.Clear();
         }
         else 
         { 
@@ -104,7 +104,9 @@ public class AttackLogic : MonoBehaviour
             selectedTerritory.HideAttackOptions();
             attackTerritory.HideAttackOptions();
             selectedTerritory.SetColor(Color.gray);
-            selectedTerritory.enemyTerritories = null;
+            selectedTerritory.isNeutral = true;
+            selectedTerritory.UpdateEnemyTerritories();
+            selectedTerritory.enemyTerritories.Clear();
         }
         // cleanup
         hideCards(selectedTerritory.presentUnits);
@@ -128,6 +130,11 @@ public class AttackLogic : MonoBehaviour
         ArenaPanel.gameObject.SetActive(true);
         int playerCards = selectedTerritory.presentUnits.Count;
         int enemyCards = attackTerritory.presentUnits.Count;
+
+        if(enemyCards==0)
+        {
+            return true;
+        }
 
         print(playerCards + " " + enemyCards);
         print(selectedTerritory.GetUnits()[0].attack);

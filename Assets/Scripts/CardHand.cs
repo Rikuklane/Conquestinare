@@ -13,7 +13,7 @@ public class CardHand : MonoBehaviour
         if(cardSelected)
         {
             Destroy(cardSelected.gameObject);
-            CardHand.Instance.cardSelected = null;
+            cardSelected = null;
         }
     }
 
