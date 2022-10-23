@@ -7,7 +7,6 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            Debug.Log("Start PlaceUnitsTurn for: " + player.Name);
             // TODO see your cards & the map
             return base.EnterState(turnManager, player);
         }

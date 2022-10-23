@@ -8,7 +8,6 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            Debug.Log("Start BattleTurn for: " + player.Name);
             // TODO now only see the map and be able to attack
             return base.EnterState(turnManager, player);
         }

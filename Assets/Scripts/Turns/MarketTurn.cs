@@ -7,7 +7,6 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            Debug.Log("Start MarketTurn for: " + player.Name);
             // TODO open market place
             return base.EnterState(turnManager, player);
         }

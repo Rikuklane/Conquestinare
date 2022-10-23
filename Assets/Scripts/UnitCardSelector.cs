@@ -32,12 +32,10 @@ public class UnitCardSelector : MonoBehaviour
         _unitSelection = CardCollection.Instance.GetSelectionOfUnits(count);
         foreach (var child in GetComponentsInChildren<UnitCardPresenter>())
         {
-            Debug.Log("Destroyed child");
             Destroy(child.gameObject);
         }
         foreach (var unitData in _unitSelection)
         {
-            Debug.Log("Create child");
             var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
             unitCard.SwitchState(unitCard.CardInSelection);
             unitCard.SetData(unitData);
