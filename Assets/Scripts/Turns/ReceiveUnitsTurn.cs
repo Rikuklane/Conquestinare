@@ -9,20 +9,21 @@ namespace Turns
     
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
+            SetNextButtonActive(turnManager, false);
             Events.DisplayUnitSelection();
             return base.EnterState(turnManager, player);
         }
 
-        public override IEnumerator Action(TurnManager turnManager, Player player)
-        {
-            // TODO select 1 card (move to MarketTurn)
-            return base.Action(turnManager, player);
-        }
-
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
+            SetNextButtonActive(turnManager, true);
             turnManager.SwitchTurnState(turnManager.MarketTurn);
-            return base.Action(turnManager, player);
+            return base.EndState(turnManager, player);
+        }
+
+        private void SetNextButtonActive(TurnManager turnManager, bool value)
+        {
+            turnManager.nextTurnButton.gameObject.SetActive(value);
         }
     }
 }

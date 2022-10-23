@@ -13,12 +13,6 @@ namespace Turns
             return base.EnterState(turnManager, player);
         }
 
-        public override IEnumerator Action(TurnManager turnManager, Player player)
-        {
-            // TODO move troops from one territory to another one
-            return base.Action(turnManager, player);
-        }
-
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             // TODO press end turn button (Next player turn)

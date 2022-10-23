@@ -11,12 +11,6 @@ namespace Turns
             return base.EnterState(turnManager, player);
         }
 
-        public override IEnumerator Action(TurnManager turnManager, Player player)
-        {
-            // TODO place cards on territories
-            return base.Action(turnManager, player);
-        }
-
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             // TODO press next phase button

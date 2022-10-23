@@ -10,11 +10,6 @@ namespace Turns
         {
             yield break;
         }
-    
-        public virtual IEnumerator Action(TurnManager turnManager, Player player)
-        {
-            yield break;
-        }
 
         public virtual IEnumerator EndState(TurnManager turnManager, Player player)
         {
