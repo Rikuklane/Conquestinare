@@ -4,7 +4,7 @@ Project owners: Richard Kuklane, Markus Sulg, Rasmus Talioja
 
 ## Other links
  - Wiki: https://courses.cs.ut.ee/2022/gamedev/fall/Conquestinare/Conquestinare
- - Itch.io: TODO
+ - Itch.io: https://rikuklane.itch.io/conquestinare
 
 ## Summary
 
