@@ -10,6 +10,7 @@ namespace Turns
             // TODO see your cards & the map
             AttackLogic.instance.territoryManager.SetActive(true);
             AttackLogic.instance.isPlacementTurn = true;
+            AttackLogic.instance.canHover = true;
             return base.EnterState(turnManager, player);
         }
 

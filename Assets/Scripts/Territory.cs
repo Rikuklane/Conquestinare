@@ -166,14 +166,19 @@ public class Territory : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-        AttackLogic.instance.showCards(presentUnits,  AttackLogic.instance.TerritoryHoverPanel);
-
+        if (AttackLogic.instance.canHover)
+        {
+            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+            AttackLogic.instance.showCards(presentUnits,  AttackLogic.instance.TerritoryHoverPanel);
+        }
     }
     private void OnMouseExit()
     {
-        spriteRenderer.material.color = color;
-        AttackLogic.instance.hideCards(presentUnits);
+        if (AttackLogic.instance.canHover)
+        {
+            spriteRenderer.material.color = color;
+            AttackLogic.instance.hideCards(presentUnits);
+        }
     }
 
     void OnDrawGizmos()
