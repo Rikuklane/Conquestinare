@@ -20,6 +20,7 @@ namespace Turns
             AttackLogic.instance.territoryManager.SetActive(false);
             // temporary bug fix
             AttackLogic.instance.attackButton.gameObject.SetActive(false);
+            AttackLogic.instance.canHover = false;
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
         }

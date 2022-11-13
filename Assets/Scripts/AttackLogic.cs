@@ -21,6 +21,10 @@ public class AttackLogic : MonoBehaviour
     public GameObject territoryManager;
 
     public bool isPlacementTurn = true;
+    public bool canHover = false;
+
+    public GameObject WinScreen;
+    public TextMeshProUGUI WinScreenText;
 
     public GameObject WinScreen;
     public TextMeshProUGUI WinScreenText;
