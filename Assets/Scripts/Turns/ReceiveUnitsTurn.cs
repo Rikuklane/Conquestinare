@@ -9,6 +9,7 @@ namespace Turns
     
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
+            AttackLogic.instance.canHover = false;
             SetNextButtonActive(turnManager, false);
             Events.DisplayUnitSelection();
             return base.EnterState(turnManager, player);

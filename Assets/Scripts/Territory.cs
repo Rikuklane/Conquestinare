@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Territory : MonoBehaviour
 {
@@ -40,32 +41,11 @@ public class Territory : MonoBehaviour
 
     private void Start()
     {
-        int attack = 0;
-        int health = 0;
-        foreach (UnitCardPresenter unit in startUnits)
-        {
-
-            attack += unit.unitData.attack;
-            health += unit.unitData.health;
-        }
-        summaryText.text = attack + "AD / " + health + "HP";
-
-        List<Unit> newUnits = new List<Unit>();
         foreach (UnitCardPresenter unit in startUnits)
 
         {
-            UnitCardPresenter card = Instantiate(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
-            card.gameObject.SetActive(false);
-            presentUnits.Add(card);
-
-            Unit newUnit = new Unit();
-            newUnit.attack = unit.unitData.attack;
-            newUnit.health = unit.unitData.health;
-            newUnits.Add(newUnit);
-
+            AddCard(unit);
         }
-        units = newUnits;
-
     }
 
     public List<Unit> GetUnits()
@@ -75,30 +55,41 @@ public class Territory : MonoBehaviour
 
     public void AddCard(UnitCardPresenter unit)
     {
+
         UnitCardPresenter card = Instantiate(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
         card.gameObject.SetActive(false);
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
+
+        card.SwitchState(card.CardInTerritory);
+
+        Color color = card.GetComponent<Image>().color;
+        color.a = 0.9f;
+        card.GetComponent<Image>().color = color;
+
         presentUnits.Add(card);
+
         Unit newUnit = new Unit();
         newUnit.attack = unit.unitData.attack;
         newUnit.health = unit.unitData.health;
         units.Add(newUnit);
-        SetSummary();
-        if (isNeutral) isNeutral = false;
-        if(isEnemy)
-        {
-            SetColor(enemyColor);
-        } else
-        {
-            SetColor(playerColor);
-        }
+        UpdateTerritoryImage();
+
         UpdateEnemyTerritories();
         //TODO
     }
 
-    public void SetSummary()
+    public void RemoveCard(int index)
     {
+        units.RemoveAt(index);
+        Destroy(presentUnits[index].gameObject);
+        presentUnits.RemoveAt(index);
+        UpdateTerritoryImage();
+    }
+
+    public void UpdateTerritoryImage()
+    {
+        // Summary
         int attack = 0;
         int health = 0;
         foreach(Unit unit in units)
@@ -107,6 +98,22 @@ public class Territory : MonoBehaviour
             health += unit.health;
         }
         summaryText.text = attack + "AD / " + health + "HP";
+        // Color
+        if (attack == 0 && health == 0)
+        {
+            isNeutral = true;
+            SetColor(Color.gray);
+        }
+        else if (isEnemy)
+        {
+            isNeutral = false;
+            SetColor(enemyColor);
+        }
+        else
+        {
+            isNeutral = false;
+            SetColor(playerColor);
+        }
     }
 
     public void SetColor(Color _color)
@@ -143,10 +150,13 @@ public class Territory : MonoBehaviour
         {
             if(AttackLogic.instance.isPlacementTurn)
             {
-                if (CardHand.Instance.cardSelected)
+                UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
+                if (cardSelected)
                 {
-                    AddCard(CardHand.Instance.cardSelected);
+
+                    AddCard(cardSelected);
                     CardHand.Instance.DestroySelected();
+
                 }
             } else
             {

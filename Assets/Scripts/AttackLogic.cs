@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class AttackLogic : MonoBehaviour
 {
@@ -21,11 +22,12 @@ public class AttackLogic : MonoBehaviour
     public GameObject territoryManager;
 
     public bool isPlacementTurn = true;
+    public bool isReorganizeTurn = false;
+    public bool isReorganizeTriggered = false;
     public bool canHover = false;
 
     public GameObject WinScreen;
     public TextMeshProUGUI WinScreenText;
-
 
     void Awake()
     {
@@ -72,7 +74,13 @@ public class AttackLogic : MonoBehaviour
             selectedTerritory.ShowAttackOptions();
             return;
 
-        } else
+        } else if (selectedTerritory == newSelected){
+            // disable attackOptions
+            selectedTerritory.HideAttackOptions();
+            selectedTerritory = null;
+            return;
+        }
+        else
         {
             if (IsEnemyTerritory(newSelected))
             {
@@ -83,14 +91,85 @@ public class AttackLogic : MonoBehaviour
                 selectedTerritory.HideAttackOptions();
                 selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
             }
-            else 
+            else
             {
-                // change selected
-                selectedTerritory.HideAttackOptions();
-                newSelected.ShowAttackOptions();
-                selectedTerritory = newSelected;
+
+                if (isReorganizeTurn)
+                {
+                    isReorganizeTriggered = true;
+                    hideCards(newSelected.presentUnits);
+
+                    attackTerritory = newSelected;
+                    canHover = false;
+
+                    // reorganizeTurn
+                    // confirm button
+                    attackButton.gameObject.SetActive(true);
+
+                    // add cards to panel
+                    showCards(selectedTerritory.presentUnits, TerritoryHoverPanel);
+
+
+
+                    // check which cards selected 
+                    // check that 1 card not selected
+
+
+                    // update icons
+
+                } else
+                {
+                    // change selected
+                    selectedTerritory.HideAttackOptions();
+                    newSelected.ShowAttackOptions();
+                    selectedTerritory = newSelected;
+                }
+
+
+            }
+
+
+
+
+        }
+
+    }
+    public void ChangeButtonClickAttack(bool isAttack)
+    {
+        if (isAttack)
+        {
+            attackButton.GetComponentInChildren<TextMeshProUGUI>().text = "ATTACK";
+            attackButton.onClick.RemoveAllListeners();
+            attackButton.onClick.AddListener(AttackPressed);
+        } else
+        {
+            attackButton.GetComponentInChildren<TextMeshProUGUI>().text = "CONFIRM";
+            attackButton.onClick.RemoveAllListeners();
+            attackButton.onClick.AddListener(CheckSelected);
+        }
+
+    }
+
+    public void CheckSelected()
+    {
+        foreach (UnitCardPresenter card in selectedTerritory.presentUnits.ToList())
+        {
+            if (card.isSelected)
+            {
+                card.isSelected = false;
+                attackTerritory.AddCard(card);
+                // remove cards from 1st territory
+
+                // add cards to 2nd territory
+                selectedTerritory.RemoveCard(selectedTerritory.presentUnits.IndexOf(card));
             }
         }
+        // disable panel
+        hideCards(selectedTerritory.presentUnits);
+        attackButton.gameObject.SetActive(false);
+        // can hover
+        canHover = true;
+        isReorganizeTriggered = false;
 
     }
 
@@ -116,8 +195,8 @@ public class AttackLogic : MonoBehaviour
     {
         bool isWin = SimulateBattle();
 
-        selectedTerritory.SetSummary();
-        attackTerritory.SetSummary();
+        selectedTerritory.UpdateTerritoryImage();
+        attackTerritory.UpdateTerritoryImage();
 
         // winCondition
         if (isWin && selectedTerritory.GetUnits().Count > 1)
@@ -130,24 +209,21 @@ public class AttackLogic : MonoBehaviour
             selectedTerritory.GetUnits().RemoveAt(1);
             Destroy(selectedTerritory.presentUnits[1].gameObject);
             selectedTerritory.presentUnits.RemoveAt(1);
-            selectedTerritory.SetSummary();
+            selectedTerritory.UpdateTerritoryImage();
         }
         else if (isWin)
         {
             // Win without territory gain
             selectedTerritory.HideAttackOptions();
             attackTerritory.HideAttackOptions();
-            attackTerritory.SetColor(Color.gray);
-            attackTerritory.isNeutral = true;
-            attackTerritory.enemyTerritories.Clear();
+            attackTerritory.UpdateTerritoryImage();
         }
         else 
         { 
             // LOSE
             selectedTerritory.HideAttackOptions();
             attackTerritory.HideAttackOptions();
-            selectedTerritory.SetColor(Color.gray);
-            selectedTerritory.isNeutral = true;
+            selectedTerritory.UpdateTerritoryImage();
             selectedTerritory.UpdateEnemyTerritories();
             selectedTerritory.enemyTerritories.Clear();
         }
@@ -198,9 +274,7 @@ public class AttackLogic : MonoBehaviour
 
             if (selectedTerritory.GetUnits()[0].health <= 0)
             {
-                selectedTerritory.units.RemoveAt(0);
-                Destroy(selectedTerritory.presentUnits[0].gameObject);
-                selectedTerritory.presentUnits.RemoveAt(0);
+                selectedTerritory.RemoveCard(0);
 
                 playerCards--;
                 print("attacker died");
@@ -218,10 +292,7 @@ public class AttackLogic : MonoBehaviour
 
             if (attackTerritory.GetUnits()[0].health <= 0)
             {
-                attackTerritory.units.RemoveAt(0);
-                Destroy(attackTerritory.presentUnits[0].gameObject);
-                attackTerritory.presentUnits.RemoveAt(0);
-
+                attackTerritory.RemoveCard(0);
 
                 enemyCards--;
                 print("defence died");
