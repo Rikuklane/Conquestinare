@@ -26,10 +26,6 @@ public class AttackLogic : MonoBehaviour
     public GameObject WinScreen;
     public TextMeshProUGUI WinScreenText;
 
-    public GameObject WinScreen;
-    public TextMeshProUGUI WinScreenText;
-
-
     void Awake()
     {
         instance = this;
