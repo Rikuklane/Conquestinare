@@ -24,7 +24,10 @@ public class UnitCardPresenter : MonoBehaviour
     public CardInMarket CardInMarket = new();
     public CardInSelection CardInSelection = new();
     public CardInTerritory CardInTerritory = new();
+    public CardInTerritory CardInReorganize = new();
     private AbstractCardState _currentState;
+
+    public bool isSelected = false;
 
     private void Awake()
     {
@@ -88,10 +91,27 @@ public class UnitCardPresenter : MonoBehaviour
         _button.onClick.AddListener(Selected);
     }
 
-
-
-    public void CardPressed()
+    public void TriggerSelected()
     {
-        CardHand.Instance.cardSelected = this;
+        Debug.Log(isSelected);
+        isSelected = !isSelected;
+
+        float alpha = 1f;
+        if (isSelected)
+        {
+            alpha = 0.6f;
+        }
+
+        Color color = GetComponent<Image>().color;
+        color.a = alpha;
+        GetComponent<Image>().color = color;
+
     }
+
+    private void OnBecameVisible()
+    {
+        // reset, when accidentally clicked between reorganizing
+        isSelected = false;
+    }
+
 }

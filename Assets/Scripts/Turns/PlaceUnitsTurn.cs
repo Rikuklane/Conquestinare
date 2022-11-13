@@ -17,6 +17,7 @@ namespace Turns
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             // TODO press next phase button
+            AttackLogic.instance.territoryManager.SetActive(false);
             turnManager.SwitchTurnState(turnManager.BattleTurn);
             return base.EndState(turnManager, player);
         }
