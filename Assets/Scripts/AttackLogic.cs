@@ -96,26 +96,8 @@ public class AttackLogic : MonoBehaviour
 
                 if (isReorganizeTurn)
                 {
-                    isReorganizeTriggered = true;
-                    hideCards(newSelected.presentUnits);
-
                     attackTerritory = newSelected;
-                    canHover = false;
-
-                    // reorganizeTurn
-                    // confirm button
-                    attackButton.gameObject.SetActive(true);
-
-                    // add cards to panel
-                    showCards(selectedTerritory.presentUnits, TerritoryHoverPanel);
-
-
-
-                    // check which cards selected 
-                    // check that 1 card not selected
-
-
-                    // update icons
+                    TriggerReorganize();
 
                 } else
                 {
@@ -132,6 +114,24 @@ public class AttackLogic : MonoBehaviour
 
 
         }
+
+    }
+    private void TriggerReorganize()
+    {
+        isReorganizeTriggered = true;
+        hideCards(attackTerritory.presentUnits);
+
+        canHover = false;
+
+        // reorganizeTurn
+        // confirm button
+        attackButton.gameObject.SetActive(true);
+
+        // add cards to panel
+        showCards(selectedTerritory.presentUnits, TerritoryHoverPanel);
+
+
+
 
     }
     public void ChangeButtonClickAttack(bool isAttack)
@@ -152,6 +152,9 @@ public class AttackLogic : MonoBehaviour
 
     public void CheckSelected()
     {
+        // check which cards selected 
+        // TODO: check that 1 card not selected
+        // TODO: update icons
         foreach (UnitCardPresenter card in selectedTerritory.presentUnits.ToList())
         {
             if (card.isSelected)
@@ -170,6 +173,12 @@ public class AttackLogic : MonoBehaviour
         // can hover
         canHover = true;
         isReorganizeTriggered = false;
+
+        // if triggered from battle turn, change back button behavior
+        if(!isReorganizeTurn)
+        {
+            ChangeButtonClickAttack(true);
+        }
 
     }
 
@@ -201,15 +210,17 @@ public class AttackLogic : MonoBehaviour
         // winCondition
         if (isWin && selectedTerritory.GetUnits().Count > 1)
         {
+            ChangeButtonClickAttack(false);
+            TriggerReorganize();
             attackTerritory.SetColor(selectedTerritory.color);
-            ResetLines();
-            // transfer 2nd troop over
-            attackTerritory.AddCard(selectedTerritory.presentUnits[01]);
-            // remove old
-            selectedTerritory.GetUnits().RemoveAt(1);
-            Destroy(selectedTerritory.presentUnits[1].gameObject);
-            selectedTerritory.presentUnits.RemoveAt(1);
             selectedTerritory.UpdateTerritoryImage();
+            ResetLines();
+
+            return;
+            // transfer 2nd troop over
+            //attackTerritory.AddCard(selectedTerritory.presentUnits[1]);
+            // selectedTerritory.RemoveCard(1);
+
         }
         else if (isWin)
         {

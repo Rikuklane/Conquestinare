@@ -76,6 +76,8 @@ public class Territory : MonoBehaviour
         UpdateTerritoryImage();
 
         UpdateEnemyTerritories();
+
+        card.isSelected = false;
         //TODO
     }
 
