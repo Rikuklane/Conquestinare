@@ -179,6 +179,12 @@ public class AttackLogic : MonoBehaviour
         {
             ChangeButtonClickAttack(true);
         }
+        // disable panel
+        hideCards(selectedTerritory.presentUnits);
+        attackButton.gameObject.SetActive(false);
+        // can hover
+        canHover = true;
+        isReorganizeTriggered = false;
 
     }
 
