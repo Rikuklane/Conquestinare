@@ -129,15 +129,18 @@ public class AttackLogic : MonoBehaviour
         // check which cards selected 
         // TODO: check that 1 card not selected
         // TODO: update icons
-        foreach (UnitCardPresenter card in selectedTerritory.TerritoryGraphics.presentUnits.ToList())
+        List<UnitCardPresenter> presentUnitsCopy = selectedTerritory.TerritoryGraphics.presentUnits.ToList();
+        List<Territory.Unit> unitsCopy = selectedTerritory.units.ToList();
+
+        for (int i = 0; i< presentUnitsCopy.Count; i++)
         {
+            UnitCardPresenter card = presentUnitsCopy[i];
             if (card.isSelected)
             {
                 card.isSelected = false;
-                attackTerritory.AddCard(card.unitData);
-                // remove cards from 1st territory
-
                 // add cards to 2nd territory
+                attackTerritory.AddCard(card.unitData, unitsCopy[i]);
+                // remove cards from 1st territory
                 selectedTerritory.RemoveCard(selectedTerritory.TerritoryGraphics.presentUnits.IndexOf(card));
             }
         }

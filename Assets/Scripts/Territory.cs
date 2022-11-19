@@ -15,7 +15,13 @@ public class Territory : MonoBehaviour
     public List<UnitData> startUnits = new();
     public UnitCardPresenter cardPrefab;
 
-    public List<UnitData> units = new();
+    public class Unit
+    {
+        public int attack;
+        public int health;
+    }
+
+    public List<Unit> units = new();
 
     public TerritoryGraphics TerritoryGraphics;
         
@@ -41,7 +47,7 @@ public class Territory : MonoBehaviour
         foreach (UnitData unit in startUnits)
 
         {
-            AddCard(unit);
+            AddCard(unit, null);
         }
     }
 
@@ -58,7 +64,7 @@ public class Territory : MonoBehaviour
         }
     }
 
-    public UnitData GetUnitAtIndex(int index)
+    public Unit GetUnitAtIndex(int index)
     {
         return units[index];
     }
@@ -67,15 +73,19 @@ public class Territory : MonoBehaviour
     {
         return units.Count;
     }
-    public void AddCard(UnitData data)
+    public void AddCard(UnitData data, Unit unit)
     {
         UnitCardPresenter card = Instantiate(cardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
         card.SetData(data);
-        AddCard(card);
+        if(unit != null)
+        {
+            card.SetHealth(unit.health);
+        }
+        AddCard(card, unit);
     }
 
 
-    private void AddCard(UnitCardPresenter card)
+    private void AddCard(UnitCardPresenter card, Unit unit)
     {
 
         card.gameObject.SetActive(false);
@@ -91,9 +101,17 @@ public class Territory : MonoBehaviour
         //presentUnits.Add(card);
         TerritoryGraphics.presentUnits.Add(card);
 
-        UnitData newUnit = new();
-        newUnit.attack = card.unitData.attack;
-        newUnit.health = card.unitData.health;
+        Unit newUnit = new();
+        if (unit != null)
+        {
+            newUnit.attack = unit.attack;
+            newUnit.health = unit.health;
+        } else
+        {
+            newUnit.attack = card.unitData.attack;
+            newUnit.health = card.unitData.health;
+        }
+        
         units.Add(newUnit);
         UpdateTerritoryImage();
 
@@ -118,7 +136,7 @@ public class Territory : MonoBehaviour
         // Summary
         int attack = 0;
         int health = 0;
-        foreach(UnitData unit in units)
+        foreach(Unit unit in units)
         {
             attack += unit.attack;
             health += unit.health;
@@ -170,7 +188,7 @@ public class Territory : MonoBehaviour
                     .setOnComplete(() =>
                     {
                         cardSelected.childObject.transform.localPosition = Vector3.zero;
-                        AddCard(cardSelected.unitData);
+                        AddCard(cardSelected.unitData, null);
 
                         CardHand.Instance.DestroySelected();
 
