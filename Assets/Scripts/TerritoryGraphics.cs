@@ -62,18 +62,6 @@ public class TerritoryGraphics : MonoBehaviour
 
     }
 
-    public void SetPlayerColor(bool isEnemy)
-    {
-        if (isEnemy)
-        {
-            SetColor(enemyColor);
-        }
-        else
-        {
-            SetColor(playerColor);
-        }
-    }
-
     public void SetSummaryText(string text)
     {
         summaryText.text = text;

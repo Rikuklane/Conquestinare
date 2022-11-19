@@ -23,7 +23,7 @@ namespace Turns
         
         private AbstractTurnState _currentState;
         private Player _currentPlayer;
-        private Player[] _players = { new("Player 1"), new("Player 2")};
+        public Player[] _players = { new("Player 1"), new("Player 2")};
 
         private void Awake()
         {

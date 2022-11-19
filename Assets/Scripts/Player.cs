@@ -17,6 +17,13 @@ public class Player
         _color.b = (float) _random.NextDouble();
         _color.r = (float) _random.NextDouble();
         _color.g = (float) _random.NextDouble();
+        _color.a = 1;
+    }
+
+    public Player(string playerName, Color color)
+    {
+        Name = playerName;
+        _color = color;
     }
 
     public string Name { get; }

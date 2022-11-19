@@ -28,17 +28,18 @@ public class AttackLogic : MonoBehaviour
     }
     public void checkWin()
     {
+        Player currentPlayer = Events.RequestPlayer();
         int enemyTerritories = 0;
         int playerTerritories = 0;
         foreach(Transform t in territoryManager.transform)
         {
-            if (t.GetComponent<Territory>().isNeutral) continue;
-            if (t.GetComponent<Territory>().isEnemy)
-            {
-                enemyTerritories++;
-            } else
+            if (t.GetComponent<Territory>().player.Name == "neutral") continue;
+            if (t.GetComponent<Territory>().player == currentPlayer)
             {
                 playerTerritories++;
+            } else
+            {
+                enemyTerritories++;
             }
         }
         if (enemyTerritories == 0)
@@ -165,7 +166,7 @@ public class AttackLogic : MonoBehaviour
     {
         selectedTerritory.HideAttackOptions();
         attackTerritory.HideAttackOptions();
-        attackTerritory.isEnemy = selectedTerritory.isEnemy;
+        attackTerritory.player = selectedTerritory.player;
         attackTerritory.UpdateEnemyTerritories();
         foreach (Territory territory in attackTerritory.territories)
         {

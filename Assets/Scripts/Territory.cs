@@ -7,21 +7,15 @@ using UnityEngine.UI;
 public class Territory : MonoBehaviour
 {
     public Waypoint waypoint;
+    public Player player;
 
     public List<Territory> territories = new();
     public List<Vector3> enemyTerritories = new();
-    public bool isEnemy;
-    public bool isNeutral = false;
-    
+       
     public List<UnitData> startUnits = new();
     public UnitCardPresenter cardPrefab;
 
-    public List<Unit> units = new();
-    public class Unit
-    {
-        public int attack;
-        public int health;
-    }
+    public List<UnitData> units = new();
 
     public TerritoryGraphics TerritoryGraphics;
         
@@ -34,11 +28,16 @@ public class Territory : MonoBehaviour
         }
         waypoint.CreateLines();
 
-        UpdateEnemyTerritories();
     }
 
     private void Start()
     {
+        
+    }
+
+    public void AddUnits()
+    {
+        UpdateEnemyTerritories();
         foreach (UnitData unit in startUnits)
 
         {
@@ -59,7 +58,7 @@ public class Territory : MonoBehaviour
         }
     }
 
-    public Unit GetUnitAtIndex(int index)
+    public UnitData GetUnitAtIndex(int index)
     {
         return units[index];
     }
@@ -92,7 +91,7 @@ public class Territory : MonoBehaviour
         //presentUnits.Add(card);
         TerritoryGraphics.presentUnits.Add(card);
 
-        Unit newUnit = new Unit();
+        UnitData newUnit = new();
         newUnit.attack = card.unitData.attack;
         newUnit.health = card.unitData.health;
         units.Add(newUnit);
@@ -119,7 +118,7 @@ public class Territory : MonoBehaviour
         // Summary
         int attack = 0;
         int health = 0;
-        foreach(Unit unit in units)
+        foreach(UnitData unit in units)
         {
             attack += unit.attack;
             health += unit.health;
@@ -129,14 +128,9 @@ public class Territory : MonoBehaviour
         // Color
         if (attack == 0 && health == 0)
         {
-            isNeutral = true;
-            TerritoryGraphics.SetColor(Color.gray);
+            player = new Player("neutral", Color.gray);
         }
-        else
-        {
-            isNeutral = false;
-            TerritoryGraphics.SetPlayerColor(isEnemy);
-        }
+        TerritoryGraphics.SetColor(player.Color);
     }
 
     public void ShowAttackOptions()
@@ -154,7 +148,7 @@ public class Territory : MonoBehaviour
         enemyTerritories.Clear();
         foreach(Territory area in territories)
         {
-            if (isEnemy != area.isEnemy || area.isNeutral)
+            if (player != area.player || area.player.Name == "neutral")
             {
                 enemyTerritories.Add(area.waypoint.transform.position);
             }
