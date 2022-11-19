@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class TerritoryGraphics : MonoBehaviour
@@ -10,8 +11,11 @@ public class TerritoryGraphics : MonoBehaviour
     public Color enemyColor;
 
     public TextMeshProUGUI summaryText;
+    public GameObject iconsParent;
+    public Image iconPrefab;
     public List<UnitCardPresenter> presentUnits = new();
 
+    private List<Image> icons = new();
     private SpriteRenderer spriteRenderer;
 
 
@@ -73,6 +77,23 @@ public class TerritoryGraphics : MonoBehaviour
     public void SetSummaryText(string text)
     {
         summaryText.text = text;
+    }
+
+    public void UpdateIcons()
+    {
+        // remove old
+        foreach(Image icon in icons)
+        {
+            Destroy(icon.gameObject);
+        }
+        icons.Clear();
+        // insert new
+        foreach(UnitCardPresenter unit in presentUnits)
+        {
+            Image icon = GameObject.Instantiate(iconPrefab, iconsParent.transform);
+            icon.sprite = unit.unitData.sprite;
+            icons.Add(icon);
+        }
     }
 
     private void OnMouseUp()
