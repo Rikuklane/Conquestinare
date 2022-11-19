@@ -13,7 +13,8 @@ public class Territory : MonoBehaviour
     public bool isEnemy;
     public bool isNeutral = false;
     
-    public List<UnitCardPresenter> startUnits = new();
+    public List<UnitData> startUnits = new();
+    public UnitCardPresenter cardPrefab;
 
     public List<Unit> units = new();
     public class Unit
@@ -38,7 +39,7 @@ public class Territory : MonoBehaviour
 
     private void Start()
     {
-        foreach (UnitCardPresenter unit in startUnits)
+        foreach (UnitData unit in startUnits)
 
         {
             AddCard(unit);
@@ -67,27 +68,33 @@ public class Territory : MonoBehaviour
     {
         return units.Count;
     }
+    public void AddCard(UnitData data)
+    {
+        UnitCardPresenter card = Instantiate(cardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
+        card.SetData(data);
+        AddCard(card);
+    }
 
-    public void AddCard(UnitCardPresenter unit)
+
+    private void AddCard(UnitCardPresenter card)
     {
 
-        UnitCardPresenter card = Instantiate(unit, GUI.instance.TerritoryHoverPanel.transform);
         card.gameObject.SetActive(false);
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
 
         card.SwitchState(card.CardInTerritory);
 
-        Color color = card.GetComponent<Image>().color;
-        color.a = 0.9f;
-        card.GetComponent<Image>().color = color;
+        Color color = card.childObject.GetComponent<Image>().color;
+        color.a = 0.6f;
+        card.childObject.GetComponent<Image>().color = color;
 
         //presentUnits.Add(card);
         TerritoryGraphics.presentUnits.Add(card);
 
         Unit newUnit = new Unit();
-        newUnit.attack = unit.unitData.attack;
-        newUnit.health = unit.unitData.health;
+        newUnit.attack = card.unitData.attack;
+        newUnit.health = card.unitData.health;
         units.Add(newUnit);
         UpdateTerritoryImage();
 
@@ -162,9 +169,18 @@ public class Territory : MonoBehaviour
                 UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
                 if (cardSelected)
                 {
+                    Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
+                    //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
+                    LeanTween.move(cardSelected.gameObject, targetPos, 0.3f)
+                    .setOnComplete(() =>
+                    {
+                        cardSelected.childObject.transform.localPosition = Vector3.zero;
+                        AddCard(cardSelected.unitData);
 
-                    AddCard(cardSelected);
-                    CardHand.Instance.DestroySelected();
+                        CardHand.Instance.DestroySelected();
+
+                    });
+                    
 
                 }
             } else

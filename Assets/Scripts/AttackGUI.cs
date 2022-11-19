@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GUI : MonoBehaviour
+public class AttackGUI : MonoBehaviour
 {
-    public static GUI instance;
+    public static AttackGUI instance;
 
     public Button attackButton;
     public GameObject TerritoryHoverPanel;

@@ -16,6 +16,7 @@ public class UnitCardPresenter : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI costText;
     public Image image;
+    public GameObject childObject;
     private Button _button;
     public int attack;
     public int health;
@@ -96,15 +97,20 @@ public class UnitCardPresenter : MonoBehaviour
         Debug.Log(isSelected);
         isSelected = !isSelected;
 
-        float alpha = 1f;
+        //float alpha = 1f;
+        float y = 0;
         if (isSelected)
         {
-            alpha = 0.6f;
+            //  alpha = 0.6f;
+            y = 10;
         }
 
-        Color color = GetComponent<Image>().color;
-        color.a = alpha;
-        GetComponent<Image>().color = color;
+        //childObject.transform.localPosition =
+        LeanTween.moveLocal(childObject, new Vector3(0, y, 0), 0.2f);
+
+        Color color = childObject.GetComponent<Image>().color;
+        color.a = 1;
+        childObject.GetComponent<Image>().color = color;
 
     }
 

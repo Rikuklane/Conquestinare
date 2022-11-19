@@ -43,11 +43,11 @@ public class AttackLogic : MonoBehaviour
         }
         if (enemyTerritories == 0)
         {
-            GUI.instance.GameOver(true);
+            AttackGUI.instance.GameOver(true);
         }
         if (playerTerritories == 0)
         {
-            GUI.instance.GameOver(false);
+            AttackGUI.instance.GameOver(false);
         }
     }
 
@@ -78,7 +78,7 @@ public class AttackLogic : MonoBehaviour
             {
                 if (selectedTerritory.GetUnitsCount() == 0) return;
                 attackTerritory = newSelected;
-                GUI.instance.attackButton.gameObject.SetActive(true);
+                AttackGUI.instance.attackButton.gameObject.SetActive(true);
                 // attack line only
                 selectedTerritory.HideAttackOptions();
                 selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
@@ -112,7 +112,7 @@ public class AttackLogic : MonoBehaviour
 
         // reorganizeTurn
         // confirm button
-        GUI.instance.attackButton.gameObject.SetActive(true);
+        AttackGUI.instance.attackButton.gameObject.SetActive(true);
 
         // add cards to panel
         selectedTerritory.TerritoryGraphics.showCards();
@@ -133,7 +133,7 @@ public class AttackLogic : MonoBehaviour
             if (card.isSelected)
             {
                 card.isSelected = false;
-                attackTerritory.AddCard(card);
+                attackTerritory.AddCard(card.unitData);
                 // remove cards from 1st territory
 
                 // add cards to 2nd territory
@@ -142,7 +142,7 @@ public class AttackLogic : MonoBehaviour
         }
         // disable panel
         selectedTerritory.TerritoryGraphics.hideCards();
-        GUI.instance.attackButton.gameObject.SetActive(false);
+        AttackGUI.instance.attackButton.gameObject.SetActive(false);
         // can hover
         canHover = true;
         isReorganizeTriggered = false;
@@ -150,7 +150,7 @@ public class AttackLogic : MonoBehaviour
         // if triggered from battle turn, change back button behavior
         if(!isReorganizeTurn)
         {
-            GUI.instance.ChangeButtonClickAttack(true);
+            AttackGUI.instance.ChangeButtonClickAttack(true);
         }
 
     }
@@ -183,7 +183,7 @@ public class AttackLogic : MonoBehaviour
         // winCondition
         if (isWin && selectedTerritory.GetUnitsCount() > 1)
         {
-            GUI.instance.ChangeButtonClickAttack(false);
+            AttackGUI.instance.ChangeButtonClickAttack(false);
             TriggerReorganize();
             attackTerritory.TerritoryGraphics.SetColor(selectedTerritory.TerritoryGraphics.color);
             selectedTerritory.UpdateTerritoryImage();
@@ -218,7 +218,7 @@ public class AttackLogic : MonoBehaviour
         selectedTerritory = null;
         attackTerritory = null;
 
-        GUI.instance.AttackCleanup();
+        AttackGUI.instance.AttackCleanup();
 
         checkWin();
     }
@@ -226,7 +226,7 @@ public class AttackLogic : MonoBehaviour
     private bool SimulateBattle()
     {
         // show panel with cards
-        GUI.instance.ShowBattle();
+        AttackGUI.instance.ShowBattle();
         int playerCards = selectedTerritory.units.Count;
         int enemyCards = attackTerritory.units.Count;
 
