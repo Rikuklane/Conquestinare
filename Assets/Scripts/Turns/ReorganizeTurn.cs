@@ -8,7 +8,7 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            AttackLogic.instance.ChangeButtonClickAttack(false);
+            GUI.instance.ChangeButtonClickAttack(false);
 
             // TODO only interact with your own territories
             //EndState(turnManager, player);
@@ -20,7 +20,7 @@ namespace Turns
         {
             // TODO press end turn button (Next player turn)
             AttackLogic.instance.isReorganizeTurn = false;
-            AttackLogic.instance.TerritoryHoverPanel.SetActive(false);
+            GUI.instance.TerritoryHoverPanel.SetActive(false);
             turnManager.SwitchPlayerTurn();
             turnManager.SwitchTurnState(turnManager.PlayerStartTurn);
             return base.EndState(turnManager, player);
