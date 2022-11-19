@@ -124,6 +124,7 @@ public class Territory : MonoBehaviour
             attack += unit.attack;
             health += unit.health;
         }
+        TerritoryGraphics.UpdateIcons();
         TerritoryGraphics.SetSummaryText(attack + "AD / " + health + "HP");
         // Color
         if (attack == 0 && health == 0)
