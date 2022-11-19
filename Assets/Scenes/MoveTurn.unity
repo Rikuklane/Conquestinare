@@ -4381,7 +4381,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1728190668}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AttackLogic, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
@@ -5271,6 +5271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1554645519}
+  - component: {fileID: 1554645520}
   m_Layer: 5
   m_Name: AttackTurn
   m_TagString: Untagged
@@ -5301,6 +5302,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1554645520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554645518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1158c6853298b68458f323908bd020bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedTerritory: {fileID: 0}
+  attackTerritory: {fileID: 0}
+  territoryManager: {fileID: 888310241}
+  isPlacementTurn: 1
+  isReorganizeTurn: 0
+  isReorganizeTriggered: 0
+  canHover: 0
 --- !u!1 &1619361425
 GameObject:
   m_ObjectHideFlags: 0
@@ -5513,7 +5533,7 @@ GameObject:
   - component: {fileID: 1728190666}
   - component: {fileID: 1728190665}
   - component: {fileID: 1728190664}
-  - component: {fileID: 1728190668}
+  - component: {fileID: 1728190669}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -5609,7 +5629,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1728190668
+--- !u!114 &1728190669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5618,20 +5638,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1728190663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1158c6853298b68458f323908bd020bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 6379670d24c980740a72bd32b9b60531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedTerritory: {fileID: 0}
-  attackTerritory: {fileID: 0}
   attackButton: {fileID: 1619361429}
   TerritoryHoverPanel: {fileID: 635182589}
   ArenaPanel: {fileID: 1852217174}
   ArenaTopPanel: {fileID: 1814765419}
   ArenaBottomPanel: {fileID: 1825279815}
-  territoryManager: {fileID: 888310241}
-  isPlacementTurn: 1
-  isReorganizeTurn: 0
-  canHover: 0
   WinScreen: {fileID: 1624363191}
   WinScreenText: {fileID: 1336169206}
 --- !u!1001 &1771772450

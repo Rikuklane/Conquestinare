@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7486316426464999335}
   - component: {fileID: 7486316426464999336}
   - component: {fileID: 7486316426464999337}
+  - component: {fileID: 175894773468878400}
   m_Layer: 0
   m_Name: Territory
   m_TagString: Untagged
@@ -101,16 +102,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoint: {fileID: 7486316426535729685}
-  color: {r: 0.9245283, g: 0.040702417, b: 0.040702417, a: 1}
   territories:
-  - {fileID: 0}
   - {fileID: 0}
   enemyTerritories: []
   isEnemy: 1
-  units:
-  - {fileID: 9174236719739751948, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
-  hoverPanel: {fileID: 0}
-  summaryText: {fileID: 5060994238007942257}
+  isNeutral: 0
+  startUnits: []
+  presentUnits: []
+  TerritoryGraphics: {fileID: 175894773468878400}
 --- !u!60 &7486316426464999337
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -140,6 +139,23 @@ PolygonCollider2D:
       - {x: -0.5, y: 0}
       - {x: 0, y: -0.25}
       - {x: 0.5, y: 0}
+--- !u!114 &175894773468878400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7486316426464999339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb8ac1ef4b10264687f669d91a91cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 0, b: 0, a: 0}
+  playerColor: {r: 0.33187962, g: 0.67990583, b: 0.9339623, a: 1}
+  enemyColor: {r: 0.8773585, g: 0.29641005, b: 0.1048415, a: 1}
+  summaryText: {fileID: 5060994238007942257}
+  presentUnits: []
 --- !u!1 &7486316426535729686
 GameObject:
   m_ObjectHideFlags: 0

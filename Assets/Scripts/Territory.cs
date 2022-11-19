@@ -7,10 +7,6 @@ using UnityEngine.UI;
 public class Territory : MonoBehaviour
 {
     public Waypoint waypoint;
-    public Color color;
-
-    public Color playerColor;
-    public Color enemyColor;
 
     public List<Territory> territories = new();
     public List<Vector3> enemyTerritories = new();
@@ -18,17 +14,18 @@ public class Territory : MonoBehaviour
     public bool isNeutral = false;
     
     public List<UnitCardPresenter> startUnits = new();
-    public List<UnitCardPresenter> presentUnits = new();
-    public List<Unit> units = new();
 
-    public TextMeshProUGUI summaryText;
-    
-    private SpriteRenderer spriteRenderer;
-    
+    public List<Unit> units = new();
+    public class Unit
+    {
+        public int attack;
+        public int health;
+    }
+
+    public TerritoryGraphics TerritoryGraphics;
+        
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if(color != null) spriteRenderer.material.color = color;
 
         foreach(Territory area in territories)
         {
@@ -48,15 +45,33 @@ public class Territory : MonoBehaviour
         }
     }
 
-    public List<Unit> GetUnits()
+    public void AttackUnit(int index, int damage)
     {
-        return units;
+        print(index + " " + damage + " " + units[index].health);
+        units[index].health -= damage;
+        TerritoryGraphics.presentUnits[index].SetHealth(units[index].health);
+
+        if (units[index].health <= 0)
+        {
+            RemoveCard(index);
+            print("unit died");
+        }
+    }
+
+    public Unit GetUnitAtIndex(int index)
+    {
+        return units[index];
+    }
+
+    public int GetUnitsCount()
+    {
+        return units.Count;
     }
 
     public void AddCard(UnitCardPresenter unit)
     {
 
-        UnitCardPresenter card = Instantiate(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
+        UnitCardPresenter card = Instantiate(unit, GUI.instance.TerritoryHoverPanel.transform);
         card.gameObject.SetActive(false);
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
@@ -67,7 +82,8 @@ public class Territory : MonoBehaviour
         color.a = 0.9f;
         card.GetComponent<Image>().color = color;
 
-        presentUnits.Add(card);
+        //presentUnits.Add(card);
+        TerritoryGraphics.presentUnits.Add(card);
 
         Unit newUnit = new Unit();
         newUnit.attack = unit.unitData.attack;
@@ -84,8 +100,10 @@ public class Territory : MonoBehaviour
     public void RemoveCard(int index)
     {
         units.RemoveAt(index);
-        Destroy(presentUnits[index].gameObject);
-        presentUnits.RemoveAt(index);
+        //Destroy(presentUnits[index].gameObject);
+        //presentUnits.RemoveAt(index);
+        Destroy(TerritoryGraphics.presentUnits[index].gameObject);
+        TerritoryGraphics.presentUnits.RemoveAt(index);
         UpdateTerritoryImage();
     }
 
@@ -99,29 +117,18 @@ public class Territory : MonoBehaviour
             attack += unit.attack;
             health += unit.health;
         }
-        summaryText.text = attack + "AD / " + health + "HP";
+        TerritoryGraphics.SetSummaryText(attack + "AD / " + health + "HP");
         // Color
         if (attack == 0 && health == 0)
         {
             isNeutral = true;
-            SetColor(Color.gray);
-        }
-        else if (isEnemy)
-        {
-            isNeutral = false;
-            SetColor(enemyColor);
+            TerritoryGraphics.SetColor(Color.gray);
         }
         else
         {
             isNeutral = false;
-            SetColor(playerColor);
+            TerritoryGraphics.SetPlayerColor(isEnemy);
         }
-    }
-
-    public void SetColor(Color _color)
-    {
-        color = _color;
-        spriteRenderer.material.color = color;
     }
 
     public void ShowAttackOptions()
@@ -166,42 +173,9 @@ public class Territory : MonoBehaviour
             }
 
             //waypoint.ToggleLines();
-            spriteRenderer.material.color = new Color(200 / 255f, 200 / 255f, 200 / 255f);
+            TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
         }
 
-    }
-
-    private void OnMouseUp()
-    {
-        spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-    }
-
-    private void OnMouseEnter()
-    {
-        if (AttackLogic.instance.canHover)
-        {
-            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-            AttackLogic.instance.showCards(presentUnits,  AttackLogic.instance.TerritoryHoverPanel);
-        }
-    }
-    private void OnMouseExit()
-    {
-        if (AttackLogic.instance.canHover)
-        {
-            spriteRenderer.material.color = color;
-            AttackLogic.instance.hideCards(presentUnits);
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        if (territories.Count == 0) return;
-        Gizmos.color = Color.red;
-        foreach (Territory area in territories)
-        {
-            Gizmos.DrawLine(transform.position, area.transform.position);
-
-        }
     }
 
 }
