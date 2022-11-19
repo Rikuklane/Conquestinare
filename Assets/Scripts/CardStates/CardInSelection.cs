@@ -12,7 +12,7 @@ namespace CardStates
         public override IEnumerator CardOnClick(UnitCardPresenter card)
         {
             NextState(card);
-            UnitCardSelector.Instance.SetActive(false);
+            //UnitCardSelector.Instance.SetActive(false);
             TurnManager.Instance.TriggerEndState();
             yield break;
         }
@@ -20,7 +20,14 @@ namespace CardStates
         public override IEnumerator NextState(UnitCardPresenter card)
         {
             card.SwitchState(card.CardInHand);
-            card.transform.SetParent(CardHand.Instance.transform, false);
+            LeanTween.move(card.childObject, CardHand.Instance.transform.position, 0.2f)
+                .setOnComplete(()=> {
+                    UnitCardSelector.Instance.SetActive(false);
+                    card.transform.SetParent(CardHand.Instance.transform, false);
+                    card.childObject.transform.localPosition = Vector3.zero;
+
+                }
+    );
             return base.NextState(card);
         }
     }

@@ -32,7 +32,7 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(true);
         }
-        GUI.instance.TerritoryHoverPanel.SetActive(true);
+        AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
 
     }
     public void hideCards()
@@ -42,7 +42,7 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(false);
         }
-        GUI.instance.TerritoryHoverPanel.SetActive(false);
+        AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
     }
 
 

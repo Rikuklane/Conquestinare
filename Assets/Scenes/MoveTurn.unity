@@ -3716,7 +3716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d845d3fcbc3e3c4498cfc395a180543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitCardPrefab: {fileID: 9174236719739751948, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
+  unitCardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
 --- !u!1001 &1223740962
 PrefabInstance:
   m_ObjectHideFlags: 0

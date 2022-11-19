@@ -108,7 +108,7 @@ MonoBehaviour:
   isEnemy: 1
   isNeutral: 0
   startUnits: []
-  presentUnits: []
+  cardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
   TerritoryGraphics: {fileID: 175894773468878400}
 --- !u!60 &7486316426464999337
 PolygonCollider2D:
