@@ -64,7 +64,7 @@ public class Territory : MonoBehaviour
         }
     }
 
-    public Unit GetUnitAtIndex(int index)
+    public UnitData GetUnitAtIndex(int index)
     {
         return units[index];
     }
@@ -136,7 +136,7 @@ public class Territory : MonoBehaviour
         // Summary
         int attack = 0;
         int health = 0;
-        foreach(Unit unit in units)
+        foreach(UnitData unit in units)
         {
             attack += unit.attack;
             health += unit.health;
