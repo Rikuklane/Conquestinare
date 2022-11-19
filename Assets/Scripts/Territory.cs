@@ -64,7 +64,7 @@ public class Territory : MonoBehaviour
         }
     }
 
-    public UnitData GetUnitAtIndex(int index)
+    public Unit GetUnitAtIndex(int index)
     {
         return units[index];
     }
@@ -136,13 +136,12 @@ public class Territory : MonoBehaviour
         // Summary
         int attack = 0;
         int health = 0;
-        foreach(UnitData unit in units)
+        foreach(Unit unit in units)
         {
             attack += unit.attack;
             health += unit.health;
         }
         TerritoryGraphics.UpdateIcons();
-        TerritoryGraphics.SetSummaryText(attack + "AD / " + health + "HP");
         // Color
         if (attack == 0 && health == 0)
         {
@@ -175,34 +174,38 @@ public class Territory : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (AttackLogic.instance.canHover)
         {
-            if(AttackLogic.instance.isPlacementTurn)
+            if (Input.GetMouseButtonDown(0))
             {
-                UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
-                if (cardSelected)
+                if (AttackLogic.instance.isPlacementTurn)
                 {
-                    Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
-                    //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                    LeanTween.move(cardSelected.gameObject, targetPos, 0.3f)
-                    .setOnComplete(() =>
+                    UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
+                    if (cardSelected)
                     {
-                        cardSelected.childObject.transform.localPosition = Vector3.zero;
-                        AddCard(cardSelected.unitData, null);
+                        Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
+                        //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
+                        LeanTween.move(cardSelected.gameObject, targetPos, 0.3f)
+                        .setOnComplete(() =>
+                        {
+                            cardSelected.childObject.transform.localPosition = Vector3.zero;
+                            AddCard(cardSelected.unitData, null);
 
-                        CardHand.Instance.DestroySelected();
+                            CardHand.Instance.DestroySelected();
 
-                    });
-                    
+                        });
 
+
+                    }
                 }
-            } else
-            {
-                AttackLogic.instance.SelectTerritory(this);
-            }
+                else
+                {
+                    AttackLogic.instance.SelectTerritory(this);
+                }
 
-            //waypoint.ToggleLines();
-            TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
+                //waypoint.ToggleLines();
+                TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
+            }
         }
 
     }
