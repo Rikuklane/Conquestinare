@@ -194,6 +194,13 @@ public class AttackLogic : MonoBehaviour
             attackTerritory.player = selectedTerritory.player;
             attackTerritory.TerritoryGraphics.SetColor(selectedTerritory.player.color);
             ResetLines();
+            // if player had bonus, remove visuals
+            if (attackTerritory.TerritoryGraphics.isShowBonus)
+            {
+                TerritoryManager.instance.ShowBonus((int)attackTerritory.bonusGroup, false);
+            }
+            // check if current player got new bonuses
+            Events.RequestBonus(Events.RequestPlayer());
 
             return;
             // transfer 2nd troop over
@@ -205,9 +212,21 @@ public class AttackLogic : MonoBehaviour
         {
             // Win without territory gain
             attackTerritory.UpdateEnemyTerritories();
+            // if player had bonus, remove visuals
+            if (attackTerritory.TerritoryGraphics.isShowBonus)
+            {
+                TerritoryManager.instance.ShowBonus((int)attackTerritory.bonusGroup, false);
+            }
+            // check if current player got new bonuses
+            Events.RequestBonus(Events.RequestPlayer());
         }
         else 
-        { 
+        {
+            // if player had bonus, remove visuals
+            if (selectedTerritory.TerritoryGraphics.isShowBonus)
+            {
+                TerritoryManager.instance.ShowBonus((int)selectedTerritory.bonusGroup, false);
+            }
             // LOSE
             selectedTerritory.UpdateEnemyTerritories();
             selectedTerritory.enemyTerritories.Clear();

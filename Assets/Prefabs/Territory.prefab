@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -206,10 +206,9 @@ MonoBehaviour:
   territories:
   - {fileID: 0}
   enemyTerritories: []
-  isEnemy: 1
-  isNeutral: 0
   startUnits: []
   cardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
+  bonusGroup: 0
   TerritoryGraphics: {fileID: 175894773468878400}
 --- !u!60 &7486316426464999337
 PolygonCollider2D:
@@ -255,10 +254,10 @@ MonoBehaviour:
   color: {r: 0, g: 0, b: 0, a: 0}
   playerColor: {r: 0.33187962, g: 0.67990583, b: 0.9339623, a: 1}
   enemyColor: {r: 0.8773585, g: 0.29641005, b: 0.1048415, a: 1}
-  summaryText: {fileID: 5060994238007942257}
   iconsParent: {fileID: 4188155789479086485}
   iconPrefab: {fileID: 8928432777033378177, guid: 730a565270802bb4c83bd964dbd933ca, type: 3}
   presentUnits: []
+  isShowBonus: 0
 --- !u!1 &7486316426535729686
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,10 +13,10 @@ public class TerritoryGraphics : MonoBehaviour
     public GameObject iconsParent;
     public Image iconPrefab;
     public List<UnitCardPresenter> presentUnits = new();
+    public bool isShowBonus = false;
 
     private List<Image> icons = new();
     private SpriteRenderer spriteRenderer;
-
 
     private void Awake()
     {
@@ -55,6 +55,19 @@ public class TerritoryGraphics : MonoBehaviour
         }
 
 
+    }
+
+    public void ShowBonus(bool showBonus)
+    {
+        isShowBonus = showBonus;
+        if (showBonus)
+        {
+            iconsParent.GetComponent<Image>().enabled = true;
+        }
+        else
+        {
+            iconsParent.GetComponent<Image>().enabled = false;
+        }
     }
 
     public void showCards()
