@@ -4,7 +4,7 @@ namespace CardStates
 {
     public class CardInHand: AbstractCardState
     {
-        public override IEnumerator CardOnClick(UnitCardPresenter card)
+        public override IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
             CardHand.Instance.NewCardSelected(card);
 
@@ -12,9 +12,9 @@ namespace CardStates
             return base.CardOnClick(card);
         }
 
-        public override IEnumerator NextState(UnitCardPresenter card)
+        public override IEnumerator NextState(CardPresenterAbstractLogic card)
         {
-            card.SwitchState(card.CardInTerritory);
+            card.SwitchState(CardStateController.Instance.CardInTerritory);
             return base.NextState(card);
         }
     }

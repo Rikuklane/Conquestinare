@@ -4,10 +4,10 @@ namespace CardStates
 {
     public class CardInMarket: AbstractCardState
     {
-        public override IEnumerator CardOnClick(UnitCardPresenter card)
+        public override IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
             var currentPlayer = Events.RequestPlayer();
-            var cardCost = card.unitData.cost;
+            var cardCost = card.CardData.cost;
             var currentGold = Events.RequestGold(currentPlayer);
             if (cardCost > currentGold) return base.CardOnClick(card);
             Events.SetGold(currentPlayer, currentGold - cardCost);
@@ -16,9 +16,9 @@ namespace CardStates
             return base.CardOnClick(card);
         }
 
-        public override IEnumerator NextState(UnitCardPresenter card)
+        public override IEnumerator NextState(CardPresenterAbstractLogic card)
         {
-            card.SwitchState(card.CardInHand);
+            card.SwitchState(CardStateController.Instance.CardInHand);
             MoveCardToHand(card, false);
             return base.NextState(card);
         }

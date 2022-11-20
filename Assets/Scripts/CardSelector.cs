@@ -13,9 +13,6 @@ public class CardSelector : MonoBehaviour
     private List<UnitData> _unitSelection;
     private List<CardData> _cardSelection;
     private HorizontalLayoutGroup _layoutGroup;
-    // TODO move these values to somewhere else where they could be used all around the code (Currently also used in UnitCardPresenter)
-    public CardInMarket CardInMarket = new();
-    public CardInSelection CardInSelection = new();
     private void Awake()
     {
         Instance = this;
@@ -39,7 +36,7 @@ public class CardSelector : MonoBehaviour
         
         foreach (var unitData in _unitSelection)
         {
-            CreateUnitCard(unitData, CardInSelection);
+            CreateUnitCard(unitData, CardStateController.Instance.CardInSelection);
         }
         SetActive(true);
     }
@@ -53,7 +50,7 @@ public class CardSelector : MonoBehaviour
         {
             if (cardData.GetType() == typeof(UnitData))
             {
-                CreateUnitCard(cardData as UnitData, CardInMarket);
+                CreateUnitCard(cardData as UnitData, CardStateController.Instance.CardInMarket);
             }
             else if (cardData.GetType() == typeof(SpellData))
             {
@@ -82,7 +79,7 @@ public class CardSelector : MonoBehaviour
     private void CreateUnitCard(UnitData unitData, AbstractCardState state)
     {
         var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
-        unitCard.SwitchState(state);
+        unitCard.cardLogic.SwitchState(state);
         unitCard.SetData(unitData);
     }
 }

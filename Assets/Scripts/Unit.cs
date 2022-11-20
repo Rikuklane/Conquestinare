@@ -3,45 +3,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts
+public class Unit : MonoBehaviour
 {
-    public class Unit : MonoBehaviour
+    public UnitData unitData;
+    public int attack;
+    public int health;
+
+    private void Awake()
     {
-        public UnitData unitData;
-        public int attack;
-        public int health;
+        attack = unitData.attack;
+        health = unitData.health;
+    }
 
-        private void Awake()
+    void Attack(Unit target)
+    {
+        // Hitting enemy
+        target.Hit(attack);
+
+        // TODO think if we want to implement getting hit back this way
+        // Getting hit by enemy
+        if (target != null)
         {
-            attack = unitData.attack;
-            health = unitData.health;
+            Hit(target.attack);
         }
+    }
 
-        void Attack(Unit target)
+    void Hit(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
         {
-            // Hitting enemy
-            target.Hit(attack);
-
-            // TODO think if we want to implement getting hit back this way
-            // Getting hit by enemy
-            if (target != null)
-            {
-                Hit(target.attack);
-            }
+            Destroy();
         }
+    }
 
-        void Hit(int damage)
-        {
-            health -= damage;
-            if (health <= 0)
-            {
-                Destroy();
-            }
-        }
-
-        void Destroy()
-        {
-            Destroy(gameObject);
-        }
+    void Destroy()
+    {
+        Destroy(gameObject);
     }
 }

@@ -86,8 +86,6 @@ public class TerritoryManager : MonoBehaviour
     {
         Events.OnRequestTerritory -= GetPlayerTerritories;
         Events.OnRequestBonus += GetPlayerBonus;
-
-
     }
 
     public void RandomShuffleTerritories(Player[] players)
@@ -104,7 +102,6 @@ public class TerritoryManager : MonoBehaviour
             territory.player = player;
             territory.startUnits = territoryUnits;
             territory.AddUnits();
-
         }
     }
 

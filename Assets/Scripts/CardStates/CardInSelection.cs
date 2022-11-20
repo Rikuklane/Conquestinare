@@ -9,15 +9,15 @@ namespace CardStates
     public class CardInSelection: AbstractCardState
     {
 
-        public override IEnumerator CardOnClick(UnitCardPresenter card)
+        public override IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
             NextState(card);
             yield break;
         }
 
-        public override IEnumerator NextState(UnitCardPresenter card)
+        public override IEnumerator NextState(CardPresenterAbstractLogic card)
         {
-            card.SwitchState(card.CardInHand);
+            card.SwitchState(CardStateController.Instance.CardInHand);
             MoveCardToHand(card, true);
             return base.NextState(card);
         }
