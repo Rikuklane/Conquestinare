@@ -7,14 +7,14 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
-            // TODO open market place
-            EndState(turnManager, player);
+            AttackLogic.instance.canHover = false;
+            Events.DisplayMarketSelection(3);
             return base.EnterState(turnManager, player);
         }
 
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
-            // TODO trigger on button press
+            CardSelector.Instance.SetActive(false);
             turnManager.SwitchTurnState(turnManager.PlaceUnitsTurn);
             return base.EndState(turnManager, player);
         }

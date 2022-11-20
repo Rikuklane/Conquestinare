@@ -6,16 +6,23 @@ namespace CardStates
     {
         public override IEnumerator CardOnClick(UnitCardPresenter card)
         {
-            // TODO check if enough gold & subtract
-            card.SwitchState(card.CardInHand);
-            card.transform.SetParent(CardHand.Instance.transform, false);
+            var currentPlayer = Events.RequestPlayer();
+            var cardCost = card.unitData.cost;
+            var currentGold = Events.RequestGold(currentPlayer);
+            if (cardCost > currentGold) return base.CardOnClick(card);
+            Events.SetGold(currentPlayer, currentGold - cardCost);
+            
+            NextState(card);
             return base.CardOnClick(card);
         }
 
         public override IEnumerator NextState(UnitCardPresenter card)
         {
             card.SwitchState(card.CardInHand);
+            MoveCardToHand(card);
             return base.NextState(card);
         }
+        
+        
     }
 }

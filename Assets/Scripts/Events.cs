@@ -4,19 +4,23 @@ using System.Collections.Generic;
 
 public class Events
 {
-    public static event Action OnReceiveUnitsSelection;
-    public static void DisplayUnitSelection() => OnReceiveUnitsSelection?.Invoke();
+    // Selections
+    public static event Action<int> OnReceiveUnitsSelection;
+    public static void DisplayUnitSelection(int cards) => OnReceiveUnitsSelection?.Invoke(cards);
     
+    public static event Action<int> OnMarketSelection;
+    public static void DisplayMarketSelection(int cards) => OnMarketSelection?.Invoke(cards);
+    
+    // Players
+    public static event Action OnNextPlayerStartTurn;
+    public static void NextPlayer() => OnNextPlayerStartTurn?.Invoke();
     public static event Func<Player> OnRequestPlayer;
     public static Player RequestPlayer() => OnRequestPlayer?.Invoke();
     
-    // gold
-    public static event Action<int> OnSpendGold;
-    public static void SpendGold(int gold) => OnSpendGold?.Invoke(gold);
+    // Gold
+    public static event Action<Player, int> OnSetGold;
+    public static void SetGold(Player player, int gold) => OnSetGold?.Invoke(player, gold);
     
-    public static event Action<int> OnAddGold;
-    public static void AddGold(int gold) => OnAddGold?.Invoke(gold);
-    
-    public static event Func<int> OnRequestGold;
-    public static int RequestGold() => OnRequestGold?.Invoke() ?? 0;
+    public static event Func<Player, int> OnRequestGold;
+    public static int RequestGold(Player player) => OnRequestGold?.Invoke(player) ?? 0;
 }

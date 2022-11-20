@@ -11,7 +11,8 @@ namespace Turns
         {
             CardHand.Instance.LoadHand(player);
             // TODO show Player start turn smth
-            // TODO increase gold based on territories owned
+            // TODO increase gold based on territories owned (currently having placeholder of +1 gold)
+            Events.SetGold(player, Events.RequestGold(player) + 1);
             return EndState(turnManager, player);
         }
 

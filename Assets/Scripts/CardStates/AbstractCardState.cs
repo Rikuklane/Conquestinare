@@ -15,5 +15,15 @@ namespace CardStates
         {
             yield break;
         }
+
+        protected void MoveCardToHand(UnitCardPresenter card)
+        {
+            LeanTween.move(card.childObject, CardHand.Instance.transform.position, 0.2f)
+                .setOnComplete(()=> {
+                        card.transform.SetParent(CardHand.Instance.transform, false);
+                        card.childObject.transform.localPosition = Vector3.zero;
+                    }
+                );
+        }
     }
 }

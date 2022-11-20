@@ -7,6 +7,7 @@ using Random = System.Random;
 
 public class Player
 {
+    public bool isAlive = true;
     private int _bonusFromAreasController;
     private Random _random = new Random();
     private Color _color;
@@ -28,14 +29,14 @@ public class Player
 
     public string Name { get; }
 
-    public Color Color => _color;
-    public int Gold { get; set; }
-    public int Territories { get; set; }
-    public CardData Cards { get; set; }
+    public Color color => _color;
+    public int gold { get; set; }
+    public int territories { get; set; }
+    public CardData cards { get; set; }
 
     // This method defines the value of unit cards given at the start of the round
     public int GetPrestige()
     {
-        return (int)(Territories * 0.5f + _bonusFromAreasController);
+        return (int)(territories * 0.5f + _bonusFromAreasController);
     }
 }

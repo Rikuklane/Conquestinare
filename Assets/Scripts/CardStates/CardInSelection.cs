@@ -12,7 +12,7 @@ namespace CardStates
         public override IEnumerator CardOnClick(UnitCardPresenter card)
         {
             NextState(card);
-            //UnitCardSelector.Instance.SetActive(false);
+            // TODO fix this triggering (currently does not let the animation finish & therefore the card does not make it to the hand)
             TurnManager.Instance.TriggerEndState();
             yield break;
         }
@@ -20,14 +20,7 @@ namespace CardStates
         public override IEnumerator NextState(UnitCardPresenter card)
         {
             card.SwitchState(card.CardInHand);
-            LeanTween.move(card.childObject, CardHand.Instance.transform.position, 0.2f)
-                .setOnComplete(()=> {
-                    UnitCardSelector.Instance.SetActive(false);
-                    card.transform.SetParent(CardHand.Instance.transform, false);
-                    card.childObject.transform.localPosition = Vector3.zero;
-
-                }
-    );
+            MoveCardToHand(card);
             return base.NextState(card);
         }
     }
