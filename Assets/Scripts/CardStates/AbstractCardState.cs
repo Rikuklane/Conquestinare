@@ -7,23 +7,23 @@ namespace CardStates
 {
     public abstract class AbstractCardState
     {
-        public virtual IEnumerator CardOnClick(UnitCardPresenter card)
+        public virtual IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
             yield break;
         }
 
-        public virtual IEnumerator NextState(UnitCardPresenter card)
+        public virtual IEnumerator NextState(CardPresenterAbstractLogic card)
         {
             yield break;
         }
 
-        protected void MoveCardToHand(UnitCardPresenter card, bool endTurn)
+        protected void MoveCardToHand(CardPresenterAbstractLogic card, bool endTurn)
         {
             CardHand.Instance.AddCard(card);
-            LeanTween.move(card.childObject, CardHand.Instance.transform.position, 0.2f)
+            LeanTween.move(card.ChildGameObject, CardHand.Instance.transform.position, 0.2f)
                 .setOnComplete(()=> {
-                        card.transform.SetParent(CardHand.Instance.transform, false);
-                        card.childObject.transform.localPosition = Vector3.zero;
+                        card.CardInstance.transform.SetParent(CardHand.Instance.transform, false);
+                        card.ChildGameObject.transform.localPosition = Vector3.zero;
                         if (endTurn) TurnManager.Instance.TriggerEndState();
                     }
                 );

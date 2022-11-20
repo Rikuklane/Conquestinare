@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 785d96894722d984b88c5dcea0220390, type: 3}
   m_Name: Unit 4
   m_EditorClassIdentifier: 
-  title: Guy with a crossbow
+  title: One eye
   description: Inflicts some heavy damage.
   cost: 3
   attack: 3
   health: 2
-  sprite: {fileID: 1508980885, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
+  sprite: {fileID: 206597062, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}

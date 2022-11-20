@@ -7,7 +7,7 @@ using System.Linq;
 
 public class AttackLogic : MonoBehaviour
 {
-    public static AttackLogic instance;
+    public static AttackLogic Instance;
     public Territory selectedTerritory;
     public Territory attackTerritory;
 
@@ -20,7 +20,7 @@ public class AttackLogic : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     public void Restart()
     {
@@ -69,43 +69,39 @@ public class AttackLogic : MonoBehaviour
             selectedTerritory.ShowAttackOptions();
             return;
 
-        } else if (selectedTerritory == newSelected){
+        } if (selectedTerritory == newSelected){
             // disable attackOptions
             selectedTerritory.HideAttackOptions();
             selectedTerritory = null;
             return;
         }
+        // check if territories are connected
+        bool territoriesConnected = selectedTerritory.territories.Contains(newSelected);
+        if (!isPlayerTerritory)
+        {
+            if (selectedTerritory.GetUnitsCount() == 0) return;
+            if (!territoriesConnected) return;
+            attackTerritory = newSelected;
+            AttackGUI.instance.attackButton.gameObject.SetActive(true);
+            // attack line only
+            selectedTerritory.HideAttackOptions();
+            selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
+        }
         else
         {
-            // check if territories are connected
-            bool territoriesConnected = selectedTerritory.territories.Contains(newSelected);
-            if (!isPlayerTerritory)
+
+            if (isReorganizeTurn && territoriesConnected)
             {
-                if (selectedTerritory.GetUnitsCount() == 0) return;
-                if (!territoriesConnected) return;
                 attackTerritory = newSelected;
-                AttackGUI.instance.attackButton.gameObject.SetActive(true);
-                // attack line only
-                selectedTerritory.HideAttackOptions();
-                selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
-            }
-            else
+                TriggerReorganize();
+
+            } else
             {
-
-                if (isReorganizeTurn && territoriesConnected)
-                {
-                    attackTerritory = newSelected;
-                    TriggerReorganize();
-
-                } else
-                {
-                    // change selected
-                    selectedTerritory.HideAttackOptions();
-                    newSelected.ShowAttackOptions();
-                    selectedTerritory = newSelected;
-                }
+                // change selected
+                selectedTerritory.HideAttackOptions();
+                newSelected.ShowAttackOptions();
+                selectedTerritory = newSelected;
             }
-
         }
 
     }
@@ -122,10 +118,6 @@ public class AttackLogic : MonoBehaviour
 
         // add cards to panel
         selectedTerritory.TerritoryGraphics.showCards();
-
-
-
-
     }
     
 
@@ -139,9 +131,9 @@ public class AttackLogic : MonoBehaviour
         for (int i = 0; i< presentUnitsCopy.Count; i++)
         {
             UnitCardPresenter card = presentUnitsCopy[i];
-            if (card.isSelected)
+            if (card.cardLogic.isSelected)
             {
-                card.isSelected = false;
+                card.cardLogic.isSelected = false;
                 // add cards to 2nd territory
                 attackTerritory.AddCard(card.unitData, unitsCopy[i]);
                 // remove cards from 1st territory
@@ -163,7 +155,7 @@ public class AttackLogic : MonoBehaviour
         // cleanup card colors
         foreach (UnitCardPresenter card in selectedTerritory.TerritoryGraphics.presentUnits)
         {
-            card.changeInteractable(true);
+            card.cardLogic.ChangeInteractable(true);
         }
         // cleanup
         AttackCleanup();

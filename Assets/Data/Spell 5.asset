@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e72a6823886913b4b8c38eed4f423bc8, type: 3}
   m_Name: Spell 5
   m_EditorClassIdentifier: 
-  title: ElectricStorm
-  description: Deal 1 damage to all units in an area
-  cost: 4
+  title: WarCall
+  description: Give all units in tile +1 attack
+  cost: 3
+  sprite: {fileID: 1685115748, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
+  type: 1
+  effectArea: 0
