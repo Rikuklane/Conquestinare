@@ -19,7 +19,7 @@ namespace CardStates
         public override IEnumerator NextState(UnitCardPresenter card)
         {
             card.SwitchState(card.CardInHand);
-            MoveCardToHand(card);
+            MoveCardToHand(card, false);
             return base.NextState(card);
         }
         

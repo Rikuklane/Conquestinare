@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Turns;
 using UnityEngine;
 
 namespace CardStates
@@ -16,12 +17,13 @@ namespace CardStates
             yield break;
         }
 
-        protected void MoveCardToHand(UnitCardPresenter card)
+        protected void MoveCardToHand(UnitCardPresenter card, bool endTurn)
         {
             LeanTween.move(card.childObject, CardHand.Instance.transform.position, 0.2f)
                 .setOnComplete(()=> {
                         card.transform.SetParent(CardHand.Instance.transform, false);
                         card.childObject.transform.localPosition = Vector3.zero;
+                        if (endTurn) TurnManager.Instance.TriggerEndState();
                     }
                 );
         }

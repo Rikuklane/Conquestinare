@@ -12,15 +12,13 @@ namespace CardStates
         public override IEnumerator CardOnClick(UnitCardPresenter card)
         {
             NextState(card);
-            // TODO fix this triggering (currently does not let the animation finish & therefore the card does not make it to the hand)
-            TurnManager.Instance.TriggerEndState();
             yield break;
         }
 
         public override IEnumerator NextState(UnitCardPresenter card)
         {
             card.SwitchState(card.CardInHand);
-            MoveCardToHand(card);
+            MoveCardToHand(card, true);
             return base.NextState(card);
         }
     }
