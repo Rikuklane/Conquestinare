@@ -188,7 +188,7 @@ public class AttackLogic : MonoBehaviour
             AttackGUI.instance.ChangeButtonClickAttack(false);
             TriggerReorganize();
             attackTerritory.player = selectedTerritory.player;
-            attackTerritory.TerritoryGraphics.SetColor(selectedTerritory.player.Color);
+            attackTerritory.TerritoryGraphics.SetColor(selectedTerritory.player.color);
             ResetLines();
 
             return;
