@@ -42,6 +42,7 @@ namespace Turns
             {
                 SetPlayerGold(player, 2);
             }
+            TerritoryManager.instance.RandomShuffleTerritories(Players);
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
         }

@@ -41,7 +41,6 @@ public class Waypoint : MonoBehaviour
         {
             CreateLine(route);
         }
-        Debug.Log(lines.Capacity);
     }
 
     public void SetLine(Vector3 toPosition, bool isEnabled)
