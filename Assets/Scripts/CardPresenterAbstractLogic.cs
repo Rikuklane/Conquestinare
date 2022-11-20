@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CardStates;
@@ -8,17 +9,16 @@ public class CardPresenterAbstractLogic: MonoBehaviour
 {
     public bool isSelected;
     public bool isInteractable = true;
+    public Button cardButton;
     
     private readonly Color _notInteractableColor = Color.gray;
     private Color _defaultColor;
     private AbstractCardState _currentState;
-    private Button _cardButton;
 
     public void SetVariables(GameObject cardInstance, GameObject child, CardData cardData)
     {
         CardInstance = cardInstance;
         ChildGameObject = child;
-        _cardButton = CardInstance.GetComponent<Button>();
         _defaultColor = ChildGameObject.GetComponent<Image>().color;
         CardData = cardData;
         SwitchState(CardStateController.Instance.CardInHand);
@@ -26,7 +26,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     
     public void ChangeInteractable(bool isInteract)
     {
-        _cardButton.interactable = isInteract;
+        cardButton.interactable = isInteract;
         isInteractable = isInteract;
         ChildGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
     }
@@ -34,14 +34,13 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     public void SwitchState(AbstractCardState state)
     {
         _currentState = state;
-        _cardButton = CardInstance.GetComponent<Button>();
-        _cardButton.onClick.RemoveAllListeners();
-        _cardButton.onClick.AddListener(Selected);
+        cardButton.onClick.RemoveAllListeners();
+        cardButton.onClick.AddListener(Selected);
     }
 
     private void Selected()
     {
-       _currentState.CardOnClick(this);
+       StartCoroutine(_currentState.CardOnClick(this));
     }
 
     public void TriggerSelected()
