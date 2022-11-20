@@ -6,9 +6,8 @@ namespace CardStates
     {
         public override IEnumerator CardOnClick(UnitCardPresenter card)
         {
-            CardHand.Instance.cardSelected = card;
+            CardHand.Instance.NewCardSelected(card);
 
-            card.TriggerSelected();
             // TODO somehow place on territory
             return base.CardOnClick(card);
         }

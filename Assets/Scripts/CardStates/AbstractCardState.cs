@@ -19,6 +19,7 @@ namespace CardStates
 
         protected void MoveCardToHand(UnitCardPresenter card, bool endTurn)
         {
+            CardHand.Instance.AddCard(card);
             LeanTween.move(card.childObject, CardHand.Instance.transform.position, 0.2f)
                 .setOnComplete(()=> {
                         card.transform.SetParent(CardHand.Instance.transform, false);
