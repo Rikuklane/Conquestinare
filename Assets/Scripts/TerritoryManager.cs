@@ -62,10 +62,24 @@ public class TerritoryManager : MonoBehaviour
             if(bonusTerritoryTotals[i] == playerBonusTerritories[i])
             {
                 // player has bonus
+                ShowBonus(i, true);
                 bonusTotal += 5;
             }
         }
         return bonusTotal;
+    }
+
+    public void ShowBonus(int BonusTypeNumber, bool showBonus)
+    {
+        BonusGroup bonusGroup = (BonusGroup)BonusTypeNumber;
+        foreach (Territory territory in territories)
+        {
+            if (territory.bonusGroup == bonusGroup)
+            {
+                territory.TerritoryGraphics.ShowBonus(showBonus);
+
+            }
+        }
     }
 
     private void OnDestroy()
