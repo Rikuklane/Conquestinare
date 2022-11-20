@@ -16,18 +16,21 @@ public class UnitCardPresenter : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI costText;
     public Image image;
+    public GameObject childObject;
     private Button _button;
     public int attack;
     public int health;
-
+    
+    // TODO move these values to somewhere else where they could be used all around the code (Currently also used in CardSelector)
     public CardInHand CardInHand = new();
     public CardInMarket CardInMarket = new();
     public CardInSelection CardInSelection = new();
     public CardInTerritory CardInTerritory = new();
-    public CardInTerritory CardInReorganize = new();
     private AbstractCardState _currentState;
 
     public bool isSelected = false;
+    public bool isInteractable = true;
+    private Color childColor;
 
     private void Awake()
     {
@@ -39,6 +42,7 @@ public class UnitCardPresenter : MonoBehaviour
         {
             SetData();
         }
+        childColor = childObject.GetComponent<Image>().color;
     }
 
     public void SetData(UnitData data)
@@ -93,19 +97,40 @@ public class UnitCardPresenter : MonoBehaviour
 
     public void TriggerSelected()
     {
+        if (!isInteractable) return;
         Debug.Log(isSelected);
         isSelected = !isSelected;
 
         float alpha = 1f;
+        float y = 0;
         if (isSelected)
+        {
+            
+            y = 10;
+        } else
         {
             alpha = 0.6f;
         }
 
-        Color color = GetComponent<Image>().color;
-        color.a = alpha;
-        GetComponent<Image>().color = color;
+        //childObject.transform.localPosition =
+        LeanTween.moveLocal(childObject, new Vector3(0, y, 0), 0.2f);
+        childColor.a = alpha;
+        childObject.GetComponent<Image>().color = childColor;
 
+    }
+
+    public void changeInteractable(bool isInteract)
+    {
+        _button.interactable = isInteract;
+        isInteractable = isInteract;
+        if (isInteract)
+        {
+            childObject.GetComponent<Image>().color = childColor;
+        }
+        else
+        {
+            childObject.GetComponent<Image>().color = Color.red;
+        }
     }
 
     private void OnBecameVisible()

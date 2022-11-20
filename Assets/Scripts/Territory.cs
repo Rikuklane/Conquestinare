@@ -3,32 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class Territory : MonoBehaviour
 {
     public Waypoint waypoint;
-    public Color color;
-
-    public Color playerColor;
-    public Color enemyColor;
+    public Player player;
 
     public List<Territory> territories = new();
     public List<Vector3> enemyTerritories = new();
-    public bool isEnemy;
-    public bool isNeutral = false;
-    
-    public List<UnitCardPresenter> startUnits = new();
-    public List<UnitCardPresenter> presentUnits = new();
+       
+    public List<UnitData> startUnits = new();
+
+    public UnitCardPresenter cardPrefab;
+
+    public TerritoryManager.BonusGroup bonusGroup;
+
+
+    public class Unit
+    {
+        public int attack;
+        public int health;
+    }
+
     public List<Unit> units = new();
 
-    public TextMeshProUGUI summaryText;
-    
-    private SpriteRenderer spriteRenderer;
-    
+    public TerritoryGraphics TerritoryGraphics;
+        
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if(color != null) spriteRenderer.material.color = color;
 
         foreach(Territory area in territories)
         {
@@ -36,42 +39,79 @@ public class Territory : MonoBehaviour
         }
         waypoint.CreateLines();
 
-        UpdateEnemyTerritories();
     }
 
-    private void Start()
+    public void AddUnits()
     {
-        foreach (UnitCardPresenter unit in startUnits)
+        UpdateEnemyTerritories();
+        foreach (UnitData unit in startUnits)
 
         {
-            AddCard(unit);
+            AddCard(unit, null);
         }
     }
 
-    public List<Unit> GetUnits()
+    public void AttackUnit(int index, int damage)
     {
-        return units;
+        print(index + " " + damage + " " + units[index].health);
+        units[index].health -= damage;
+        TerritoryGraphics.presentUnits[index].SetHealth(units[index].health);
+
+        if (units[index].health <= 0)
+        {
+            RemoveCard(index);
+            print("unit died");
+        }
     }
 
-    public void AddCard(UnitCardPresenter unit)
+    public Unit GetUnitAtIndex(int index)
+    {
+        return units[index];
+    }
+
+    public int GetUnitsCount()
+    {
+        return units.Count;
+    }
+    public void AddCard(UnitData data, Unit unit)
+    {
+        UnitCardPresenter card = Instantiate(cardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
+        card.SetData(data);
+        if(unit != null)
+        {
+            card.SetHealth(unit.health);
+        }
+        AddCard(card, unit);
+    }
+
+
+    private void AddCard(UnitCardPresenter card, Unit unit)
     {
 
-        UnitCardPresenter card = Instantiate(unit, AttackLogic.instance.TerritoryHoverPanel.transform);
         card.gameObject.SetActive(false);
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
 
         card.SwitchState(card.CardInTerritory);
 
-        Color color = card.GetComponent<Image>().color;
-        color.a = 0.9f;
-        card.GetComponent<Image>().color = color;
+        Color color = card.childObject.GetComponent<Image>().color;
+        color.a = 0.6f;
+        card.childObject.GetComponent<Image>().color = color;
 
-        presentUnits.Add(card);
+        //presentUnits.Add(card);
+        TerritoryGraphics.presentUnits.Add(card);
 
-        Unit newUnit = new Unit();
-        newUnit.attack = unit.unitData.attack;
-        newUnit.health = unit.unitData.health;
+        Unit newUnit = new();
+        if (unit != null)
+        {
+            newUnit.attack = unit.attack;
+            newUnit.health = unit.health;
+        } else
+        {
+            newUnit.attack = card.unitData.attack;
+            newUnit.health = card.unitData.health;
+        }
+        
         units.Add(newUnit);
         UpdateTerritoryImage();
 
@@ -84,8 +124,10 @@ public class Territory : MonoBehaviour
     public void RemoveCard(int index)
     {
         units.RemoveAt(index);
-        Destroy(presentUnits[index].gameObject);
-        presentUnits.RemoveAt(index);
+        //Destroy(presentUnits[index].gameObject);
+        //presentUnits.RemoveAt(index);
+        Destroy(TerritoryGraphics.presentUnits[index].gameObject);
+        TerritoryGraphics.presentUnits.RemoveAt(index);
         UpdateTerritoryImage();
     }
 
@@ -99,29 +141,13 @@ public class Territory : MonoBehaviour
             attack += unit.attack;
             health += unit.health;
         }
-        summaryText.text = attack + "AD / " + health + "HP";
+        TerritoryGraphics.UpdateIcons();
         // Color
         if (attack == 0 && health == 0)
         {
-            isNeutral = true;
-            SetColor(Color.gray);
+            player = new Player("neutral", Color.gray);
         }
-        else if (isEnemy)
-        {
-            isNeutral = false;
-            SetColor(enemyColor);
-        }
-        else
-        {
-            isNeutral = false;
-            SetColor(playerColor);
-        }
-    }
-
-    public void SetColor(Color _color)
-    {
-        color = _color;
-        spriteRenderer.material.color = color;
+        TerritoryGraphics.SetColor(player.color);
     }
 
     public void ShowAttackOptions()
@@ -139,7 +165,7 @@ public class Territory : MonoBehaviour
         enemyTerritories.Clear();
         foreach(Territory area in territories)
         {
-            if (isEnemy != area.isEnemy || area.isNeutral)
+            if (player != area.player || area.player.Name == "neutral")
             {
                 enemyTerritories.Add(area.waypoint.transform.position);
             }
@@ -148,60 +174,40 @@ public class Territory : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (AttackLogic.instance.canHover)
         {
-            if(AttackLogic.instance.isPlacementTurn)
+            if (Input.GetMouseButtonDown(0))
             {
-                UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
-                if (cardSelected)
+                if (AttackLogic.instance.isPlacementTurn)
                 {
+                    UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
+                    if (cardSelected && player == Events.RequestPlayer())
+                    {
+                        Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
+                        //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
+                        LeanTween.move(cardSelected.gameObject, targetPos, 0.3f)
+                        .setOnComplete(() =>
+                        {
+                            cardSelected.childObject.transform.localPosition = Vector3.zero;
+                            AddCard(cardSelected.unitData, null);
 
-                    AddCard(cardSelected);
-                    CardHand.Instance.DestroySelected();
+                            CardHand.Instance.DestroySelected();
 
+                        });
+
+
+                    }
                 }
-            } else
-            {
-                AttackLogic.instance.SelectTerritory(this);
+                else
+                {
+                    AttackLogic.instance.SelectTerritory(this);
+                }
+
+                //waypoint.ToggleLines();
+                TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
             }
-
-            //waypoint.ToggleLines();
-            spriteRenderer.material.color = new Color(200 / 255f, 200 / 255f, 200 / 255f);
         }
 
-    }
-
-    private void OnMouseUp()
-    {
-        spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-    }
-
-    private void OnMouseEnter()
-    {
-        if (AttackLogic.instance.canHover)
-        {
-            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-            AttackLogic.instance.showCards(presentUnits,  AttackLogic.instance.TerritoryHoverPanel);
-        }
-    }
-    private void OnMouseExit()
-    {
-        if (AttackLogic.instance.canHover)
-        {
-            spriteRenderer.material.color = color;
-            AttackLogic.instance.hideCards(presentUnits);
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        if (territories.Count == 0) return;
-        Gizmos.color = Color.red;
-        foreach (Territory area in territories)
-        {
-            Gizmos.DrawLine(transform.position, area.transform.position);
-
-        }
     }
 
 }

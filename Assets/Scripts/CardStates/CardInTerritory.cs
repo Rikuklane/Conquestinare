@@ -9,7 +9,14 @@ namespace CardStates
         {
             if(AttackLogic.instance.isReorganizeTriggered)
             {
+                // territory has only 1 troop
+                if(AttackLogic.instance.selectedTerritory.TerritoryGraphics.presentUnits.Count == 1)
+                {
+                    card.changeInteractable(false);
+                    return base.CardOnClick(card);
+                }
                 card.TriggerSelected();
+                AttackLogic.instance.selectedTerritory.TerritoryGraphics.CheckSelected();
             }
             return base.CardOnClick(card);
         }

@@ -11,7 +11,8 @@ namespace Turns
         {
             CardHand.Instance.LoadHand(player);
             // TODO show Player start turn smth
-            // TODO increase gold based on territories owned
+            Debug.Log("Player prestige:" + player.GetPrestige());
+            Events.SetGold(player, Events.RequestGold(player) + player.GetPrestige());
             return EndState(turnManager, player);
         }
 

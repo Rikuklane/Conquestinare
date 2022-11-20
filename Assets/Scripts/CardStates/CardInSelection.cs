@@ -12,15 +12,13 @@ namespace CardStates
         public override IEnumerator CardOnClick(UnitCardPresenter card)
         {
             NextState(card);
-            UnitCardSelector.Instance.SetActive(false);
-            TurnManager.Instance.TriggerEndState();
             yield break;
         }
 
         public override IEnumerator NextState(UnitCardPresenter card)
         {
             card.SwitchState(card.CardInHand);
-            card.transform.SetParent(CardHand.Instance.transform, false);
+            MoveCardToHand(card, true);
             return base.NextState(card);
         }
     }
