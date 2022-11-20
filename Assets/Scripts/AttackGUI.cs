@@ -49,13 +49,13 @@ public class AttackGUI : MonoBehaviour
         {
             attackButton.GetComponentInChildren<TextMeshProUGUI>().text = "ATTACK";
             attackButton.onClick.RemoveAllListeners();
-            attackButton.onClick.AddListener(AttackLogic.instance.AttackPressed);
+            attackButton.onClick.AddListener(AttackLogic.Instance.AttackPressed);
         }
         else
         {
             attackButton.GetComponentInChildren<TextMeshProUGUI>().text = "CONFIRM";
             attackButton.onClick.RemoveAllListeners();
-            attackButton.onClick.AddListener(AttackLogic.instance.CheckSelected);
+            attackButton.onClick.AddListener(AttackLogic.Instance.CheckSelected);
         }
 
     }

@@ -29,7 +29,7 @@ public class TerritoryGraphics : MonoBehaviour
         int numberSelected = 0;
         foreach (UnitCardPresenter card in presentUnits)
         {
-            if (card.isSelected)
+            if (card.cardLogic.isSelected)
             {
                 numberSelected += 1;
             }
@@ -39,9 +39,9 @@ public class TerritoryGraphics : MonoBehaviour
         {
             foreach (UnitCardPresenter card in presentUnits)
             {
-                if (!card.isSelected)
+                if (!card.cardLogic.isSelected)
                 {
-                    card.changeInteractable(false);
+                    card.cardLogic.ChangeInteractable(false);
                 }
             }
         }
@@ -50,7 +50,7 @@ public class TerritoryGraphics : MonoBehaviour
             // change others to interactable
             foreach (UnitCardPresenter card in presentUnits)
             {
-                card.changeInteractable(true);
+                card.cardLogic.ChangeInteractable(true);
             }
         }
 
@@ -118,7 +118,7 @@ public class TerritoryGraphics : MonoBehaviour
         // insert new
         foreach(UnitCardPresenter unit in presentUnits)
         {
-            Image icon = GameObject.Instantiate(iconPrefab, iconsParent.transform);
+            Image icon = Instantiate(iconPrefab, iconsParent.transform);
             icon.sprite = unit.unitData.sprite;
             icons.Add(icon);
         }
@@ -126,7 +126,7 @@ public class TerritoryGraphics : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (AttackLogic.instance.canHover)
+        if (AttackLogic.Instance.canHover)
         {
             spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
         }
@@ -134,7 +134,7 @@ public class TerritoryGraphics : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (AttackLogic.instance.canHover)
+        if (AttackLogic.Instance.canHover)
         {
             spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
             showCards();
@@ -142,7 +142,7 @@ public class TerritoryGraphics : MonoBehaviour
     }
     private void OnMouseExit()
     {
-        if (AttackLogic.instance.canHover)
+        if (AttackLogic.Instance.canHover)
         {
             spriteRenderer.material.color = color;
             hideCards();
