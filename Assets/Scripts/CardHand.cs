@@ -14,6 +14,7 @@ public class CardHand : MonoBehaviour
     {
         if(cardSelected)
         {
+            PlayCard(cardSelected);
             Destroy(cardSelected.gameObject);
             cardSelected = null;
         }
@@ -72,8 +73,8 @@ public class CardHand : MonoBehaviour
         cardHands[Events.RequestPlayer().Name].Add(card);
     }
 
-    public void PlayCard(Player player)
+    public void PlayCard(UnitCardPresenter card)
     {
-        
+        cardHands[Events.RequestPlayer().Name].Remove(card);
     }
 }
