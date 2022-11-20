@@ -5,18 +5,18 @@ using UnityEngine.UI;
 namespace CardStates
 {
     public class CardInTerritory: AbstractCardState {
-        public override IEnumerator CardOnClick(UnitCardPresenter card)
+        public override IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
-            if(AttackLogic.instance.isReorganizeTriggered)
+            if(AttackLogic.Instance.isReorganizeTriggered)
             {
                 // territory has only 1 troop
-                if(AttackLogic.instance.selectedTerritory.TerritoryGraphics.presentUnits.Count == 1)
+                if(AttackLogic.Instance.selectedTerritory.TerritoryGraphics.presentUnits.Count == 1)
                 {
-                    card.changeInteractable(false);
+                    card.ChangeInteractable(false);
                     return base.CardOnClick(card);
                 }
                 card.TriggerSelected();
-                AttackLogic.instance.selectedTerritory.TerritoryGraphics.CheckSelected();
+                AttackLogic.Instance.selectedTerritory.TerritoryGraphics.CheckSelected();
             }
             return base.CardOnClick(card);
         }

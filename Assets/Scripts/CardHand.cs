@@ -6,25 +6,25 @@ using UnityEngine;
 public class CardHand : MonoBehaviour
 {
     public static CardHand Instance;
-    public Dictionary<string, List<UnitCardPresenter>> cardHands = new();
-    public UnitCardPresenter cardSelected;
-    public UnitCardPresenter cardPrefab;
+    public Dictionary<string, List<CardPresenterAbstractLogic>> cardHands = new();
+    public CardPresenterAbstractLogic cardSelected;
+    public UnitCardPresenter unitCardPrefab;
 
     public void DestroySelected()
     {
-        if(cardSelected)
+        if(cardSelected != null)
         {
             PlayCard(cardSelected);
-            Destroy(cardSelected.gameObject);
+            Destroy(cardSelected.CardInstance.gameObject);
             cardSelected = null;
         }
     }
 
-    public void NewCardSelected(UnitCardPresenter cardSelect)
+    public void NewCardSelected(CardPresenterAbstractLogic cardSelect)
     {
         cardSelected = cardSelect;
         // deselect others
-        foreach(UnitCardPresenter card in cardHands[Events.RequestPlayer().Name])
+        foreach(CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().Name])
         {
             if (card.isSelected)
             {
@@ -53,27 +53,27 @@ public class CardHand : MonoBehaviour
         // TODO hide all children
         foreach (Player currentPlayer in Turns.TurnManager.Instance.Players)
         {
-            foreach (UnitCardPresenter card in cardHands[currentPlayer.Name])
+            foreach (CardPresenterAbstractLogic card in cardHands[currentPlayer.Name])
             {
-                card.gameObject.SetActive(false);
+                card.CardInstance.gameObject.SetActive(false);
             }
         }
 
         //   - add cards from new player
-        foreach(UnitCardPresenter card in cardHands[player.Name])
+        foreach(CardPresenterAbstractLogic card in cardHands[player.Name])
         {
-            card.gameObject.SetActive(true);
+            card.CardInstance.gameObject.SetActive(true);
         }
 
 
     }
 
-    public void AddCard(UnitCardPresenter card)
+    public void AddCard(CardPresenterAbstractLogic card)
     {
         cardHands[Events.RequestPlayer().Name].Add(card);
     }
 
-    public void PlayCard(UnitCardPresenter card)
+    public void PlayCard(CardPresenterAbstractLogic card)
     {
         cardHands[Events.RequestPlayer().Name].Remove(card);
     }

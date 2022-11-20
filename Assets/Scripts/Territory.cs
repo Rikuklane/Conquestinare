@@ -92,7 +92,7 @@ public class Territory : MonoBehaviour
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
 
-        card.SwitchState(card.CardInTerritory);
+        card.CardLogic.SwitchState(CardStateController.Instance.CardInTerritory);
 
         Color color = card.childObject.GetComponent<Image>().color;
         color.a = 0.6f;
@@ -117,7 +117,7 @@ public class Territory : MonoBehaviour
 
         UpdateEnemyTerritories();
 
-        card.isSelected = false;
+        card.CardLogic.isSelected = false;
         //TODO
     }
 
@@ -174,33 +174,31 @@ public class Territory : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (AttackLogic.instance.canHover)
+        if (AttackLogic.Instance.canHover)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (AttackLogic.instance.isPlacementTurn)
+                if (AttackLogic.Instance.isPlacementTurn)
                 {
-                    UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected && player == Events.RequestPlayer())
+                    CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
+                    if (cardSelected != null && player == Events.RequestPlayer())
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                        LeanTween.move(cardSelected.gameObject, targetPos, 0.3f)
+                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.3f)
                         .setOnComplete(() =>
                         {
-                            cardSelected.childObject.transform.localPosition = Vector3.zero;
-                            AddCard(cardSelected.unitData, null);
+                            cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
+                            AddCard((UnitData)cardSelected.CardData, null);
 
                             CardHand.Instance.DestroySelected();
 
                         });
-
-
                     }
                 }
                 else
                 {
-                    AttackLogic.instance.SelectTerritory(this);
+                    AttackLogic.Instance.SelectTerritory(this);
                 }
 
                 //waypoint.ToggleLines();
