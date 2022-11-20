@@ -12,7 +12,7 @@ public class CardHand : MonoBehaviour
 
     public void DestroySelected()
     {
-        if(cardSelected != null)
+        if(cardSelected)
         {
             PlayCard(cardSelected);
             Destroy(cardSelected.CardInstance.gameObject);

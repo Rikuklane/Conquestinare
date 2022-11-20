@@ -131,9 +131,9 @@ public class AttackLogic : MonoBehaviour
         for (int i = 0; i< presentUnitsCopy.Count; i++)
         {
             UnitCardPresenter card = presentUnitsCopy[i];
-            if (card.CardLogic.isSelected)
+            if (card.cardLogic.isSelected)
             {
-                card.CardLogic.isSelected = false;
+                card.cardLogic.isSelected = false;
                 // add cards to 2nd territory
                 attackTerritory.AddCard(card.unitData, unitsCopy[i]);
                 // remove cards from 1st territory
@@ -155,7 +155,7 @@ public class AttackLogic : MonoBehaviour
         // cleanup card colors
         foreach (UnitCardPresenter card in selectedTerritory.TerritoryGraphics.presentUnits)
         {
-            card.CardLogic.ChangeInteractable(true);
+            card.cardLogic.ChangeInteractable(true);
         }
         // cleanup
         AttackCleanup();

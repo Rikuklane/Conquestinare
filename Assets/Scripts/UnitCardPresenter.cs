@@ -20,23 +20,23 @@ public class UnitCardPresenter : MonoBehaviour
     private Button _button;
     public int attack;
     public int health;
-    public CardPresenterAbstractLogic CardLogic;
+    public CardPresenterAbstractLogic cardLogic;
 
     private void Awake()
     {
+        cardLogic.SetVariables(gameObject, childObject, unitData);
         if (unitData != null)
         {
             SetData();
         }
-        CardLogic = new CardPresenterAbstractLogic(gameObject, childObject, unitData);
     }
 
     public void SetData(UnitData data)
     {
         unitData = data;
-        CardLogic.CardData = unitData;
         if (unitData != null)
         {
+            cardLogic.CardData = unitData;
             SetData();
         }
     }

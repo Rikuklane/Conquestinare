@@ -79,7 +79,7 @@ public class CardSelector : MonoBehaviour
     private void CreateUnitCard(UnitData unitData, AbstractCardState state)
     {
         var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
-        unitCard.CardLogic.SwitchState(state);
+        unitCard.cardLogic.SwitchState(state);
         unitCard.SetData(unitData);
     }
 }

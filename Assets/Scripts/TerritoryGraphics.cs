@@ -29,7 +29,7 @@ public class TerritoryGraphics : MonoBehaviour
         int numberSelected = 0;
         foreach (UnitCardPresenter card in presentUnits)
         {
-            if (card.CardLogic.isSelected)
+            if (card.cardLogic.isSelected)
             {
                 numberSelected += 1;
             }
@@ -39,9 +39,9 @@ public class TerritoryGraphics : MonoBehaviour
         {
             foreach (UnitCardPresenter card in presentUnits)
             {
-                if (!card.CardLogic.isSelected)
+                if (!card.cardLogic.isSelected)
                 {
-                    card.CardLogic.ChangeInteractable(false);
+                    card.cardLogic.ChangeInteractable(false);
                 }
             }
         }
@@ -50,7 +50,7 @@ public class TerritoryGraphics : MonoBehaviour
             // change others to interactable
             foreach (UnitCardPresenter card in presentUnits)
             {
-                card.CardLogic.ChangeInteractable(true);
+                card.cardLogic.ChangeInteractable(true);
             }
         }
 

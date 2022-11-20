@@ -154,6 +154,7 @@ Transform:
   - {fileID: 316340918}
   - {fileID: 1189736311}
   - {fileID: 888310242}
+  - {fileID: 790261992}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3606,6 +3607,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 695920515}
   m_CullTransparentMesh: 1
+--- !u!1 &790261991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 790261992}
+  - component: {fileID: 790261993}
+  m_Layer: 0
+  m_Name: CardStateController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &790261992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790261991}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 33075955}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &790261993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790261991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8c5b62db260a94e8ff4cb6567617cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &812900686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5107,6 +5152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14da1a09a855c774799c95fd7bb69251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardSelected: {fileID: 0}
   unitCardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
 --- !u!114 &1235091873 stripped
 MonoBehaviour:
@@ -7354,6 +7400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14da1a09a855c774799c95fd7bb69251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardSelected: {fileID: 0}
   unitCardPrefab: {fileID: 0}
 --- !u!114 &1805879137
 MonoBehaviour:

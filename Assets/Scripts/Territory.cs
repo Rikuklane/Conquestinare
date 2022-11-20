@@ -92,7 +92,7 @@ public class Territory : MonoBehaviour
         // overwrite scale
         card.transform.localScale = new Vector3(2, 2, 2);
 
-        card.CardLogic.SwitchState(CardStateController.Instance.CardInTerritory);
+        card.cardLogic.SwitchState(CardStateController.Instance.CardInTerritory);
 
         Color color = card.childObject.GetComponent<Image>().color;
         color.a = 0.6f;
@@ -117,7 +117,7 @@ public class Territory : MonoBehaviour
 
         UpdateEnemyTerritories();
 
-        card.CardLogic.isSelected = false;
+        card.cardLogic.isSelected = false;
         //TODO
     }
 
@@ -181,7 +181,7 @@ public class Territory : MonoBehaviour
                 if (AttackLogic.Instance.isPlacementTurn)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected != null && player == Events.RequestPlayer())
+                    if (cardSelected && player == Events.RequestPlayer())
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);

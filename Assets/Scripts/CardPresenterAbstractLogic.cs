@@ -4,7 +4,7 @@ using CardStates;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardPresenterAbstractLogic
+public class CardPresenterAbstractLogic: MonoBehaviour
 {
     public bool isSelected;
     public bool isInteractable = true;
@@ -12,9 +12,9 @@ public class CardPresenterAbstractLogic
     private readonly Color _notInteractableColor = Color.gray;
     private Color _defaultColor;
     private AbstractCardState _currentState;
-    private readonly Button _cardButton;
+    private Button _cardButton;
 
-    public CardPresenterAbstractLogic(GameObject cardInstance, GameObject child, CardData cardData)
+    public void SetVariables(GameObject cardInstance, GameObject child, CardData cardData)
     {
         CardInstance = cardInstance;
         ChildGameObject = child;
@@ -34,16 +34,11 @@ public class CardPresenterAbstractLogic
     public void SwitchState(AbstractCardState state)
     {
         _currentState = state;
+        _cardButton = CardInstance.GetComponent<Button>();
         _cardButton.onClick.RemoveAllListeners();
         _cardButton.onClick.AddListener(Selected);
     }
-    
-    private void OnBecameVisible()
-    {
-        // reset, when accidentally clicked between reorganizing
-        isSelected = false;
-    }
-    
+
     private void Selected()
     {
        _currentState.CardOnClick(this);
@@ -70,7 +65,13 @@ public class CardPresenterAbstractLogic
         ChildGameObject.GetComponent<Image>().color = _defaultColor;
     }
 
-    public GameObject ChildGameObject { get; }
-    public GameObject CardInstance { get; }
+    public GameObject ChildGameObject { get; private set;}
+    public GameObject CardInstance { get; private set; }
     public CardData CardData { get; set; }
+    
+    private void OnBecameVisible()
+    {
+        // reset, when accidentally clicked between reorganizing
+        isSelected = false;
+    }
 }
