@@ -10,7 +10,6 @@ public class TerritoryGraphics : MonoBehaviour
     public Color playerColor;
     public Color enemyColor;
 
-    public TextMeshProUGUI summaryText;
     public GameObject iconsParent;
     public Image iconPrefab;
     public List<UnitCardPresenter> presentUnits = new();
@@ -62,11 +61,6 @@ public class TerritoryGraphics : MonoBehaviour
 
     }
 
-    public void SetSummaryText(string text)
-    {
-        summaryText.text = text;
-    }
-
     public void UpdateIcons()
     {
         // remove old
@@ -86,7 +80,10 @@ public class TerritoryGraphics : MonoBehaviour
 
     private void OnMouseUp()
     {
-        spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+        if (AttackLogic.instance.canHover)
+        {
+            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+        }
     }
 
     private void OnMouseEnter()
