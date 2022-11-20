@@ -31,4 +31,8 @@ public class Events
     // Bonuses
     public static event Func<Player, int> OnRequestBonus;
     public static int RequestBonus(Player player) => OnRequestBonus?.Invoke(player) ?? 0;
+
+    // Cards
+    public static event Func<Player, List<CardData>> OnRequestCards;
+    public static List<CardData> RequestCards(Player player) => OnRequestCards?.Invoke(player) ?? null;
 }

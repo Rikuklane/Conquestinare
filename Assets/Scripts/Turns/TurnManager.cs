@@ -43,6 +43,7 @@ namespace Turns
                 SetPlayerGold(player, 2);
             }
             TerritoryManager.instance.RandomShuffleTerritories(Players);
+            CardHand.Instance.CreateCardHands(Players);
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
         }
@@ -61,14 +62,13 @@ namespace Turns
 
         private void SetNextPlayerTurn()
         {
+            _currentPlayerIndex++;
+            if (_currentPlayerIndex >= Players.Length)
+            {
+                _currentPlayerIndex = 0;
+            }
             for (int i = 0; i < Players.Length; i++)
             {
-                _currentPlayerIndex++;
-                if (_currentPlayerIndex >= Players.Length)
-                {
-                    _currentPlayerIndex = 0;
-                    continue;
-                }
                 if (GetCurrentPlayer().isAlive) break;
             }
             SwitchTurnState(PlayerStartTurn);
