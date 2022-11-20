@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class CardHand : MonoBehaviour
 {
-    public List<UnitCardPresenter> cards = new();
     public static CardHand Instance;
+    public Dictionary<string, List<UnitCardPresenter>> cardHands = new();
     public UnitCardPresenter cardSelected;
+    public UnitCardPresenter cardPrefab;
 
     public void DestroySelected()
     {
@@ -22,7 +23,7 @@ public class CardHand : MonoBehaviour
     {
         cardSelected = cardSelect;
         // deselect others
-        foreach(UnitCardPresenter card in cards)
+        foreach(UnitCardPresenter card in cardHands[Events.RequestPlayer().Name])
         {
             if (card.isSelected)
             {
@@ -37,16 +38,38 @@ public class CardHand : MonoBehaviour
         Instance = this;
     }
 
+    public void CreateCardHands(Player[] players)
+    {
+        foreach (Player player in players)
+        {
+            cardHands[player.Name] = new();
+        }
+
+    }
+
     public void LoadHand(Player player)
     {
-        // TODO delete all children
+        // TODO hide all children
+        foreach (Player currentPlayer in Turns.TurnManager.Instance.Players)
+        {
+            foreach (UnitCardPresenter card in cardHands[currentPlayer.Name])
+            {
+                card.gameObject.SetActive(false);
+            }
+        }
+
         //   - add cards from new player
-        
+        foreach(UnitCardPresenter card in cardHands[player.Name])
+        {
+            card.gameObject.SetActive(true);
+        }
+
+
     }
 
     public void AddCard(UnitCardPresenter card)
     {
-        cards.Add(card);
+        cardHands[Events.RequestPlayer().Name].Add(card);
     }
 
     public void PlayCard(Player player)
