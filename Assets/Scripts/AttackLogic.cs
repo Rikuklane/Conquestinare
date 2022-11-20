@@ -54,6 +54,7 @@ public class AttackLogic : MonoBehaviour
 
     public void SelectTerritory(Territory newSelected)
     {
+        bool isPlayerTerritory = newSelected.player == Events.RequestPlayer();
         // TODO: disable any click events as well
         if (isReorganizeTriggered)
         {
@@ -63,6 +64,7 @@ public class AttackLogic : MonoBehaviour
 
         if (selectedTerritory == null)
         {
+            if (!isPlayerTerritory) return;
             selectedTerritory = newSelected;
             selectedTerritory.ShowAttackOptions();
             return;
@@ -75,9 +77,12 @@ public class AttackLogic : MonoBehaviour
         }
         else
         {
-            if (IsEnemyTerritory(newSelected))
+            // check if territories are connected
+            bool territoriesConnected = selectedTerritory.territories.Contains(newSelected);
+            if (!isPlayerTerritory)
             {
                 if (selectedTerritory.GetUnitsCount() == 0) return;
+                if (!territoriesConnected) return;
                 attackTerritory = newSelected;
                 AttackGUI.instance.attackButton.gameObject.SetActive(true);
                 // attack line only
@@ -87,7 +92,7 @@ public class AttackLogic : MonoBehaviour
             else
             {
 
-                if (isReorganizeTurn)
+                if (isReorganizeTurn && territoriesConnected)
                 {
                     attackTerritory = newSelected;
                     TriggerReorganize();
@@ -164,12 +169,6 @@ public class AttackLogic : MonoBehaviour
         AttackCleanup();
 
 
-    }
-
-    bool IsEnemyTerritory(Territory territory)
-    {
-        return selectedTerritory.enemyTerritories.Contains(territory.transform.position)
-            && selectedTerritory.TerritoryGraphics.color != territory.TerritoryGraphics.color;
     }
 
     void ResetLines()

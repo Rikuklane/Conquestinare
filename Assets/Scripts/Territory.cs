@@ -181,7 +181,7 @@ public class Territory : MonoBehaviour
                 if (AttackLogic.instance.isPlacementTurn)
                 {
                     UnitCardPresenter cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected)
+                    if (cardSelected && player == Events.RequestPlayer())
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
