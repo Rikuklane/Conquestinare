@@ -62,14 +62,13 @@ namespace Turns
 
         private void SetNextPlayerTurn()
         {
+            _currentPlayerIndex++;
+            if (_currentPlayerIndex >= Players.Length)
+            {
+                _currentPlayerIndex = 0;
+            }
             for (int i = 0; i < Players.Length; i++)
             {
-                _currentPlayerIndex++;
-                if (_currentPlayerIndex >= Players.Length)
-                {
-                    _currentPlayerIndex = 0;
-                    continue;
-                }
                 if (GetCurrentPlayer().isAlive) break;
             }
             SwitchTurnState(PlayerStartTurn);
