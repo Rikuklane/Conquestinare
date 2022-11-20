@@ -155,6 +155,11 @@ public class AttackLogic : MonoBehaviour
             AttackGUI.instance.ChangeButtonClickAttack(true);
         }
         checkWin();
+        // cleanup card colors
+        foreach (UnitCardPresenter card in selectedTerritory.TerritoryGraphics.presentUnits)
+        {
+            card.changeInteractable(true);
+        }
         // cleanup
         AttackCleanup();
 
