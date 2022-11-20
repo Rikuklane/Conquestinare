@@ -21,7 +21,10 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         ChildGameObject = child;
         _defaultColor = ChildGameObject.GetComponent<Image>().color;
         CardData = cardData;
-        SwitchState(CardStateController.Instance.CardInHand);
+        if (_currentState == null)
+        {
+            SwitchState(CardStateController.Instance.CardInHand);
+        }
     }
     
     public void ChangeInteractable(bool isInteract)
@@ -40,7 +43,8 @@ public class CardPresenterAbstractLogic: MonoBehaviour
 
     private void Selected()
     {
-       StartCoroutine(_currentState.CardOnClick(this));
+        Debug.Log("Starting Coroutine");
+        StartCoroutine(_currentState.CardOnClick(this));
     }
 
     public void TriggerSelected()
