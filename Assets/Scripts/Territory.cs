@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class Territory : MonoBehaviour
 {
@@ -13,6 +14,39 @@ public class Territory : MonoBehaviour
     public List<Vector3> enemyTerritories = new();
        
     public List<UnitData> startUnits = new();
+
+    internal void CheckSelected()
+    {
+        int numberSelected = 0;
+        foreach (UnitCardPresenter card in TerritoryGraphics.presentUnits)
+        {
+            if (card.isSelected)
+            {
+                numberSelected += 1;
+            }
+        }
+        // cant select last one
+        if (TerritoryGraphics.presentUnits.Count - numberSelected == 1)
+        {
+            foreach (UnitCardPresenter card in TerritoryGraphics.presentUnits)
+            {
+                if (!card.isSelected)
+                {
+                    card.changeInteractable(false);
+                }
+            }
+        } else
+        {
+            // change others to interactable
+            foreach (UnitCardPresenter card in TerritoryGraphics.presentUnits)
+            {
+                card.changeInteractable(true);
+            }
+        }
+        
+
+    }
+
     public UnitCardPresenter cardPrefab;
 
     public class Unit

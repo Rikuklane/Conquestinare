@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CardHand : MonoBehaviour
 {
+    public List<UnitCardPresenter> cards = new();
     public static CardHand Instance;
     public UnitCardPresenter cardSelected;
 
@@ -15,6 +16,20 @@ public class CardHand : MonoBehaviour
             Destroy(cardSelected.gameObject);
             cardSelected = null;
         }
+    }
+
+    public void NewCardSelected(UnitCardPresenter cardSelect)
+    {
+        cardSelected = cardSelect;
+        // deselect others
+        foreach(UnitCardPresenter card in cards)
+        {
+            if (card.isSelected)
+            {
+                card.TriggerSelected();
+            }
+        }
+        cardSelect.TriggerSelected();
     }
 
     private void Awake()
@@ -29,9 +44,9 @@ public class CardHand : MonoBehaviour
         
     }
 
-    public void AddCard(Player player)
+    public void AddCard(UnitCardPresenter card)
     {
-        
+        cards.Add(card);
     }
 
     public void PlayCard(Player player)

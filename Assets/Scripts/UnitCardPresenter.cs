@@ -29,6 +29,8 @@ public class UnitCardPresenter : MonoBehaviour
     private AbstractCardState _currentState;
 
     public bool isSelected = false;
+    public bool isInteractable = true;
+    private Color childColor;
 
     private void Awake()
     {
@@ -40,6 +42,7 @@ public class UnitCardPresenter : MonoBehaviour
         {
             SetData();
         }
+        childColor = childObject.GetComponent<Image>().color;
     }
 
     public void SetData(UnitData data)
@@ -94,24 +97,40 @@ public class UnitCardPresenter : MonoBehaviour
 
     public void TriggerSelected()
     {
+        if (!isInteractable) return;
         Debug.Log(isSelected);
         isSelected = !isSelected;
 
-        //float alpha = 1f;
+        float alpha = 1f;
         float y = 0;
         if (isSelected)
         {
-            //  alpha = 0.6f;
+            
             y = 10;
+        } else
+        {
+            alpha = 0.6f;
         }
 
         //childObject.transform.localPosition =
         LeanTween.moveLocal(childObject, new Vector3(0, y, 0), 0.2f);
+        childColor.a = alpha;
+        childObject.GetComponent<Image>().color = childColor;
 
-        Color color = childObject.GetComponent<Image>().color;
-        color.a = 1;
-        childObject.GetComponent<Image>().color = color;
+    }
 
+    public void changeInteractable(bool isInteract)
+    {
+        _button.interactable = isInteract;
+        isInteractable = isInteract;
+        if (isInteract)
+        {
+            childObject.GetComponent<Image>().color = childColor;
+        }
+        else
+        {
+            childObject.GetComponent<Image>().color = Color.red;
+        }
     }
 
     private void OnBecameVisible()
