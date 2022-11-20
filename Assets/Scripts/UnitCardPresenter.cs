@@ -20,12 +20,12 @@ public class UnitCardPresenter : MonoBehaviour
     private Button _button;
     public int attack;
     public int health;
-
+    
+    // TODO move these values to somewhere else where they could be used all around the code (Currently also used in CardSelector)
     public CardInHand CardInHand = new();
     public CardInMarket CardInMarket = new();
     public CardInSelection CardInSelection = new();
     public CardInTerritory CardInTerritory = new();
-    public CardInTerritory CardInReorganize = new();
     private AbstractCardState _currentState;
 
     public bool isSelected = false;

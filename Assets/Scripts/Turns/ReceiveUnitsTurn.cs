@@ -11,12 +11,13 @@ namespace Turns
         {
             AttackLogic.instance.canHover = false;
             SetNextButtonActive(turnManager, false);
-            Events.DisplayUnitSelection();
+            Events.DisplayUnitSelection(3);
             return base.EnterState(turnManager, player);
         }
 
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
+            CardSelector.Instance.SetActive(false);
             SetNextButtonActive(turnManager, true);
             turnManager.SwitchTurnState(turnManager.MarketTurn);
             return base.EndState(turnManager, player);

@@ -21,8 +21,7 @@ namespace Turns
             // TODO press end turn button (Next player turn)
             AttackLogic.instance.isReorganizeTurn = false;
             AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
-            turnManager.SwitchPlayerTurn();
-            turnManager.SwitchTurnState(turnManager.PlayerStartTurn);
+            Events.NextPlayer();
             return base.EndState(turnManager, player);
         }
     }

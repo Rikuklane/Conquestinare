@@ -22,7 +22,7 @@ public class TerritoryManager : MonoBehaviour
     }
     void Start()
     {
-        RandomShuffleTerritories(Turns.TurnManager.Instance._players);
+        RandomShuffleTerritories(Turns.TurnManager.Instance.Players);
     }
 
     public void RandomShuffleTerritories(Player[] players)
@@ -51,14 +51,9 @@ public class TerritoryManager : MonoBehaviour
         {
             n--;
             int k = Random.Range(0, n + 1);
-            Territory value = territories[k];
-            territories[k] = territories[n];
-            territories[n] = value;
+            (territories[k], territories[n]) = (territories[n], territories[k]);
         }
     }
-
-
-
 
     private Player GetNextPlayer(Player[] players)
     {
@@ -78,11 +73,5 @@ public class TerritoryManager : MonoBehaviour
         UnitData playerUnit = playerUnitPool[randomI];
         playerUnitPool.RemoveAt(randomI);
         return new List<UnitData>(){playerUnit};
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

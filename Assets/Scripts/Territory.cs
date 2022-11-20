@@ -147,7 +147,7 @@ public class Territory : MonoBehaviour
         {
             player = new Player("neutral", Color.gray);
         }
-        TerritoryGraphics.SetColor(player.Color);
+        TerritoryGraphics.SetColor(player.color);
     }
 
     public void ShowAttackOptions()
