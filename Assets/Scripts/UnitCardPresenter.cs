@@ -17,7 +17,6 @@ public class UnitCardPresenter : MonoBehaviour
     public TextMeshProUGUI costText;
     public Image image;
     public GameObject childObject;
-    private Button _button;
     public int attack;
     public int health;
     public CardPresenterAbstractLogic cardLogic;

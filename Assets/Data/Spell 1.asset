@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Spell 1
   m_EditorClassIdentifier: 
   title: ElectricStorm
-  description: Deal 1 damage to all units in an area
+  description: Deal 1 damage to all units in a tile
   cost: 4
+  sprite: {fileID: 400554740, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
+  type: 0
+  effectArea: 0

@@ -4900,7 +4900,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c7973e0650e1a1d4299f5a548719530b, type: 2}
   - {fileID: 11400000, guid: 00668c6c7a5e5124e94dca342cdab08e, type: 2}
   - {fileID: 11400000, guid: fd8ffde52d49a6b478c5c6671fbccdad, type: 2}
-  spells: []
+  spells:
+  - {fileID: 11400000, guid: 6b8fc02efce82824c9fa7a87276806a6, type: 2}
+  - {fileID: 11400000, guid: 206fe33cd130e384ea9759bc58092a9d, type: 2}
+  - {fileID: 11400000, guid: 931e8f61852449340ab47603651037b0, type: 2}
+  - {fileID: 11400000, guid: e7544c5cb5b493f4aa11681e04b7f963, type: 2}
+  - {fileID: 11400000, guid: bcc8609c4bd90234198e42ca6c2cb5ed, type: 2}
+  - {fileID: 11400000, guid: 8f5c8ef0a87b9524b89c285f805fbf12, type: 2}
 --- !u!4 &1189736311
 Transform:
   m_ObjectHideFlags: 0
@@ -5036,6 +5042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitCardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
+  spellCardPrefab: {fileID: 3144760274782733483, guid: c079fd01816d63b4b8684380d769245e, type: 3}
 --- !u!1 &1226233211
 GameObject:
   m_ObjectHideFlags: 0
