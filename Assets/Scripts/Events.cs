@@ -23,4 +23,12 @@ public class Events
     
     public static event Func<Player, int> OnRequestGold;
     public static int RequestGold(Player player) => OnRequestGold?.Invoke(player) ?? 0;
+
+    // Territories
+    public static event Func<Player, int> OnRequestTerritory;
+    public static int RequestTerritory(Player player) => OnRequestTerritory?.Invoke(player) ?? 0;
+
+    // Bonuses
+    public static event Func<Player, int> OnRequestBonus;
+    public static int RequestBonus(Player player) => OnRequestBonus?.Invoke(player) ?? 0;
 }

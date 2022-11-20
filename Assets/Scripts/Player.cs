@@ -37,6 +37,6 @@ public class Player
     // This method defines the value of unit cards given at the start of the round
     public int GetPrestige()
     {
-        return (int)(territories * 0.5f + _bonusFromAreasController);
+        return (int)(Events.RequestTerritory(this) * 0.5f + Events.RequestBonus(this));
     }
 }

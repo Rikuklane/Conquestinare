@@ -16,7 +16,7 @@ namespace CardStates
                     return base.CardOnClick(card);
                 }
                 card.TriggerSelected();
-                AttackLogic.instance.selectedTerritory.CheckSelected();
+                AttackLogic.instance.selectedTerritory.TerritoryGraphics.CheckSelected();
             }
             return base.CardOnClick(card);
         }

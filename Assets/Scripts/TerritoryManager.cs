@@ -4,25 +4,76 @@ using UnityEngine;
 
 public class TerritoryManager : MonoBehaviour
 {
+    public static TerritoryManager instance;
     public List<Territory> territories = new();
     public List<UnitData> unitsStartPool = new();
 
     private List<List<UnitData>> playerUnitPools = new();
-
+    private List<int> bonusTerritoryTotals = new List<int>() { 0, 0 };
     private int playerIndex = -1;
+
+    public enum BonusGroup
+    {
+        LEFT, RIGHT
+    }
 
     private void Awake()
     {
+        instance = this;
         territories.Clear();
         foreach (Transform child in transform)
         {
-            territories.Add(child.GetComponent<Territory>());
+            Territory territory = child.GetComponent<Territory>();
+            territories.Add(territory);
+            bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
         }
-        
+        Events.OnRequestTerritory += GetPlayerTerritories;
+        Events.OnRequestBonus += GetPlayerBonus;
+
     }
-    void Start()
+
+    private int GetPlayerTerritories(Player player)
     {
-        RandomShuffleTerritories(Turns.TurnManager.Instance.Players);
+        int terrAmount = 0;
+        foreach(Territory territory in territories)
+        {
+            if(territory.player == player)
+            {
+                terrAmount++;
+            }
+        }
+        return terrAmount;
+    }
+
+    private int GetPlayerBonus(Player player)
+    {
+        List<int> playerBonusTerritories = new List<int>() { 0, 0};
+        foreach (Territory territory in territories)
+        {
+            if (territory.player == player)
+            {
+                playerBonusTerritories[(int)territory.bonusGroup] += 1;
+
+            }
+        }
+        int bonusTotal = 0;
+        for(int i = 0; i < bonusTerritoryTotals.Count; i++)
+        {
+            if(bonusTerritoryTotals[i] == playerBonusTerritories[i])
+            {
+                // player has bonus
+                bonusTotal += 5;
+            }
+        }
+        return bonusTotal;
+    }
+
+    private void OnDestroy()
+    {
+        Events.OnRequestTerritory -= GetPlayerTerritories;
+        Events.OnRequestBonus += GetPlayerBonus;
+
+
     }
 
     public void RandomShuffleTerritories(Player[] players)
@@ -68,8 +119,6 @@ public class TerritoryManager : MonoBehaviour
     {
         List<UnitData> playerUnitPool = playerUnitPools[playerIndex];
         int randomI = Random.Range(0, playerUnitPool.Count);
-        print(randomI);
-        print(playerUnitPool.Count);
         UnitData playerUnit = playerUnitPool[randomI];
         playerUnitPool.RemoveAt(randomI);
         return new List<UnitData>(){playerUnit};

@@ -24,6 +24,39 @@ public class TerritoryGraphics : MonoBehaviour
         if (color != null) spriteRenderer.material.color = color;
     }
 
+    internal void CheckSelected()
+    {
+        int numberSelected = 0;
+        foreach (UnitCardPresenter card in presentUnits)
+        {
+            if (card.isSelected)
+            {
+                numberSelected += 1;
+            }
+        }
+        // cant select last one
+        if (presentUnits.Count - numberSelected == 1)
+        {
+            foreach (UnitCardPresenter card in presentUnits)
+            {
+                if (!card.isSelected)
+                {
+                    card.changeInteractable(false);
+                }
+            }
+        }
+        else
+        {
+            // change others to interactable
+            foreach (UnitCardPresenter card in presentUnits)
+            {
+                card.changeInteractable(true);
+            }
+        }
+
+
+    }
+
     public void showCards()
     {
         //foreach(Transform child in parent.transform)
