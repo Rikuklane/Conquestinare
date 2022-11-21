@@ -21,7 +21,7 @@ public class UnitCardPresenter : MonoBehaviour
     public int health;
     public CardPresenterAbstractLogic cardLogic;
 
-    private void Awake()
+    private void Start()
     {
         cardLogic.SetVariables(gameObject, childObject, unitData);
         if (unitData != null)

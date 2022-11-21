@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Turns
@@ -25,11 +26,27 @@ namespace Turns
         public readonly ReorganizeTurn ReorganizeTurn = new();
         private AbstractTurnState _currentState;
         
-        public Player[] Players = { new("PlayerMustafa"), new("xxGamerBoyX")};
+        private Player[] samplePlayers = { new("PlayerMustafa"), new("xxGamerBoyX"), new("CasualGamer"), new("BOT")};
+        public Player[] Players;
         private int _currentPlayerIndex;
+        int playerNumber = 2;
+
+        private void setupPlayers()
+        {
+            playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
+            Debug.Log("Player number" + playerNumber);
+            Player[] newPlayers = new Player[playerNumber];
+            for(int i = 0; i < playerNumber; i++)
+            {
+                newPlayers[i] = samplePlayers[i];
+                Debug.Log(newPlayers[i].Name);
+            }
+            Players = newPlayers;
+        }
 
         private void Awake()
         {
+            setupPlayers();
             Instance = this;
             Events.OnRequestPlayer += GetCurrentPlayer;
             Events.OnRequestGold += GetPlayerGold;
@@ -51,6 +68,14 @@ namespace Turns
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
             goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
+        }
+
+        private void Update()
+        {
+            if(Input.GetKey("escape"))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
 
         private void OnDestroy()
