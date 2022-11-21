@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using Random = System.Random;
 
 public class Territory : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Territory : MonoBehaviour
     public UnitCardPresenter cardPrefab;
 
     public TerritoryManager.BonusGroup bonusGroup;
+    private readonly Random _random = new();
 
 
     public class Unit
@@ -48,6 +50,34 @@ public class Territory : MonoBehaviour
 
         {
             AddCard(unit, null);
+        }
+    }
+
+    public void CastSpellOnUnits(SpellData spellData)
+    {
+        if (spellData.effectArea == EffectArea.WholeTile)
+        {
+            for (int i = 0; i < units.Count; i++)
+            {
+                SetUnitAttackAndHealth(i, spellData.attack, spellData.health);
+            }
+        }
+        else
+        {
+            SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attack, spellData.health);
+        }
+    }
+
+    private void SetUnitAttackAndHealth(int i, int attack, int health)
+    {
+        units[i].attack += attack;
+        units[i].health += health;
+        TerritoryGraphics.presentUnits[i].SetAttack(units[i].attack);
+        TerritoryGraphics.presentUnits[i].SetHealth(units[i].health);
+        if (units[i].health <= 0)
+        {
+            RemoveCard(i);
+            print("unit died");
         }
     }
 
@@ -193,7 +223,10 @@ public class Territory : MonoBehaviour
                             {
                                 AddCard((UnitData)cardSelected.CardData, null);
                             }
-                            // TODO add special case for spells to trigger effect
+                            else if (cardSelected.CardData.GetType() == typeof(SpellData))
+                            {
+                                CastSpellOnUnits((SpellData)cardSelected.CardData);
+                            }
                             CardHand.Instance.DestroySelected();
 
                         });
