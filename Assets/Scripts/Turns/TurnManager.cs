@@ -33,7 +33,7 @@ namespace Turns
 
         private void setupPlayers()
         {
-            playerNumber = PlayerPrefs.GetInt("playerNumber");
+            playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
             Debug.Log("Player number" + playerNumber);
             Player[] newPlayers = new Player[playerNumber];
             for(int i = 0; i < playerNumber; i++)
