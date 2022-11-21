@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db9787d248b9cc4095d4ca620b9d0b7, type: 3}
-  m_Name: WarCry
+  m_Script: {fileID: 11500000, guid: 8983058b2a997c04dbad0533caaf74a7, type: 3}
+  m_Name: warCry
   m_EditorClassIdentifier: 
-  AudioClips:
-  - {fileID: 8300000, guid: f480df4fe48e8ce49afc11f02fc18540, type: 3}
-  - {fileID: 8300000, guid: a0ed539dd03478345aa4fd8b3e3d5676, type: 3}
-  - {fileID: 8300000, guid: 0f42420fa3a2dd3428e7db1f6334d4f2, type: 3}
-  VolumeMin: 0.91
-  VolumeMax: 1.11
-  PitchMin: 0.9
-  PitchMax: 1.1
-  Cooldown: 1
+  volumeMin: 0.7
+  volumeMax: 1
+  pitchMin: 1.2
+  pitchMax: 0.7
+  cooldown: 0.4
+  clips:
+  - {fileID: 8300000, guid: 0af88b617833aff4c93edc558fbb8d54, type: 3}
+  - {fileID: 8300000, guid: c913593bb27da5d4c9e60fd11cebb9fb, type: 3}
+  - {fileID: 8300000, guid: 2f3f1145c6ec334459415947060dbac0, type: 3}

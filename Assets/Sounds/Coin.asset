@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db9787d248b9cc4095d4ca620b9d0b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 8983058b2a997c04dbad0533caaf74a7, type: 3}
   m_Name: Coin
   m_EditorClassIdentifier: 
-  AudioClips:
-  - {fileID: 8300000, guid: dfa08c4fb59597c4ab3cb57c143662ed, type: 3}
-  - {fileID: 8300000, guid: 264e5092e89c29843adae8ea44543d39, type: 3}
-  - {fileID: 8300000, guid: 56e2ce3cbf3e19e4b8603c50c12a5e84, type: 3}
-  VolumeMin: 0.94
-  VolumeMax: 1.04
-  PitchMin: 0.9
-  PitchMax: 1.1
-  Cooldown: 0.2
+  volumeMin: 0.7
+  volumeMax: 1
+  pitchMin: 1.2
+  pitchMax: 0.7
+  cooldown: 0.4
+  clips:
+  - {fileID: 8300000, guid: d8974e900ff1d544dbe56a6d8ffa532f, type: 3}
+  - {fileID: 8300000, guid: c107abb65e383484c8d31b8a4fb3b8c0, type: 3}
+  - {fileID: 8300000, guid: bd61087132423fe4389ddf50cce9d950, type: 3}

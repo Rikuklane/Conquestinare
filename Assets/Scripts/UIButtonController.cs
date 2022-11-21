@@ -6,18 +6,13 @@ using UnityEngine.UI;
 
 public class UIButtonController : MonoBehaviour
 {
-    public AudioClipGroup clickUIButton;
-    public AudioClipGroup hoverUIButton;
-
-    private void OnMouseEnter()
-    {
-        Debug.Log("Mouse entered!");
-        hoverUIButton.Play();
-    }
-
     public void PlayOnClick()
     {
-        Debug.Log("Button clicked");
-        clickUIButton.Play();
+        AudioController.Instance.clickUIButton.Play();
+    }
+
+    public void PlayOnHover()
+    {
+        AudioController.Instance.hoverUIButton.Play();
     }
 }
