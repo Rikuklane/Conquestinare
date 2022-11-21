@@ -13,7 +13,9 @@ namespace Turns
         public TextMeshProUGUI playerNameText;
         public TextMeshProUGUI turnNameText;
         public TextMeshProUGUI goldAmountText;
-        
+        public Image playerColorImage;
+        public TextMeshProUGUI goldGainText;
+
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
         public readonly ReceiveUnitsTurn ReceiveUnitsTurn = new();
@@ -42,10 +44,13 @@ namespace Turns
             {
                 SetPlayerGold(player, 2);
             }
+            playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
+
             TerritoryManager.instance.RandomShuffleTerritories(Players);
             CardHand.Instance.CreateCardHands(Players);
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
+            goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
         }
 
         private void OnDestroy()
@@ -71,8 +76,10 @@ namespace Turns
             {
                 if (GetCurrentPlayer().isAlive) break;
             }
+            playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
+            goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
         }
 
         private int GetPlayerGold(Player player)
