@@ -11,6 +11,7 @@ namespace CardStates
 
         public override IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
+            AudioController.Instance.cardChoiceSelect.Play();
             NextState(card);
             yield break;
         }
