@@ -64,7 +64,6 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         LeanTween.moveLocal(ChildGameObject, new Vector3(0, y, 0), 0.2f);
         _defaultColor.a = alpha;
 
-        gameObject.GetComponentInParent<AudioSource>().Play();
         ChildGameObject.GetComponent<Image>().color = _defaultColor;
     }
 
