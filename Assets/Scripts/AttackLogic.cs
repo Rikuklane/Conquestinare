@@ -67,6 +67,7 @@ public class AttackLogic : MonoBehaviour
             if (!isPlayerTerritory) return;
             selectedTerritory = newSelected;
             selectedTerritory.ShowAttackOptions();
+            AudioController.Instance.warCry.Play();
             return;
 
         } if (selectedTerritory == newSelected){
@@ -82,6 +83,7 @@ public class AttackLogic : MonoBehaviour
             if (selectedTerritory.GetUnitsCount() == 0) return;
             if (!territoriesConnected) return;
             attackTerritory = newSelected;
+            AudioController.Instance.warCry.Play();
             AttackGUI.instance.attackButton.gameObject.SetActive(true);
             // attack line only
             selectedTerritory.HideAttackOptions();
@@ -181,6 +183,7 @@ public class AttackLogic : MonoBehaviour
         // winCondition
         if (isWin && selectedTerritory.GetUnitsCount() > 1)
         {
+            AudioController.Instance.cardHit.Play();
             AttackGUI.instance.ChangeButtonClickAttack(false);
             TriggerReorganize();
             attackTerritory.player = selectedTerritory.player;
@@ -202,6 +205,7 @@ public class AttackLogic : MonoBehaviour
         }
         else if (isWin)
         {
+            AudioController.Instance.cardHit.Play();
             // Win without territory gain
             attackTerritory.UpdateEnemyTerritories();
             // if player had bonus, remove visuals
@@ -212,8 +216,9 @@ public class AttackLogic : MonoBehaviour
             // check if current player got new bonuses
             Events.RequestBonus(Events.RequestPlayer());
         }
-        else 
+        else
         {
+            AudioController.Instance.cannon.Play();
             // if player had bonus, remove visuals
             if (selectedTerritory.TerritoryGraphics.isShowBonus)
             {
