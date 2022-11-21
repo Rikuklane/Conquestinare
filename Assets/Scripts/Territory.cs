@@ -189,8 +189,11 @@ public class Territory : MonoBehaviour
                         .setOnComplete(() =>
                         {
                             cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
-                            AddCard((UnitData)cardSelected.CardData, null);
-
+                            if (cardSelected.CardData.GetType() == typeof(UnitData))
+                            {
+                                AddCard((UnitData)cardSelected.CardData, null);
+                            }
+                            // TODO add special case for spells to trigger effect
                             CardHand.Instance.DestroySelected();
 
                         });

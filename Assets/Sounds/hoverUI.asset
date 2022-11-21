@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8983058b2a997c04dbad0533caaf74a7, type: 3}
   m_Name: hoverUI
   m_EditorClassIdentifier: 
-  volumeMin: 0.7
-  volumeMax: 1
+  volumeMin: 0.433
+  volumeMax: 0.753
   pitchMin: 1.2
   pitchMax: 0.7
   cooldown: 0.4

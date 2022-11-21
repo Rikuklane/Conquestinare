@@ -128,6 +128,7 @@ namespace Turns
 
         public void TriggerEndState()
         {
+            AudioController.Instance.clickUIButton.Play();
             StartCoroutine(_currentState.EndState(this, GetCurrentPlayer()));
         }
 

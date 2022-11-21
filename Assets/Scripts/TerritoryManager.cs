@@ -63,7 +63,7 @@ public class TerritoryManager : MonoBehaviour
             {
                 // player has bonus
                 ShowBonus(i, true);
-                bonusTotal += 5;
+                bonusTotal += 2;
             }
         }
         return bonusTotal;

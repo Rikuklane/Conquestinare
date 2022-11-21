@@ -22,7 +22,6 @@ namespace CardStates
             MoveCardToHand(card, false);
             return base.NextState(card);
         }
-        
-        
+
     }
 }
