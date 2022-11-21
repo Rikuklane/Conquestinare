@@ -101,7 +101,7 @@ namespace Turns
             {
                 if (GetCurrentPlayer().isAlive) break;
             }
-            playerColorImage.color = GetCurrentPlayer().color;
+            playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
             goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
