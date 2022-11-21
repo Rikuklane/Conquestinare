@@ -18,3 +18,5 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 51e7ecfa8ef40a843b10a1206ccb06c9, type: 3}
   type: 1
   effectArea: 0
+  attack: 1
+  health: 0

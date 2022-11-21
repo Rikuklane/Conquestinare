@@ -55,4 +55,10 @@ public class UnitCardPresenter : MonoBehaviour
         health = newHealth;
         healthText.text = health.ToString();
     }
+    
+    public void SetAttack(int newAttack)
+    {
+        attack = newAttack;
+        attackText.text = attack.ToString();
+    }
 }

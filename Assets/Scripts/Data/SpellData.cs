@@ -6,17 +6,12 @@ using UnityEngine;
 public class SpellData : CardData
 {
     public Sprite sprite;
-    public SpellType type;
-    public EffectArea effectArea;
-}
-
-public enum SpellType
-{
-    Hostile, Friendly
+    public EffectArea effectArea = EffectArea.WholeTile;
+    public int attack;
+    public int health;
 }
 
 public enum EffectArea
 {
     WholeTile, RandomInTile
 }
-
