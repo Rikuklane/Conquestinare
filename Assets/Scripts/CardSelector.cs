@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class CardSelector : MonoBehaviour
 {
     public UnitCardPresenter unitCardPrefab;
+    public SpellCardPresenter spellCardPrefab;
     public static CardSelector Instance;
     private List<UnitData> _unitSelection;
     private List<CardData> _cardSelection;
@@ -54,7 +55,7 @@ public class CardSelector : MonoBehaviour
             }
             else if (cardData.GetType() == typeof(SpellData))
             {
-                // TODO initiate spells
+                CreateSpellCard(cardData as SpellData, CardStateController.Instance.CardInMarket);
             }
             
         }
@@ -73,7 +74,10 @@ public class CardSelector : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        // TODO also delete all the spells
+        foreach (var child in GetComponentsInChildren<SpellCardPresenter>())
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     private void CreateUnitCard(UnitData unitData, AbstractCardState state)
@@ -81,5 +85,12 @@ public class CardSelector : MonoBehaviour
         var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
         unitCard.cardLogic.SwitchState(state);
         unitCard.SetData(unitData);
+    }
+    
+    private void CreateSpellCard(SpellData spellData, AbstractCardState state)
+    {
+        var spellCard = Instantiate(spellCardPrefab, transform.position, Quaternion.identity, transform);
+        spellCard.cardLogic.SwitchState(state);
+        spellCard.SetData(spellData);
     }
 }

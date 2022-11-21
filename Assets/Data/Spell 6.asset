@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e72a6823886913b4b8c38eed4f423bc8, type: 3}
   m_Name: Spell 6
   m_EditorClassIdentifier: 
-  title: ElectricStorm
-  description: Deal 1 damage to all units in an area
-  cost: 4
+  title: Dark Necromancy
+  description: Kill all units in a tile
+  cost: 12
+  sprite: {fileID: 1590892769, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
+  type: 0
+  effectArea: 0
