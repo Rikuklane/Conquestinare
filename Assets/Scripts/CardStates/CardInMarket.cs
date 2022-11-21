@@ -11,7 +11,6 @@ namespace CardStates
             var currentGold = Events.RequestGold(currentPlayer);
             if (cardCost > currentGold) return base.CardOnClick(card);
             Events.SetGold(currentPlayer, currentGold - cardCost);
-            
             NextState(card);
             return base.CardOnClick(card);
         }

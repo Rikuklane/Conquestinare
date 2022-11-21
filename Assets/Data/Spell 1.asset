@@ -15,6 +15,6 @@ MonoBehaviour:
   title: ElectricStorm
   description: Deal 1 damage to all units in a tile
   cost: 4
-  sprite: {fileID: 400554740, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
+  sprite: {fileID: 21300000, guid: 4f922c76e579c3247882933a447bfba6, type: 3}
   type: 0
   effectArea: 0
