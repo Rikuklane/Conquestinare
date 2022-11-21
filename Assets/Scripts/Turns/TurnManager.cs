@@ -83,6 +83,7 @@ namespace Turns
             Events.OnRequestPlayer -= GetCurrentPlayer;
             Events.OnRequestGold -= GetPlayerGold;
             Events.OnSetGold -= SetPlayerGold;
+            Events.OnNextPlayerStartTurn -= SetNextPlayerTurn;
         }
 
         private Player GetCurrentPlayer()
@@ -101,7 +102,10 @@ namespace Turns
             {
                 if (GetCurrentPlayer().isAlive) break;
             }
-            playerColorImage.color = GetCurrentPlayer().color;
+            if(playerColorImage != null)
+            {
+                playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
+            }
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
             goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
