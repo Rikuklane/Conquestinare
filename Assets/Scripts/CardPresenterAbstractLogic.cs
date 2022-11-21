@@ -19,7 +19,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     {
         CardInstance = cardInstance;
         ChildGameObject = child;
-        _defaultColor = ChildGameObject.transform.GetComponentsInChildren<Image>()[0].color;
+        _defaultColor = ChildGameObject.GetComponent<Image>().color;
         CardData = cardData;
         if (_currentState == null)
         {
@@ -31,7 +31,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     {
         cardButton.interactable = isInteract;
         isInteractable = isInteract;
-        ChildGameObject.transform.GetComponentsInChildren<Image>()[0].color = isInteract ? _defaultColor : _notInteractableColor;
+        ChildGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
     }
     
     public void SwitchState(AbstractCardState state)
@@ -43,14 +43,12 @@ public class CardPresenterAbstractLogic: MonoBehaviour
 
     private void Selected()
     {
-        Debug.Log("Starting Coroutine");
         StartCoroutine(_currentState.CardOnClick(this));
     }
 
     public void TriggerSelected()
     {
         if (!isInteractable) return;
-        Debug.Log(isSelected);
         isSelected = !isSelected;
 
         float alpha = 1f;
@@ -67,7 +65,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         _defaultColor.a = alpha;
 
         gameObject.GetComponentInParent<AudioSource>().Play();
-        ChildGameObject.transform.GetComponentsInChildren<Image>()[0].color = _defaultColor;
+        ChildGameObject.GetComponent<Image>().color = _defaultColor;
     }
 
     public GameObject ChildGameObject { get; private set;}

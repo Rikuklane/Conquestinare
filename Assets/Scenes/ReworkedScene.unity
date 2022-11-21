@@ -155,6 +155,7 @@ Transform:
   - {fileID: 1189736311}
   - {fileID: 888310242}
   - {fileID: 790261992}
+  - {fileID: 1559463166}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5140,8 +5141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d845d3fcbc3e3c4498cfc395a180543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitCardPrefab: {fileID: 4548972679767333496, guid: 664ac6e2132da994abacde4d7c3f82b2, type: 3}
-  spellCardPrefab: {fileID: 4510152251176632602, guid: 28256f8b3e90c7f4b9c1092005471793, type: 3}
+  unitCardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
+  spellCardPrefab: {fileID: 3144760274782733483, guid: c079fd01816d63b4b8684380d769245e, type: 3}
 --- !u!1 &1226233211
 GameObject:
   m_ObjectHideFlags: 0
@@ -5259,7 +5260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSelected: {fileID: 0}
-  unitCardPrefab: {fileID: 4548972679767333496, guid: 664ac6e2132da994abacde4d7c3f82b2, type: 3}
+  unitCardPrefab: {fileID: 3536949067997722464, guid: 4bec3b061dd29674591270c1b5e93a74, type: 3}
 --- !u!114 &1235091873 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7486316426464999336, guid: 24ef6517580b0da4daf343930e7122f4, type: 3}
@@ -7112,6 +7113,79 @@ MonoBehaviour:
   isReorganizeTurn: 0
   isReorganizeTriggered: 0
   canHover: 0
+--- !u!1 &1559463165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1559463166}
+  - component: {fileID: 1559463169}
+  - component: {fileID: 1559463168}
+  - component: {fileID: 1559463167}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1559463166
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559463165}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 33075955}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1559463167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559463165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4ccec323520d5a419a5eb95c9fdea40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickUIButton: {fileID: 0}
+  hoverUIButton: {fileID: 0}
+  cannon: {fileID: 0}
+  cardChoiceSelect: {fileID: 0}
+  coin: {fileID: 0}
+  warCry: {fileID: 0}
+--- !u!81 &1559463168
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559463165}
+  m_Enabled: 1
+--- !u!114 &1559463169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559463165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3877348c9943ba04ca6f0ced835cd57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSourcePrefab: {fileID: 6114849633337057922, guid: 5728f9f429c6fb8428a9212c326b9671, type: 3}
 --- !u!1 &1619361425
 GameObject:
   m_ObjectHideFlags: 0

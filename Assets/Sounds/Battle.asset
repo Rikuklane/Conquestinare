@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 785d96894722d984b88c5dcea0220390, type: 3}
-  m_Name: Unit 4
+  m_Script: {fileID: 11500000, guid: 8983058b2a997c04dbad0533caaf74a7, type: 3}
+  m_Name: Battle
   m_EditorClassIdentifier: 
-  title: One eye
-  description: Inflicts some heavy damage.
-  cost: 3
-  attack: 3
-  health: 2
-  sprite: {fileID: 21300000, guid: 760683cfbae472b448d31570a224913d, type: 3}
+  volumeMin: 0.7
+  volumeMax: 1
+  pitchMin: 1.2
+  pitchMax: 0.7
+  cooldown: 0.4
+  clips:
+  - {fileID: 8300000, guid: 971fa4ea62690804eb19ce2e30688ce1, type: 3}

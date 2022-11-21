@@ -84,7 +84,6 @@ namespace Turns
     
         private void SetPlayerGold(Player player, int gold)
         {
-            gameObject.GetComponent<AudioSource>().PlayOneShot(goldAmountSound);
             player.gold = gold;
             // Changing the gold amount seen on screen if the change was on the current player
             goldAmountText.text = GetCurrentPlayer().gold.ToString();
