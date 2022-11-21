@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Turns
@@ -67,6 +68,14 @@ namespace Turns
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
             goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
+        }
+
+        private void Update()
+        {
+            if(Input.GetKey("escape"))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
 
         private void OnDestroy()

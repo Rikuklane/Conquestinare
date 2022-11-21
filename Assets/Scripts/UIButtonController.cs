@@ -32,4 +32,9 @@ public class UIButtonController : MonoBehaviour
         PlayerPrefs.SetInt("playerNumber", numberOfPlayers);
         SceneManager.LoadScene(1);
     }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
 }
