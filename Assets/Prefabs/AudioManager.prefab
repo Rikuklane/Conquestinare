@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4606303314512137851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4606303314512137848}
+  - component: {fileID: 4606303314512138119}
+  - component: {fileID: 4606303314512138118}
+  - component: {fileID: 4606303314512137849}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4606303314512137848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4606303314512137851}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4606303314512138119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4606303314512137851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3877348c9943ba04ca6f0ced835cd57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSourcePrefab: {fileID: 6114849633337057922, guid: 5728f9f429c6fb8428a9212c326b9671, type: 3}
+--- !u!81 &4606303314512138118
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4606303314512137851}
+  m_Enabled: 1
+--- !u!114 &4606303314512137849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4606303314512137851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4ccec323520d5a419a5eb95c9fdea40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickUIButton: {fileID: 11400000, guid: 0342f9f9812050542a48d736276007d5, type: 2}
+  hoverUIButton: {fileID: 11400000, guid: e76dd9bc4947aba43a49d70b7a186cdf, type: 2}
+  cannon: {fileID: 11400000, guid: 468ed570a89f59e44a87d6e8bfe5e1a2, type: 2}
+  cardChoiceSelect: {fileID: 11400000, guid: cd402f939bd2fc4419206de88e5274f5, type: 2}
+  coin: {fileID: 11400000, guid: 843c36c3eb07d554da406cc987d89e38, type: 2}
+  warCry: {fileID: 11400000, guid: 7b8b1011344e3584e9681caf0e7cc89b, type: 2}
+  cardHit: {fileID: 11400000, guid: 3f20556d7a5355f4fb9f5832e99241d3, type: 2}
+  cardHover: {fileID: 11400000, guid: 900e621fefeb28148aa0c2a55edfbee7, type: 2}

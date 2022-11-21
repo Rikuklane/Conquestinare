@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db9787d248b9cc4095d4ca620b9d0b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 8983058b2a997c04dbad0533caaf74a7, type: 3}
   m_Name: Cannon
   m_EditorClassIdentifier: 
-  AudioClips:
-  - {fileID: 8300000, guid: d71f0a680f8250442b8cc15996cfbf9c, type: 3}
-  - {fileID: 8300000, guid: 0c7d9ae84ca36c24bbdbdeadadd334b0, type: 3}
-  - {fileID: 8300000, guid: d26fc0aa988b0cc40ae06803fdf99c13, type: 3}
-  VolumeMin: 0.95
-  VolumeMax: 1.06
-  PitchMin: 0.86
-  PitchMax: 1.12
-  Cooldown: 0.6
+  volumeMin: 0.7
+  volumeMax: 1
+  pitchMin: 1.2
+  pitchMax: 0.7
+  cooldown: 0.4
+  clips:
+  - {fileID: 8300000, guid: 4139397606d6ba447b91b85a570baa44, type: 3}
+  - {fileID: 8300000, guid: 601f3489781cbe04885693b90833e499, type: 3}
+  - {fileID: 8300000, guid: d5abe6955d1bdb44c9ba4b04f67c7cf0, type: 3}

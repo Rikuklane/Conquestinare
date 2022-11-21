@@ -11,8 +11,10 @@ public class AudioController : MonoBehaviour
     public AudioClipGroup cardChoiceSelect;
     public AudioClipGroup coin;
     public AudioClipGroup warCry;
+    public AudioClipGroup cardHit;
+    public AudioClipGroup cardHover;
     public static AudioController Instance;
-
+    
     private void Awake()
     {
         Instance = this;

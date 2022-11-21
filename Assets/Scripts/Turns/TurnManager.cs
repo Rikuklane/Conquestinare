@@ -13,8 +13,6 @@ namespace Turns
         public TextMeshProUGUI playerNameText;
         public TextMeshProUGUI turnNameText;
         public TextMeshProUGUI goldAmountText;
-        public AudioClip goldAmountSound;
-        public AudioClip buttonPressSound;
         
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -98,7 +96,6 @@ namespace Turns
 
         public void TriggerEndState()
         {
-            gameObject.GetComponent<AudioSource>().PlayOneShot(buttonPressSound);
             StartCoroutine(_currentState.EndState(this, GetCurrentPlayer()));
         }
 
