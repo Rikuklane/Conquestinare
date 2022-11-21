@@ -13,6 +13,8 @@ namespace Turns
         public TextMeshProUGUI playerNameText;
         public TextMeshProUGUI turnNameText;
         public TextMeshProUGUI goldAmountText;
+        public AudioClip goldAmountSound;
+        public AudioClip buttonPressSound;
         
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -82,6 +84,7 @@ namespace Turns
     
         private void SetPlayerGold(Player player, int gold)
         {
+            gameObject.GetComponent<AudioSource>().PlayOneShot(goldAmountSound);
             player.gold = gold;
             // Changing the gold amount seen on screen if the change was on the current player
             goldAmountText.text = GetCurrentPlayer().gold.ToString();
@@ -96,6 +99,7 @@ namespace Turns
 
         public void TriggerEndState()
         {
+            gameObject.GetComponent<AudioSource>().PlayOneShot(buttonPressSound);
             StartCoroutine(_currentState.EndState(this, GetCurrentPlayer()));
         }
 

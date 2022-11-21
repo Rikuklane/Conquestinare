@@ -9,15 +9,22 @@ public class UIButtonController : MonoBehaviour
     public AudioClipGroup clickUIButton;
     public AudioClipGroup hoverUIButton;
 
-    private void OnMouseEnter()
+    public AudioClip hoverButtonSound;
+
+    private AudioSource audioSource;
+
+    private void Awake()
     {
-        Debug.Log("Mouse entered!");
-        hoverUIButton.Play();
+        audioSource = transform.GetComponent<AudioSource>();
     }
 
     public void PlayOnClick()
     {
-        Debug.Log("Button clicked");
-        clickUIButton.Play();
+        audioSource.PlayOneShot(clickUIButton.clips[0]);
+    }
+
+    public void PlayOnHover()
+    {
+        audioSource.PlayOneShot(hoverUIButton.clips[1]);
     }
 }

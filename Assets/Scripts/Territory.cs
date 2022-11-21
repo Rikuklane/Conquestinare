@@ -202,6 +202,7 @@ public class Territory : MonoBehaviour
                 }
 
                 //waypoint.ToggleLines();
+                gameObject.GetComponent<AudioSource>().Play();
                 TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
             }
         }

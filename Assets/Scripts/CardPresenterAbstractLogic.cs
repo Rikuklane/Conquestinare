@@ -19,7 +19,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     {
         CardInstance = cardInstance;
         ChildGameObject = child;
-        _defaultColor = ChildGameObject.GetComponent<Image>().color;
+        _defaultColor = ChildGameObject.transform.GetComponentsInChildren<Image>()[0].color;
         CardData = cardData;
         if (_currentState == null)
         {
@@ -31,7 +31,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     {
         cardButton.interactable = isInteract;
         isInteractable = isInteract;
-        ChildGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
+        ChildGameObject.transform.GetComponentsInChildren<Image>()[0].color = isInteract ? _defaultColor : _notInteractableColor;
     }
     
     public void SwitchState(AbstractCardState state)
@@ -65,7 +65,9 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         
         LeanTween.moveLocal(ChildGameObject, new Vector3(0, y, 0), 0.2f);
         _defaultColor.a = alpha;
-        ChildGameObject.GetComponent<Image>().color = _defaultColor;
+
+        gameObject.GetComponentInParent<AudioSource>().Play();
+        ChildGameObject.transform.GetComponentsInChildren<Image>()[0].color = _defaultColor;
     }
 
     public GameObject ChildGameObject { get; private set;}

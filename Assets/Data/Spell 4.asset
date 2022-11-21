@@ -15,6 +15,6 @@ MonoBehaviour:
   title: ElectricStorm
   description: Give a random unit +1/+1 in the tile
   cost: 2
-  sprite: {fileID: 1860238120, guid: 00a0107cc4e137847845226cf1a58f6a, type: 3}
+  sprite: {fileID: 21300000, guid: 96b0cf1c76b725c4ab727229db1e2680, type: 3}
   type: 1
   effectArea: 1
