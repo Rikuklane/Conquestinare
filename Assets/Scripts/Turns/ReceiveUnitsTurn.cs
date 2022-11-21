@@ -9,6 +9,7 @@ namespace Turns
     
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
+            TurnManager.Instance.goldGainText.gameObject.SetActive(true);
             AttackLogic.Instance.canHover = false;
             SetNextButtonActive(turnManager, false);
             Events.DisplayUnitSelection(3);
@@ -17,6 +18,7 @@ namespace Turns
 
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
+            TurnManager.Instance.goldGainText.gameObject.SetActive(false);
             CardSelector.Instance.SetActive(false);
             SetNextButtonActive(turnManager, true);
             turnManager.SwitchTurnState(turnManager.MarketTurn);
