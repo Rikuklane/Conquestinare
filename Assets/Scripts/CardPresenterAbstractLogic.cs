@@ -56,6 +56,10 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         if (isSelected)
         {
             y = 10;
+            if(_currentState.GetType() == typeof(CardInHand))
+            {
+                LeanTween.scale(CardInstance, new Vector3(0.5f, 0.5f, 0.5f), 0.25f);
+            }
         } else
         {
             alpha = 0.6f;

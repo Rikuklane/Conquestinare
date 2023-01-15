@@ -217,7 +217,7 @@ public class Territory : MonoBehaviour
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.3f)
+                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.1f)
                         .setOnComplete(() =>
                         {
                             cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
