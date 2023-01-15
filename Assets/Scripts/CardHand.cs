@@ -10,6 +10,15 @@ public class CardHand : MonoBehaviour
     public CardPresenterAbstractLogic cardSelected;
     public UnitCardPresenter unitCardPrefab;
 
+    private void Update()
+    {
+        if(cardSelected != null)
+        {
+            print(Input.mousePosition);
+            cardSelected.CardInstance.transform.position = Input.mousePosition;
+        }
+    }
+
     public void DestroySelected()
     {
         if(cardSelected)
