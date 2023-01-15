@@ -59,15 +59,28 @@ public class CardPresenterAbstractLogic: MonoBehaviour
             if(_currentState.GetType() == typeof(CardInHand))
             {
                 LeanTween.scale(CardInstance, new Vector3(0.5f, 0.5f, 0.5f), 0.25f);
+                CanvasGroup canvasGroup = cardButton.gameObject.AddComponent<CanvasGroup>();
+                canvasGroup.blocksRaycasts = false;
             }
         } else
         {
             alpha = 0.6f;
+            if (CardInstance.GetComponent<CanvasGroup>() != null)
+            {
+                LeanTween.scale(CardInstance, new Vector3(1f, 1f, 1f), 0.25f);
+                Destroy(CardInstance.GetComponent<CanvasGroup>());
+            }
         }
-        
+
         LeanTween.moveLocal(ChildGameObject, new Vector3(0, y, 0), 0.2f);
         _defaultColor.a = alpha;
 
+        ChildGameObject.GetComponent<Image>().color = _defaultColor;
+    }
+
+    public void FadeCard()
+    {
+        _defaultColor.a = 0.6f;
         ChildGameObject.GetComponent<Image>().color = _defaultColor;
     }
 

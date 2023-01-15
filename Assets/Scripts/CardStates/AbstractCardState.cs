@@ -24,6 +24,7 @@ namespace CardStates
                 .setOnComplete(()=> {
                         card.CardInstance.transform.SetParent(CardHand.Instance.transform, false);
                         card.ChildGameObject.transform.localPosition = Vector3.zero;
+                        card.FadeCard();
                         if (endTurn) TurnManager.Instance.TriggerEndState();
                     }
                 );
