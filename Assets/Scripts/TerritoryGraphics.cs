@@ -16,6 +16,9 @@ public class TerritoryGraphics : MonoBehaviour
     public bool isShowBonus = false;
     public bool showingCards = false;
 
+    public ScalingAnimation OpenAnimation;
+    public ScalingAnimation CloseAnimation;
+
     private List<Image> icons = new();
     private SpriteRenderer spriteRenderer;
 
@@ -73,26 +76,28 @@ public class TerritoryGraphics : MonoBehaviour
 
     public void showCards()
     {
-        //foreach(Transform child in parent.transform)
-        ///{
-        //    Destroy(child.gameObject);
-        //}
+        if (AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+            return;
         foreach (UnitCardPresenter unit in presentUnits)
         {
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(true);
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
+        OpenAnimation.enabled = true;
         showingCards = true;
     }
     public void hideCards()
     {
+        if (!AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+            return;
         foreach (UnitCardPresenter unit in presentUnits)
         {
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(false);
         }
-        AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
+        //AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
+        CloseAnimation.enabled = true;
         showingCards = false;
     }
 
