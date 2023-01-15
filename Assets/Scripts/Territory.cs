@@ -55,16 +55,19 @@ public class Territory : MonoBehaviour
 
     public void CastSpellOnUnits(SpellData spellData)
     {
-        if (spellData.effectArea == EffectArea.WholeTile)
+        for (int repetition = 0; repetition < spellData.repetition; repetition++)
         {
-            for (int i = 0; i < units.Count; i++)
+            if (spellData.effectArea == EffectArea.WholeTile)
             {
-                SetUnitAttackAndHealth(i, spellData.attack, spellData.health);
+                for (int i = 0; i < units.Count; i++)
+                {
+                    SetUnitAttackAndHealth(i, spellData.attackChange, spellData.healthChange);
+                }
             }
-        }
-        else
-        {
-            SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attack, spellData.health);
+            else
+            {
+                SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attackChange, spellData.healthChange);
+            }    
         }
     }
 
@@ -211,7 +214,7 @@ public class Territory : MonoBehaviour
                 if (AttackLogic.Instance.isPlacementTurn)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected && player == Events.RequestPlayer())
+                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.CardData.GetType() == typeof(SpellData)))
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
