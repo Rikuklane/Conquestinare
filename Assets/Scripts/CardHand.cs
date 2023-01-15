@@ -9,6 +9,19 @@ public class CardHand : MonoBehaviour
     public Dictionary<string, List<CardPresenterAbstractLogic>> cardHands = new();
     public CardPresenterAbstractLogic cardSelected;
     public UnitCardPresenter unitCardPrefab;
+    private Vector3 cardSelectLastPosition;
+
+    private void Update()
+    {
+        if(cardSelected != null)
+        {
+            cardSelected.CardInstance.transform.position = Input.mousePosition;
+            if (Input.GetMouseButtonDown(1))
+            {
+                NewCardSelected(null);
+            }
+        }
+    }
 
     private void Update()
     {
@@ -31,9 +44,19 @@ public class CardHand : MonoBehaviour
 
     public void NewCardSelected(CardPresenterAbstractLogic cardSelect)
     {
+        // animate last card back to hand
+        if(cardSelected != null)
+        {
+            StartCoroutine(cardSelected.MoveBack(cardSelectLastPosition, 0.7f));
+        }
         cardSelected = cardSelect;
+        if (cardSelect == null)
+        {
+            return;
+        }
+        cardSelectLastPosition = cardSelect.transform.position;
         // deselect others
-        foreach(CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().Name])
+        foreach (CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().Name])
         {
             if (card.isSelected)
             {
