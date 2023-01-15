@@ -214,7 +214,7 @@ public class Territory : MonoBehaviour
                 if (AttackLogic.Instance.isPlacementTurn)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected && player == Events.RequestPlayer())
+                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.CardData.GetType() == typeof(SpellData)))
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
