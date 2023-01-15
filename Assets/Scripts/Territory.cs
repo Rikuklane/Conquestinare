@@ -21,7 +21,6 @@ public class Territory : MonoBehaviour
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
 
-
     public class Unit
     {
         public int attack;
@@ -123,7 +122,7 @@ public class Territory : MonoBehaviour
 
         card.gameObject.SetActive(false);
         // overwrite scale
-        card.transform.localScale = new Vector3(2, 2, 2);
+        card.transform.localScale = new Vector3(1, 1, 1);
 
         card.cardLogic.SwitchState(CardStateController.Instance.CardInTerritory);
 
@@ -242,6 +241,12 @@ public class Territory : MonoBehaviour
 
                 //waypoint.ToggleLines();
                 TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
+            } else if (Input.GetMouseButton(1))
+            {
+                TerritoryGraphics.showCards();
+            } else if(TerritoryGraphics.showingCards)
+            {
+                TerritoryGraphics.hideCards();
             }
         }
 
