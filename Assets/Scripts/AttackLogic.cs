@@ -17,6 +17,9 @@ public class AttackLogic : MonoBehaviour
     public bool isReorganizeTurn = false;
     public bool isReorganizeTriggered = false;
     public bool canHover = false;
+    // for simulateBattle logic
+    private bool isDefenderTurn = true;
+    private int noMaxBattleTurns = 50;
 
     void Awake()
     {
@@ -178,8 +181,14 @@ public class AttackLogic : MonoBehaviour
 
     public void AttackPressed()
     {
-        bool isWin = SimulateBattle();
+        // show panel with cards
+        AttackGUI.instance.ShowBattle(selectedTerritory, attackTerritory);
+        SimulateBattle();
+    }
 
+    public void HandleBattleResult(bool isWin)
+    {
+        // call handleBattleResult after coroutine finished
         // winCondition
         if (isWin && selectedTerritory.GetUnitsCount() > 1)
         {
@@ -250,46 +259,28 @@ public class AttackLogic : MonoBehaviour
         selectedTerritory = null;
         attackTerritory = null;
     }
-
-    private bool SimulateBattle()
+    
+    public bool SimulateBattle()
     {
-        // show panel with cards
-        AttackGUI.instance.ShowBattle();
-        int playerCards = selectedTerritory.units.Count;
-        int enemyCards = attackTerritory.units.Count;
-
-        // neutral territory
-        if(enemyCards==0)
+        if (attackTerritory.GetUnitsCount() <= 0)
         {
+            AttackGUI.instance.HideBattle();
+            HandleBattleResult(true);
             return true;
         }
-
-        print(playerCards + " " + enemyCards);
-
-        int i = 0; // dont want to write if true
-        // less than 50 turns
-        while (i<50)
+        if (selectedTerritory.GetUnitsCount() <= 0)
         {
-            // defence attacks
-            int playerAttack = attackTerritory.GetUnitAtIndex(0).attack;
-            selectedTerritory.AttackUnit(0, playerAttack);
-
-            if (selectedTerritory.GetUnitsCount() <= 0)
-            {
-                return false;
-            }
-
-            // attacker attacks
-            int enemyAttack = selectedTerritory.GetUnitAtIndex(0).attack;
-            attackTerritory.AttackUnit(0, enemyAttack);
-
-            if (attackTerritory.GetUnitsCount() <= 0)
-            {
-                return true;
-            }
-            print("end of turn " + i.ToString());
-            i++;
+            AttackGUI.instance.HideBattle();
+            HandleBattleResult(false);
+            return false;
         }
+
+        if (noMaxBattleTurns > 0)
+        {
+            StartCoroutine(AttackGUI.instance.AttackAnimation(isDefenderTurn, selectedTerritory, attackTerritory));
+        }
+        isDefenderTurn = !isDefenderTurn;
+        noMaxBattleTurns--;
         return false;
     }
 }

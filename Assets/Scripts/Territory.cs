@@ -83,7 +83,7 @@ public class Territory : MonoBehaviour
 
     public void AttackUnit(int index, int damage)
     {
-        print(index + " " + damage + " " + units[index].health);
+        //print(index + " " + damage + " " + units[index].health);
         units[index].health -= damage;
         TerritoryGraphics.presentUnits[index].SetHealth(units[index].health);
 
