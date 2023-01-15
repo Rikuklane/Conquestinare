@@ -52,7 +52,7 @@ namespace Turns
             Events.OnRequestGold += GetPlayerGold;
             Events.OnSetGold += SetPlayerGold;
             Events.OnNextPlayerStartTurn += SetNextPlayerTurn;
-            nextTurnButton.onClick.AddListener(TriggerEndState);
+            nextTurnButton.onClick.AddListener(TriggerEndStateButton);
         }
         
         private void Start()
@@ -130,12 +130,15 @@ namespace Turns
             turnNameText.text = _currentState.ToString();
         }
 
-        public void TriggerEndState()
+        public void TriggerEndStateButton()
         {
             AudioController.Instance.clickUIButton.Play();
+            TriggerEndState();
+        }
+        public void TriggerEndState()
+        {
             StartCoroutine(_currentState.EndState(this, GetCurrentPlayer()));
         }
-
         private void UpdatePlayerNameAndGold()
         {
             playerNameText.text = GetCurrentPlayer().Name;
