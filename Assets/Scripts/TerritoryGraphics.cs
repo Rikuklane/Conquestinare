@@ -14,6 +14,7 @@ public class TerritoryGraphics : MonoBehaviour
     public Image iconPrefab;
     public List<UnitCardPresenter> presentUnits = new();
     public bool isShowBonus = false;
+    public bool showingCards = false;
 
     private List<Image> icons = new();
     private SpriteRenderer spriteRenderer;
@@ -82,7 +83,7 @@ public class TerritoryGraphics : MonoBehaviour
             unit.gameObject.SetActive(true);
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
-
+        showingCards = true;
     }
     public void hideCards()
     {
@@ -92,6 +93,7 @@ public class TerritoryGraphics : MonoBehaviour
             unit.gameObject.SetActive(false);
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
+        showingCards = false;
     }
 
 
@@ -137,7 +139,7 @@ public class TerritoryGraphics : MonoBehaviour
         if (AttackLogic.Instance.canHover)
         {
             spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-            showCards();
+            //showCards();
         }
     }
     private void OnMouseExit()
