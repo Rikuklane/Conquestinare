@@ -55,16 +55,19 @@ public class Territory : MonoBehaviour
 
     public void CastSpellOnUnits(SpellData spellData)
     {
-        if (spellData.effectArea == EffectArea.WholeTile)
+        for (int repetition = 0; repetition < spellData.repetition; repetition++)
         {
-            for (int i = 0; i < units.Count; i++)
+            if (spellData.effectArea == EffectArea.WholeTile)
             {
-                SetUnitAttackAndHealth(i, spellData.attack, spellData.health);
+                for (int i = 0; i < units.Count; i++)
+                {
+                    SetUnitAttackAndHealth(i, spellData.attackChange, spellData.healthChange);
+                }
             }
-        }
-        else
-        {
-            SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attack, spellData.health);
+            else
+            {
+                SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attackChange, spellData.healthChange);
+            }    
         }
     }
 
