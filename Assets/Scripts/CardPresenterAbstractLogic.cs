@@ -27,14 +27,14 @@ public class CardPresenterAbstractLogic: MonoBehaviour
             SwitchState(CardStateController.Instance.CardInHand);
         }
     }
-    
+
     public void ChangeInteractable(bool isInteract)
     {
         cardButton.interactable = isInteract;
         isInteractable = isInteract;
         ChildGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
     }
-    
+
     public void SwitchState(AbstractCardState state)
     {
         _currentState = state;
@@ -106,7 +106,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     public GameObject ChildGameObject { get; private set;}
     public GameObject CardInstance { get; private set; }
     public CardData CardData { get; set; }
-    
+
     private void OnBecameVisible()
     {
         // reset, when accidentally clicked between reorganizing

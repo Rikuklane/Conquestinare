@@ -23,6 +23,15 @@ public class CardHand : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(cardSelected != null)
+        {
+            print(Input.mousePosition);
+            cardSelected.CardInstance.transform.position = Input.mousePosition;
+        }
+    }
+
     public void DestroySelected()
     {
         if(cardSelected)
