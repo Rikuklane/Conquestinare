@@ -21,7 +21,6 @@ namespace Turns
         public readonly PlayerStartTurn PlayerStartTurn = new();
         public readonly ReceiveUnitsTurn ReceiveUnitsTurn = new();
         public readonly MarketTurn MarketTurn = new();
-        public readonly PlaceUnitsTurn PlaceUnitsTurn = new();
         public readonly BattleTurn BattleTurn = new();
         public readonly ReorganizeTurn ReorganizeTurn = new();
         private AbstractTurnState _currentState;
