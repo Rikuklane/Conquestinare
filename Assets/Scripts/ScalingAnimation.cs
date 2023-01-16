@@ -26,9 +26,9 @@ public class ScalingAnimation : MonoBehaviour
         transform.localScale = Vector3.LerpUnclamped(StartScale, EndScale, value);
         if(timeAggregate >= Duration)
         {
-            enabled = false;
             if(CloseOnEnd)
             {
+                enabled = false;
                 gameObject.SetActive(false);
             }
         }

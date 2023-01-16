@@ -4046,7 +4046,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635182589}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 280988b0eba4c1346b1b44d7f5206ffe, type: 3}
   m_Name: 
@@ -8212,7 +8212,6 @@ MonoBehaviour:
   selectedTerritory: {fileID: 0}
   attackTerritory: {fileID: 0}
   territoryManager: {fileID: 888310241}
-  isPlacementTurn: 1
   isReorganizeTurn: 0
   isReorganizeTriggered: 0
   canHover: 0
