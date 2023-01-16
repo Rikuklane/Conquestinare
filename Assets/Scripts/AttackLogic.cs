@@ -13,7 +13,6 @@ public class AttackLogic : MonoBehaviour
 
     public GameObject territoryManager;
 
-    public bool isPlacementTurn = true;
     public bool isReorganizeTurn = false;
     public bool isReorganizeTriggered = false;
     public bool canHover = false;

@@ -10,8 +10,8 @@ namespace Turns
         {
             AttackGUI.instance.ChangeButtonClickAttack(true);
             // TODO now only see the map and be able to attack
+            AttackLogic.Instance.canHover = true;
             AttackLogic.Instance.territoryManager.SetActive(true);
-            AttackLogic.Instance.isPlacementTurn = false;
             return base.EnterState(turnManager, player);
         }
 

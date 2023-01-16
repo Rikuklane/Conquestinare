@@ -210,7 +210,8 @@ public class Territory : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (AttackLogic.Instance.isPlacementTurn)
+                // Check if card selected
+                if (CardHand.Instance.cardSelected)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
                     if (cardSelected && (player == Events.RequestPlayer() || cardSelected.CardData.GetType() == typeof(SpellData)))
