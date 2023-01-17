@@ -6,24 +6,21 @@ using TMPro;
 
 public class TerritoryGraphics : MonoBehaviour
 {
-    [Header("Colors")]
-    [Space]
     public Color color;
     public Color playerColor;
     public Color enemyColor;
 
-    [Header("Icons")]
-    [Space]
     public GameObject iconsParent;
     public Image iconPrefab;
+    public List<UnitCardPresenter> presentUnits = new();
+    public bool isShowBonus = false;
+    public bool showingCards = false;
+
+    public ScalingAnimation OpenAnimation;
+    public ScalingAnimation CloseAnimation;
+
     private List<Image> icons = new();
     private SpriteRenderer spriteRenderer;
-
-    [Space]
-    public List<UnitCardPresenter> presentUnits = new();
-    [Space]
-    public bool isShowBonus = false;
- 
 
     private void Awake()
     {
@@ -79,26 +76,29 @@ public class TerritoryGraphics : MonoBehaviour
 
     public void showCards()
     {
-        //foreach(Transform child in parent.transform)
-        ///{
-        //    Destroy(child.gameObject);
-        //}
+        if (AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+            return;
         foreach (UnitCardPresenter unit in presentUnits)
         {
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(true);
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
-
+        OpenAnimation.enabled = true;
+        showingCards = true;
     }
     public void hideCards()
     {
+        if (!AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+            return;
         foreach (UnitCardPresenter unit in presentUnits)
         {
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(false);
         }
-        AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
+        //AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
+        CloseAnimation.enabled = true;
+        showingCards = false;
     }
 
 
@@ -144,7 +144,7 @@ public class TerritoryGraphics : MonoBehaviour
         if (AttackLogic.Instance.canHover)
         {
             spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
-            showCards();
+            //showCards();
         }
     }
     private void OnMouseExit()

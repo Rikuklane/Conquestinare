@@ -7,10 +7,9 @@ public class SpellData : CardData
 {
     public Sprite sprite;
     public EffectArea effectArea = EffectArea.WholeTile;
-    [Range(-10, 10)]
-    public int attack;
-    [Range(-10, 10)]
-    public int health;
+    public int attackChange;
+    public int healthChange;
+    public int repetition = 1;
 }
 
 public enum EffectArea

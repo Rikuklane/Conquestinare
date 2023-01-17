@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Give a random unit +1/+1 in the tile
   cost: 2
   sprite: {fileID: 21300000, guid: cef146d1e89b04945b63cdac5b5f88da, type: 3}
-  type: 1
   effectArea: 1
-  attack: 1
-  health: 1
+  attackChange: 1
+  healthChange: 1
+  repetition: 1

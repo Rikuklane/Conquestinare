@@ -31,7 +31,6 @@ public class Territory : MonoBehaviour
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
 
-
     public class Unit
     {
         public int attack;
@@ -65,16 +64,19 @@ public class Territory : MonoBehaviour
 
     public void CastSpellOnUnits(SpellData spellData)
     {
-        if (spellData.effectArea == EffectArea.WholeTile)
+        for (int repetition = 0; repetition < spellData.repetition; repetition++)
         {
-            for (int i = 0; i < units.Count; i++)
+            if (spellData.effectArea == EffectArea.WholeTile)
             {
-                SetUnitAttackAndHealth(i, spellData.attack, spellData.health);
+                for (int i = 0; i < units.Count; i++)
+                {
+                    SetUnitAttackAndHealth(i, spellData.attackChange, spellData.healthChange);
+                }
             }
-        }
-        else
-        {
-            SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attack, spellData.health);
+            else
+            {
+                SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attackChange, spellData.healthChange);
+            }    
         }
     }
 
@@ -93,7 +95,7 @@ public class Territory : MonoBehaviour
 
     public void AttackUnit(int index, int damage)
     {
-        print(index + " " + damage + " " + units[index].health);
+        //print(index + " " + damage + " " + units[index].health);
         units[index].health -= damage;
         TerritoryGraphics.presentUnits[index].SetHealth(units[index].health);
 
@@ -130,7 +132,7 @@ public class Territory : MonoBehaviour
 
         card.gameObject.SetActive(false);
         // overwrite scale
-        card.transform.localScale = new Vector3(2, 2, 2);
+        card.transform.localScale = new Vector3(1, 1, 1);
 
         card.cardLogic.SwitchState(CardStateController.Instance.CardInTerritory);
 
@@ -218,14 +220,15 @@ public class Territory : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (AttackLogic.Instance.isPlacementTurn)
+                // Check if card selected
+                if (CardHand.Instance.cardSelected)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected && player == Events.RequestPlayer())
+                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.CardData.GetType() == typeof(SpellData)))
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.3f)
+                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.1f)
                         .setOnComplete(() =>
                         {
                             cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
@@ -249,6 +252,12 @@ public class Territory : MonoBehaviour
 
                 //waypoint.ToggleLines();
                 TerritoryGraphics.ChangeColor(new Color(200 / 255f, 200 / 255f, 200 / 255f));
+            } else if (Input.GetMouseButton(1))
+            {
+                TerritoryGraphics.showCards();
+            } else if(TerritoryGraphics.showingCards)
+            {
+                TerritoryGraphics.hideCards();
             }
         }
 

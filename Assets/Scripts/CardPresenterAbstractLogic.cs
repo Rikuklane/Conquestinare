@@ -10,7 +10,8 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     public bool isSelected;
     public bool isInteractable = true;
     public Button cardButton;
-    
+    public AnimationCurve animationCurve;
+
     private readonly Color _notInteractableColor = Color.gray;
     private Color _defaultColor;
     private AbstractCardState _currentState;
@@ -26,14 +27,14 @@ public class CardPresenterAbstractLogic: MonoBehaviour
             SwitchState(CardStateController.Instance.CardInHand);
         }
     }
-    
+
     public void ChangeInteractable(bool isInteract)
     {
         cardButton.interactable = isInteract;
         isInteractable = isInteract;
         ChildGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
     }
-    
+
     public void SwitchState(AbstractCardState state)
     {
         _currentState = state;
@@ -56,21 +57,56 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         if (isSelected)
         {
             y = 10;
+            if(_currentState.GetType() == typeof(CardInHand))
+            {
+                LeanTween.scale(CardInstance, new Vector3(0.5f, 0.5f, 0.5f), 0.25f);
+                CanvasGroup canvasGroup = cardButton.gameObject.AddComponent<CanvasGroup>();
+                canvasGroup.blocksRaycasts = false;
+            }
         } else
         {
             alpha = 0.6f;
+            if (CardInstance.GetComponent<CanvasGroup>() != null)
+            {
+                LeanTween.scale(CardInstance, new Vector3(1f, 1f, 1f), 0.25f);
+                Destroy(CardInstance.GetComponent<CanvasGroup>());
+            }
         }
-        
+
         LeanTween.moveLocal(ChildGameObject, new Vector3(0, y, 0), 0.2f);
         _defaultColor.a = alpha;
 
+        ChildGameObject.GetComponent<Image>().color = _defaultColor;
+    }
+    public IEnumerator MoveBack(Vector3 target, float duration)
+    {
+        //animationTo.transform.SetParent(transform, true);
+        Vector3 origin = CardInstance.transform.position;
+        float timePassed = 0f;
+        while (timePassed <= duration)
+        {
+            timePassed += Time.deltaTime;
+            float percent = Mathf.Clamp01(timePassed / duration);
+            float curvePercent = animationCurve.Evaluate(percent);
+            CardInstance.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
+            yield return null;
+        }
+        if(isSelected)
+        {
+            TriggerSelected();
+        }
+    }
+
+    public void FadeCard()
+    {
+        _defaultColor.a = 0.6f;
         ChildGameObject.GetComponent<Image>().color = _defaultColor;
     }
 
     public GameObject ChildGameObject { get; private set;}
     public GameObject CardInstance { get; private set; }
     public CardData CardData { get; set; }
-    
+
     private void OnBecameVisible()
     {
         // reset, when accidentally clicked between reorganizing

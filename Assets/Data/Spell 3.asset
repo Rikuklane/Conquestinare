@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Give all units in tile +1/+1
   cost: 6
   sprite: {fileID: 21300000, guid: 96b0cf1c76b725c4ab727229db1e2680, type: 3}
-  type: 1
   effectArea: 0
-  attack: 1
-  health: 1
+  attackChange: 1
+  healthChange: 1
+  repetition: 1
