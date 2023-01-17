@@ -6,17 +6,24 @@ using TMPro;
 
 public class TerritoryGraphics : MonoBehaviour
 {
+    [Header("Colors")]
+    [Space]
     public Color color;
     public Color playerColor;
     public Color enemyColor;
 
+    [Header("Icons")]
+    [Space]
     public GameObject iconsParent;
     public Image iconPrefab;
-    public List<UnitCardPresenter> presentUnits = new();
-    public bool isShowBonus = false;
-
     private List<Image> icons = new();
     private SpriteRenderer spriteRenderer;
+
+    [Space]
+    public List<UnitCardPresenter> presentUnits = new();
+    [Space]
+    public bool isShowBonus = false;
+ 
 
     private void Awake()
     {

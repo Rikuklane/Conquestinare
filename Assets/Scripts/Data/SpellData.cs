@@ -7,7 +7,9 @@ public class SpellData : CardData
 {
     public Sprite sprite;
     public EffectArea effectArea = EffectArea.WholeTile;
+    [Range(-10, 10)]
     public int attack;
+    [Range(-10, 10)]
     public int health;
 }
 

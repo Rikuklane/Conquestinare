@@ -11,13 +11,23 @@ public class Territory : MonoBehaviour
     public Waypoint waypoint;
     public Player player;
 
+    [Header("Territories")]
+    [Space]
     public List<Territory> territories = new();
     public List<Vector3> enemyTerritories = new();
        
+    [Header("Units")]
+    [Space]
     public List<UnitData> startUnits = new();
 
-    public UnitCardPresenter cardPrefab;
+    [Header("Graphics")]
+    [Space]
 
+    public UnitCardPresenter cardPrefab;
+    public TerritoryGraphics TerritoryGraphics;
+
+    [Header("Bonus Group")]
+    [Space]
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
 
@@ -30,7 +40,7 @@ public class Territory : MonoBehaviour
 
     public List<Unit> units = new();
 
-    public TerritoryGraphics TerritoryGraphics;
+    
         
     void Awake()
     {

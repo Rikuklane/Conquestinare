@@ -5,12 +5,20 @@ using UnityEngine;
 
 public class AudioController : MonoBehaviour
 {
+    [Header("UI Sounds")]
+    [Space]
     public AudioClipGroup clickUIButton;
     public AudioClipGroup hoverUIButton;
+
+    [Header("Game Sounds")]
+    [Space]
     public AudioClipGroup cannon;
-    public AudioClipGroup cardChoiceSelect;
     public AudioClipGroup coin;
     public AudioClipGroup warCry;
+
+    [Header("Card Sounds")]
+    [Space]
+    public AudioClipGroup cardChoiceSelect;
     public AudioClipGroup cardHit;
     public AudioClipGroup cardHover;
     public static AudioController Instance;

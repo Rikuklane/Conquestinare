@@ -8,14 +8,20 @@ using System.Linq;
 public class AttackLogic : MonoBehaviour
 {
     public static AttackLogic Instance;
+    [HideInInspector]
     public Territory selectedTerritory;
+    [HideInInspector]
     public Territory attackTerritory;
 
     public GameObject territoryManager;
 
+    [HideInInspector]
     public bool isPlacementTurn = true;
+    [HideInInspector]
     public bool isReorganizeTurn = false;
+    [HideInInspector]
     public bool isReorganizeTriggered = false;
+    [HideInInspector]
     public bool canHover = false;
 
     void Awake()
