@@ -12,7 +12,7 @@ public class MapGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var json = Resources.Load<TextAsset>("world").text;
+        var json = Resources.Load<TextAsset>("worldequalized").text;
         MapData mapData = JsonUtility.FromJson<MapData>(json);
 
         /* Test Vertices
