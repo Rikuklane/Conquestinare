@@ -11,25 +11,34 @@ public class Territory : MonoBehaviour
     public Waypoint waypoint;
     public Player player;
 
+    [Header("Neighbours")]
+    [Space]
     public List<Territory> territories = new();
+    [HideInInspector]
     public List<Vector3> enemyTerritories = new();
        
+    [Header("Units")]
+    [Space]
+    [HideInInspector]
     public List<UnitData> startUnits = new();
-
-    public UnitCardPresenter cardPrefab;
-
-    public TerritoryManager.BonusGroup bonusGroup;
-    private readonly Random _random = new();
-
     public class Unit
     {
         public int attack;
         public int health;
     }
-
+    [HideInInspector]
     public List<Unit> units = new();
 
+
+    [Header("Graphics")]
+    [Space]
+
     public TerritoryGraphics TerritoryGraphics;
+
+    [Header("Bonus Group")]
+    [Space]
+    public TerritoryManager.BonusGroup bonusGroup;
+    private readonly Random _random = new();
         
     void Awake()
     {
@@ -107,7 +116,7 @@ public class Territory : MonoBehaviour
     }
     public void AddCard(UnitData data, Unit unit)
     {
-        UnitCardPresenter card = Instantiate(cardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
+        UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
         card.SetData(data);
         if(unit != null)
         {

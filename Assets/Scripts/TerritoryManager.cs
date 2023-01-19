@@ -1,16 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TerritoryManager : MonoBehaviour
 {
     public static TerritoryManager instance;
+    [HideInInspector]
     public List<Territory> territories = new();
     public List<UnitData> unitsStartPool = new();
 
     private List<List<UnitData>> playerUnitPools = new();
     private List<int> bonusTerritoryTotals = new List<int>() { 0, 0 };
     private int playerIndex = -1;
+
+    public Color playerColor;
+    public Color enemyColor;
+
+    public Image iconPrefab;
+
 
     public enum BonusGroup
     {
