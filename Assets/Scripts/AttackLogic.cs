@@ -31,10 +31,10 @@ public class AttackLogic : MonoBehaviour
         Player currentPlayer = Events.RequestPlayer();
         int enemyTerritories = 0;
         int playerTerritories = 0;
-        foreach(Transform t in TerritoryManager.instance.transform)
+        foreach(Territory t in TerritoryManager.instance.territories)
         {
-            if (t.GetComponent<Territory>().player.Name == "neutral") continue;
-            if (t.GetComponent<Territory>().player == currentPlayer)
+            if (t.player.Name == "neutral") continue;
+            if (t.player == currentPlayer)
             {
                 playerTerritories++;
             } else
@@ -241,11 +241,11 @@ public class AttackLogic : MonoBehaviour
     private void AttackCleanup()
     {
         // cleanup
-        selectedTerritory.UpdateTerritoryImage();
-        attackTerritory.UpdateTerritoryImage();
-
         selectedTerritory.HideAttackOptions();
         attackTerritory.HideAttackOptions();
+
+        selectedTerritory.UpdateTerritoryImage();
+        attackTerritory.UpdateTerritoryImage();
 
         selectedTerritory.TerritoryGraphics.hideCards();
         attackTerritory.TerritoryGraphics.hideCards();
