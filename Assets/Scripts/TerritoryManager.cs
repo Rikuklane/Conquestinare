@@ -27,14 +27,27 @@ public class TerritoryManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        for (int i = 0; i< territories.Count - unitsStartPool.Count; i++)
+        {
+            unitsStartPool.Add(unitsStartPool[0]);
+        }
+        Events.OnRequestTerritory += GetPlayerTerritories;
+        Events.OnRequestBonus += GetPlayerBonus;
+
+    }
+    [ContextMenu("New territories")]
+    private void AddTerritories()
+    {
         territories.Clear();
+
         foreach (Transform child in transform)
         {
             print(child.GetComponent<MeshFilter>().mesh.bounds);
             if (child.name.Equals("province "))
             {
                 continue;
-            } else
+            }
+            else
             {
                 print("x" + child.name + 'x');
             }
@@ -47,7 +60,7 @@ public class TerritoryManager : MonoBehaviour
                 GameObject iconsContainer = Instantiate(territoryIconsPrefab);
                 iconsContainer.transform.parent = territory.transform;
                 iconsContainer.transform.position = territory.transform.position;
-
+                iconsContainer.AddComponent<Canvas>();
                 territory.TerritoryGraphics = territoryGraphics;
                 territoryGraphics.iconsParent = iconsContainer;
 
@@ -56,13 +69,6 @@ public class TerritoryManager : MonoBehaviour
             territories.Add(territory);
             bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
         }
-        for (int i = 0; i< territories.Count - unitsStartPool.Count; i++)
-        {
-            unitsStartPool.Add(unitsStartPool[0]);
-        }
-        Events.OnRequestTerritory += GetPlayerTerritories;
-        Events.OnRequestBonus += GetPlayerBonus;
-
     }
 
     private int GetPlayerTerritories(Player player)
