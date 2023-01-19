@@ -9,6 +9,8 @@ public class TerritoryGraphics : MonoBehaviour
     public Color color;
 
     public GameObject iconsParent;
+    public Image attackImage;
+    public Image defenseImage;
     [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
     [HideInInspector]
@@ -20,12 +22,12 @@ public class TerritoryGraphics : MonoBehaviour
     public ScalingAnimation CloseAnimation;
 
     private List<Image> icons = new();
-    private SpriteRenderer spriteRenderer;
+    private Renderer _renderer;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (color != null) spriteRenderer.material.color = color;
+        _renderer = GetComponent<Renderer>();
+        if (color != null) _renderer.material.color = color;
     }
 
     internal void CheckSelected()
@@ -110,7 +112,7 @@ public class TerritoryGraphics : MonoBehaviour
 
     public void ChangeColor(Color _color)
     {
-        spriteRenderer.material.color = color;
+        _renderer.material.color = color;
 
     }
 
@@ -135,7 +137,7 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+            _renderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
         }
     }
 
@@ -143,7 +145,7 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+            _renderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
             //showCards();
         }
     }
@@ -151,7 +153,7 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            spriteRenderer.material.color = color;
+            _renderer.material.color = color;
             hideCards();
         }
     }

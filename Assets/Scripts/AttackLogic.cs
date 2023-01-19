@@ -11,8 +11,6 @@ public class AttackLogic : MonoBehaviour
     public Territory selectedTerritory;
     public Territory attackTerritory;
 
-    public GameObject territoryManager;
-
     public bool isReorganizeTurn = false;
     public bool isReorganizeTriggered = false;
     public bool canHover = false;
@@ -33,10 +31,10 @@ public class AttackLogic : MonoBehaviour
         Player currentPlayer = Events.RequestPlayer();
         int enemyTerritories = 0;
         int playerTerritories = 0;
-        foreach(Transform t in territoryManager.transform)
+        foreach(Territory t in TerritoryManager.instance.territories)
         {
-            if (t.GetComponent<Territory>().player.Name == "neutral") continue;
-            if (t.GetComponent<Territory>().player == currentPlayer)
+            if (t.player.Name == "neutral") continue;
+            if (t.player == currentPlayer)
             {
                 playerTerritories++;
             } else
@@ -87,9 +85,6 @@ public class AttackLogic : MonoBehaviour
             attackTerritory = newSelected;
             AudioController.Instance.warCry.Play();
             AttackGUI.instance.attackButton.gameObject.SetActive(true);
-            // attack line only
-            selectedTerritory.HideAttackOptions();
-            selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
         }
         else
         {
@@ -246,11 +241,11 @@ public class AttackLogic : MonoBehaviour
     private void AttackCleanup()
     {
         // cleanup
-        selectedTerritory.UpdateTerritoryImage();
-        attackTerritory.UpdateTerritoryImage();
-
         selectedTerritory.HideAttackOptions();
         attackTerritory.HideAttackOptions();
+
+        selectedTerritory.UpdateTerritoryImage();
+        attackTerritory.UpdateTerritoryImage();
 
         selectedTerritory.TerritoryGraphics.hideCards();
         attackTerritory.TerritoryGraphics.hideCards();
