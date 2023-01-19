@@ -3,14 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class MapGeneration : MonoBehaviour
 {
     public float scale = 1f;
     public Material MeshMaterial;
 
-    // Start is called before the first frame update
+
     void Start()
+    {
+        //GenerateMap();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    [ContextMenu("Generate")]
+    private void GenerateMap()
     {
         var json = Resources.Load<TextAsset>("worldequalized").text;
         MapData mapData = JsonUtility.FromJson<MapData>(json);
@@ -25,16 +37,18 @@ public class MapGeneration : MonoBehaviour
             return sphere;
         }).ToArray();*/
 
-        
+
         GameObject[] provinces = mapData.cells.provinces.Select(province =>
         {
             GameObject provinceObject = new();
 
             provinceObject.AddComponent(typeof(MeshRenderer));
             provinceObject.AddComponent(typeof(MeshFilter));
+            provinceObject.AddComponent(typeof(MeshCollider));
 
             provinceObject.name = "province " + province.name;
             provinceObject.transform.parent = gameObject.transform;
+            provinceObject.transform.position = new Vector3(mapData.cells.cells[province.center].p[0], mapData.cells.cells[province.center].p[1]);
             return provinceObject;
         }).ToArray();
 
@@ -43,7 +57,8 @@ public class MapGeneration : MonoBehaviour
         {
             Vector3[] vertices = cell.v.Select(vertID => {
                 var vert = mapData.vertices[vertID];
-                return new Vector3(vert.p[0], vert.p[1], 0);
+                int[] provincePos = mapData.cells.cells[mapData.cells.provinces[cell.province].center].p;
+                return new Vector3(vert.p[0]-cell.p[0]- provincePos[0], vert.p[1]-cell.p[1]- provincePos[1], 0);
             }).ToArray();
 
             int[] indices = new int[(vertices.Length - 2) * 3];
@@ -60,7 +75,7 @@ public class MapGeneration : MonoBehaviour
             mesh.triangles = indices;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            
+
 
             GameObject cellObject = new();
             cellObject.name = cell.i.ToString();
@@ -69,6 +84,7 @@ public class MapGeneration : MonoBehaviour
             filter.mesh = mesh;
 
             cellObject.transform.parent = provinces[cell.province].transform;
+            cellObject.transform.position = new Vector3(cell.p[0], cell.p[1], 0);
 
             return cellObject;
         }).ToArray();
@@ -95,13 +111,11 @@ public class MapGeneration : MonoBehaviour
             renderer.material = MeshMaterial;
             renderer.material.color = Random.ColorHSV();
 
+            MeshCollider collider = province.GetComponent<MeshCollider>();
+
+            collider.sharedMesh = province.GetComponent<MeshFilter>().mesh;
+
             province.SetActive(true);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

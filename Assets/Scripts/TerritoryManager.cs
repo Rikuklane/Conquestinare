@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TerritoryManager : MonoBehaviour
 {
@@ -12,6 +13,12 @@ public class TerritoryManager : MonoBehaviour
     private List<int> bonusTerritoryTotals = new List<int>() { 0, 0 };
     private int playerIndex = -1;
 
+    public Color playerColor;
+    public Color enemyColor;
+
+    public Image iconPrefab;
+    public GameObject provinceCanvasPrefab;
+
     public enum BonusGroup
     {
         LEFT, RIGHT
@@ -20,16 +27,68 @@ public class TerritoryManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        territories.Clear();
+        // temp
         foreach (Transform child in transform)
         {
-            Territory territory = child.GetComponent<Territory>();
-            territories.Add(territory);
-            bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
+            if (child.name.Equals("province "))
+            {
+                continue;
+            }
+            else
+            {
+                print("x" + child.name + 'x');
+            }
+            GameObject canvas = Instantiate(provinceCanvasPrefab, child.transform.position, Quaternion.identity, child.transform);
+            TerritoryGraphics territoryGraphics = child.gameObject.GetComponent<TerritoryGraphics>();
+
+            territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
+            territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
+            territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
+            territoryGraphics.attackImage.enabled = false;
+            territoryGraphics.defenseImage.enabled = false;
+        }
+        for (int i = 0; i< territories.Count - unitsStartPool.Count; i++)
+        {
+            unitsStartPool.Add(unitsStartPool[0]);
         }
         Events.OnRequestTerritory += GetPlayerTerritories;
         Events.OnRequestBonus += GetPlayerBonus;
 
+    }
+    [ContextMenu("New territories")]
+    private void AddTerritories()
+    {
+        territories.Clear();
+
+        foreach (Transform child in transform)
+        {
+            print(child.GetComponent<MeshFilter>().mesh.bounds);
+            if (child.name.Equals("province "))
+            {
+                continue;
+            }
+            else
+            {
+                print("x" + child.name + 'x');
+            }
+
+            Territory territory = child.GetComponent<Territory>();
+            if (!territory)
+            {
+                territory = child.gameObject.AddComponent<Territory>();
+                TerritoryGraphics territoryGraphics = child.gameObject.AddComponent<TerritoryGraphics>();
+                GameObject canvas = Instantiate(provinceCanvasPrefab, territory.transform.position, Quaternion.identity, territory.transform);
+                territory.TerritoryGraphics = territoryGraphics;
+                territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
+                territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
+                territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
+                territoryGraphics.attackImage.enabled = false;
+                territoryGraphics.defenseImage.enabled = false;
+            }
+
+            territories.Add(territory);
+            bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
+        }
     }
 
     private int GetPlayerTerritories(Player player)

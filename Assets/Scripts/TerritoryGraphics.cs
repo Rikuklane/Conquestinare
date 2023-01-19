@@ -7,25 +7,27 @@ using TMPro;
 public class TerritoryGraphics : MonoBehaviour
 {
     public Color color;
-    public Color playerColor;
-    public Color enemyColor;
 
     public GameObject iconsParent;
-    public Image iconPrefab;
+    public Image attackImage;
+    public Image defenseImage;
+    [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
+    [HideInInspector]
     public bool isShowBonus = false;
+    [HideInInspector]
     public bool showingCards = false;
 
     public ScalingAnimation OpenAnimation;
     public ScalingAnimation CloseAnimation;
 
     private List<Image> icons = new();
-    private SpriteRenderer spriteRenderer;
+    private Renderer _renderer;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (color != null) spriteRenderer.material.color = color;
+        _renderer = GetComponent<Renderer>();
+        if (color != null) _renderer.material.color = color;
     }
 
     internal void CheckSelected()
@@ -110,7 +112,7 @@ public class TerritoryGraphics : MonoBehaviour
 
     public void ChangeColor(Color _color)
     {
-        spriteRenderer.material.color = color;
+        _renderer.material.color = color;
 
     }
 
@@ -125,7 +127,7 @@ public class TerritoryGraphics : MonoBehaviour
         // insert new
         foreach(UnitCardPresenter unit in presentUnits)
         {
-            Image icon = Instantiate(iconPrefab, iconsParent.transform);
+            Image icon = Instantiate(TerritoryManager.instance.iconPrefab, iconsParent.transform);
             icon.sprite = unit.unitData.sprite;
             icons.Add(icon);
         }
@@ -135,7 +137,7 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+            _renderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
         }
     }
 
@@ -143,7 +145,7 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            spriteRenderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
+            _renderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
             //showCards();
         }
     }
@@ -151,7 +153,7 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            spriteRenderer.material.color = color;
+            _renderer.material.color = color;
             hideCards();
         }
     }
