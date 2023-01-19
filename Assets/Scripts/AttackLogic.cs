@@ -11,8 +11,6 @@ public class AttackLogic : MonoBehaviour
     public Territory selectedTerritory;
     public Territory attackTerritory;
 
-    public GameObject territoryManager;
-
     public bool isReorganizeTurn = false;
     public bool isReorganizeTriggered = false;
     public bool canHover = false;
@@ -33,7 +31,7 @@ public class AttackLogic : MonoBehaviour
         Player currentPlayer = Events.RequestPlayer();
         int enemyTerritories = 0;
         int playerTerritories = 0;
-        foreach(Transform t in territoryManager.transform)
+        foreach(Transform t in TerritoryManager.instance.transform)
         {
             if (t.GetComponent<Territory>().player.Name == "neutral") continue;
             if (t.GetComponent<Territory>().player == currentPlayer)

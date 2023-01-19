@@ -42,13 +42,13 @@ public class Territory : MonoBehaviour
         
     void Awake()
     {
-
+        /*
         foreach(Territory area in territories)
         {
             waypoint.routes.Add(area.waypoint);
         }
         waypoint.CreateLines();
-
+        */
     }
 
     public void AddUnits()

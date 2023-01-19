@@ -13,7 +13,7 @@ public class MapGeneration : MonoBehaviour
 
     void Start()
     {
-        GenerateMap();
+        //GenerateMap();
     }
 
     // Update is called once per frame
@@ -44,6 +44,7 @@ public class MapGeneration : MonoBehaviour
 
             provinceObject.AddComponent(typeof(MeshRenderer));
             provinceObject.AddComponent(typeof(MeshFilter));
+            provinceObject.AddComponent(typeof(MeshCollider));
 
             provinceObject.name = "province " + province.name;
             provinceObject.transform.parent = gameObject.transform;
@@ -109,6 +110,10 @@ public class MapGeneration : MonoBehaviour
 
             renderer.material = MeshMaterial;
             renderer.material.color = Random.ColorHSV();
+
+            MeshCollider collider = province.GetComponent<MeshCollider>();
+
+            collider.sharedMesh = province.GetComponent<MeshFilter>().mesh;
 
             province.SetActive(true);
         }

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class TerritoryManager : MonoBehaviour
 {
     public static TerritoryManager instance;
-    [HideInInspector]
     public List<Territory> territories = new();
     public List<UnitData> unitsStartPool = new();
 
@@ -18,7 +17,7 @@ public class TerritoryManager : MonoBehaviour
     public Color enemyColor;
 
     public Image iconPrefab;
-
+    public GameObject territoryIconsPrefab;
 
     public enum BonusGroup
     {
@@ -31,9 +30,35 @@ public class TerritoryManager : MonoBehaviour
         territories.Clear();
         foreach (Transform child in transform)
         {
+            print(child.GetComponent<MeshFilter>().mesh.bounds);
+            if (child.name.Equals("province "))
+            {
+                continue;
+            } else
+            {
+                print("x" + child.name + 'x');
+            }
+
             Territory territory = child.GetComponent<Territory>();
+            if (!territory)
+            {
+                territory = child.gameObject.AddComponent<Territory>();
+                TerritoryGraphics territoryGraphics = child.gameObject.AddComponent<TerritoryGraphics>();
+                GameObject iconsContainer = Instantiate(territoryIconsPrefab);
+                iconsContainer.transform.parent = territory.transform;
+                iconsContainer.transform.position = territory.transform.position;
+
+                territory.TerritoryGraphics = territoryGraphics;
+                territoryGraphics.iconsParent = iconsContainer;
+
+            }
+
             territories.Add(territory);
             bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
+        }
+        for (int i = 0; i< territories.Count - unitsStartPool.Count; i++)
+        {
+            unitsStartPool.Add(unitsStartPool[0]);
         }
         Events.OnRequestTerritory += GetPlayerTerritories;
         Events.OnRequestBonus += GetPlayerBonus;
