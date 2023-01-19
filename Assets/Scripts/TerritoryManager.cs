@@ -17,7 +17,7 @@ public class TerritoryManager : MonoBehaviour
     public Color enemyColor;
 
     public Image iconPrefab;
-    public GameObject territoryIconsPrefab;
+    public GameObject provinceCanvasPrefab;
 
     public enum BonusGroup
     {
@@ -27,6 +27,26 @@ public class TerritoryManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        // temp
+        foreach (Transform child in transform)
+        {
+            if (child.name.Equals("province "))
+            {
+                continue;
+            }
+            else
+            {
+                print("x" + child.name + 'x');
+            }
+            GameObject canvas = Instantiate(provinceCanvasPrefab, child.transform.position, Quaternion.identity, child.transform);
+            TerritoryGraphics territoryGraphics = child.gameObject.GetComponent<TerritoryGraphics>();
+
+            territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
+            territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
+            territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
+            territoryGraphics.attackImage.enabled = false;
+            territoryGraphics.defenseImage.enabled = false;
+        }
         for (int i = 0; i< territories.Count - unitsStartPool.Count; i++)
         {
             unitsStartPool.Add(unitsStartPool[0]);
@@ -57,13 +77,13 @@ public class TerritoryManager : MonoBehaviour
             {
                 territory = child.gameObject.AddComponent<Territory>();
                 TerritoryGraphics territoryGraphics = child.gameObject.AddComponent<TerritoryGraphics>();
-                GameObject iconsContainer = Instantiate(territoryIconsPrefab);
-                iconsContainer.transform.parent = territory.transform;
-                iconsContainer.transform.position = territory.transform.position;
-                iconsContainer.AddComponent<Canvas>();
+                GameObject canvas = Instantiate(provinceCanvasPrefab, territory.transform.position, Quaternion.identity, territory.transform);
                 territory.TerritoryGraphics = territoryGraphics;
-                territoryGraphics.iconsParent = iconsContainer;
-
+                territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
+                territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
+                territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
+                territoryGraphics.attackImage.enabled = false;
+                territoryGraphics.defenseImage.enabled = false;
             }
 
             territories.Add(territory);

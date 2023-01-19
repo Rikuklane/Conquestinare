@@ -9,6 +9,8 @@ public class TerritoryGraphics : MonoBehaviour
     public Color color;
 
     public GameObject iconsParent;
+    public Image attackImage;
+    public Image defenseImage;
     [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
     [HideInInspector]
@@ -143,7 +145,6 @@ public class TerritoryGraphics : MonoBehaviour
     {
         if (AttackLogic.Instance.canHover)
         {
-            print("mouse Enter");
             _renderer.material.color = new Color(245 / 255f, 245 / 255f, 245 / 255f);
             //showCards();
         }

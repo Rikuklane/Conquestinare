@@ -15,7 +15,7 @@ public class Territory : MonoBehaviour
     [Space]
     public List<Territory> territories = new();
     [HideInInspector]
-    public List<Vector3> enemyTerritories = new();
+    public List<Territory> enemyTerritories = new();
        
     [Header("Units")]
     [Space]
@@ -193,12 +193,18 @@ public class Territory : MonoBehaviour
 
     public void ShowAttackOptions()
     {
-        waypoint.SetLines(enemyTerritories, true);
+        foreach(Territory t in enemyTerritories)
+        {
+            t.TerritoryGraphics.attackImage.enabled = true;
+        }
     }
 
     public void HideAttackOptions()
     {
-        waypoint.SetLines(enemyTerritories, false);
+        foreach (Territory t in enemyTerritories)
+        {
+            t.TerritoryGraphics.attackImage.enabled = false;
+        }
     }
 
     public void UpdateEnemyTerritories()
@@ -208,7 +214,7 @@ public class Territory : MonoBehaviour
         {
             if (player != area.player || area.player.Name == "neutral")
             {
-                enemyTerritories.Add(area.waypoint.transform.position);
+                enemyTerritories.Add(area);
             }
         }
     }

@@ -85,9 +85,6 @@ public class AttackLogic : MonoBehaviour
             attackTerritory = newSelected;
             AudioController.Instance.warCry.Play();
             AttackGUI.instance.attackButton.gameObject.SetActive(true);
-            // attack line only
-            selectedTerritory.HideAttackOptions();
-            selectedTerritory.waypoint.SetLine(attackTerritory.waypoint.transform.position, true);
         }
         else
         {
