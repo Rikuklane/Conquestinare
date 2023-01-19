@@ -3,14 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class MapGeneration : MonoBehaviour
 {
     public float scale = 1f;
     public Material MeshMaterial;
 
-    // Start is called before the first frame update
+
     void Start()
+    {
+        GenerateMap();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    [ContextMenu("Generate")]
+    private void GenerateMap()
     {
         var json = Resources.Load<TextAsset>("worldequalized").text;
         MapData mapData = JsonUtility.FromJson<MapData>(json);
@@ -25,7 +37,7 @@ public class MapGeneration : MonoBehaviour
             return sphere;
         }).ToArray();*/
 
-        
+
         GameObject[] provinces = mapData.cells.provinces.Select(province =>
         {
             GameObject provinceObject = new();
@@ -60,7 +72,7 @@ public class MapGeneration : MonoBehaviour
             mesh.triangles = indices;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            
+
 
             GameObject cellObject = new();
             cellObject.name = cell.i.ToString();
@@ -97,11 +109,5 @@ public class MapGeneration : MonoBehaviour
 
             province.SetActive(true);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -60,7 +60,7 @@ public class AttackGUI : MonoBehaviour
         // Create top panel of cards (attacker)
         foreach (UnitCardPresenter unit in attackers.TerritoryGraphics.presentUnits)
         {
-            UnitCardPresenter card = Instantiate(attackers.cardPrefab, ArenaTopPanel.transform);
+            UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, ArenaTopPanel.transform);
             card.transform.localPosition = new Vector3(xAttackersStart + xAddition, 0, 0);
             card.SetData(unit.unitData);
             card.SetHealth(unit.health);
@@ -82,7 +82,7 @@ public class AttackGUI : MonoBehaviour
         // Create bottom panel of cards (defender)
         foreach (UnitCardPresenter unit in defenders.TerritoryGraphics.presentUnits)
         {
-            UnitCardPresenter card = Instantiate(defenders.cardPrefab, ArenaBottomPanel.transform);
+            UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, ArenaBottomPanel.transform);
             card.transform.localPosition = new Vector3(xDefendersStart + xAddition, 0, 0);
             card.SetData(unit.unitData);
             card.SetHealth(unit.health);

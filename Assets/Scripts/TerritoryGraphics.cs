@@ -7,13 +7,13 @@ using TMPro;
 public class TerritoryGraphics : MonoBehaviour
 {
     public Color color;
-    public Color playerColor;
-    public Color enemyColor;
 
     public GameObject iconsParent;
-    public Image iconPrefab;
+    [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
+    [HideInInspector]
     public bool isShowBonus = false;
+    [HideInInspector]
     public bool showingCards = false;
 
     public ScalingAnimation OpenAnimation;
@@ -125,7 +125,7 @@ public class TerritoryGraphics : MonoBehaviour
         // insert new
         foreach(UnitCardPresenter unit in presentUnits)
         {
-            Image icon = Instantiate(iconPrefab, iconsParent.transform);
+            Image icon = Instantiate(TerritoryManager.instance.iconPrefab, iconsParent.transform);
             icon.sprite = unit.unitData.sprite;
             icons.Add(icon);
         }
