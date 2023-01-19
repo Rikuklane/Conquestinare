@@ -47,6 +47,7 @@ public class MapGeneration : MonoBehaviour
 
             provinceObject.name = "province " + province.name;
             provinceObject.transform.parent = gameObject.transform;
+            provinceObject.transform.position = new Vector3(mapData.cells.cells[province.center].p[0], mapData.cells.cells[province.center].p[1]);
             return provinceObject;
         }).ToArray();
 
@@ -55,7 +56,8 @@ public class MapGeneration : MonoBehaviour
         {
             Vector3[] vertices = cell.v.Select(vertID => {
                 var vert = mapData.vertices[vertID];
-                return new Vector3(vert.p[0], vert.p[1], 0);
+                int[] provincePos = mapData.cells.cells[mapData.cells.provinces[cell.province].center].p;
+                return new Vector3(vert.p[0]-cell.p[0]- provincePos[0], vert.p[1]-cell.p[1]- provincePos[1], 0);
             }).ToArray();
 
             int[] indices = new int[(vertices.Length - 2) * 3];
@@ -81,6 +83,7 @@ public class MapGeneration : MonoBehaviour
             filter.mesh = mesh;
 
             cellObject.transform.parent = provinces[cell.province].transform;
+            cellObject.transform.position = new Vector3(cell.p[0], cell.p[1], 0);
 
             return cellObject;
         }).ToArray();
