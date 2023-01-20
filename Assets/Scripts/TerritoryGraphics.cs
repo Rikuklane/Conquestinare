@@ -68,11 +68,11 @@ public class TerritoryGraphics : MonoBehaviour
         isShowBonus = showBonus;
         if (showBonus)
         {
-            iconsParent.GetComponent<Image>().enabled = true;
+            //iconsParent.GetComponent<Image>().enabled = true;
         }
         else
         {
-            iconsParent.GetComponent<Image>().enabled = false;
+            //iconsParent.GetComponent<Image>().enabled = false;
         }
     }
 

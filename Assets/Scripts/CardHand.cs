@@ -71,7 +71,7 @@ public class CardHand : MonoBehaviour
 
     }
 
-    public void LoadHand(Player player)
+    public void HideCurrentHand()
     {
         // TODO hide all children
         foreach (Player currentPlayer in Turns.TurnManager.Instance.Players)
@@ -81,14 +81,15 @@ public class CardHand : MonoBehaviour
                 card.CardInstance.gameObject.SetActive(false);
             }
         }
+    }
 
+    public void LoadHand(Player player)
+    {
         //   - add cards from new player
         foreach(CardPresenterAbstractLogic card in cardHands[player.Name])
         {
             card.CardInstance.gameObject.SetActive(true);
         }
-
-
     }
 
     public void AddCard(CardPresenterAbstractLogic card)
