@@ -13,8 +13,8 @@ public class TerritoryManager : MonoBehaviour
     private List<int> bonusTerritoryTotals = new List<int>() { 0, 0 };
     private int playerIndex = -1;
 
-    public Color playerColor;
-    public Color enemyColor;
+    public ScalingAnimation OpenAnimation;
+    public ScalingAnimation CloseAnimation;
 
     public Image iconPrefab;
     public GameObject provinceCanvasPrefab;
@@ -27,26 +27,6 @@ public class TerritoryManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        // temp
-        foreach (Transform child in transform)
-        {
-            if (child.name.Equals("province "))
-            {
-                continue;
-            }
-            else
-            {
-                print("x" + child.name + 'x');
-            }
-            GameObject canvas = Instantiate(provinceCanvasPrefab, child.transform.position, Quaternion.identity, child.transform);
-            TerritoryGraphics territoryGraphics = child.gameObject.GetComponent<TerritoryGraphics>();
-
-            territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
-            territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
-            territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
-            territoryGraphics.attackImage.enabled = false;
-            territoryGraphics.defenseImage.enabled = false;
-        }
         for (int i = 0; i< territories.Count - unitsStartPool.Count; i++)
         {
             unitsStartPool.Add(unitsStartPool[0]);
@@ -84,6 +64,8 @@ public class TerritoryManager : MonoBehaviour
                 territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
                 territoryGraphics.attackImage.enabled = false;
                 territoryGraphics.defenseImage.enabled = false;
+                territoryGraphics.OpenAnimation = OpenAnimation;
+                territoryGraphics.CloseAnimation = CloseAnimation;
             }
 
             territories.Add(territory);
