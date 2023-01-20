@@ -16,6 +16,7 @@ namespace Turns
         public TextMeshProUGUI goldAmountText;
         public Image playerColorImage;
         public TextMeshProUGUI goldGainText;
+        public TextMeshProUGUI goldLossText;
 
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -116,9 +117,20 @@ namespace Turns
         }
     
         private void SetPlayerGold(Player player, int gold)
-        {
-            player.gold = gold;
+        {            
             // Changing the gold amount seen on screen if the change was on the current player
+            if (gold < player.gold)
+            {
+                goldLossText.gameObject.SetActive(true);
+                goldLossText.text = "-" + (player.gold - gold);
+                LeanTween.moveLocalY(goldLossText.gameObject, -45, 0.5f).setOnComplete(()=> { 
+                    goldLossText.gameObject.SetActive(false);
+                    LeanTween.moveLocalY(goldLossText.gameObject, 0, 0.1f);
+                });
+            } else
+            {
+            }
+            player.gold = gold;
             goldAmountText.text = GetCurrentPlayer().gold.ToString();
         }
 
