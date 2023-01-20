@@ -11,44 +11,45 @@ public class Territory : MonoBehaviour
     public Waypoint waypoint;
     public Player player;
 
-    [Header("Neighbours")]
+    [Header("Territories")]
     [Space]
     public List<Territory> territories = new();
-    [HideInInspector]
-    public List<Territory> enemyTerritories = new();
+    public List<Vector3> enemyTerritories = new();
        
     [Header("Units")]
     [Space]
-    [HideInInspector]
     public List<UnitData> startUnits = new();
-    public class Unit
-    {
-        public int attack;
-        public int health;
-    }
-    [HideInInspector]
-    public List<Unit> units = new();
-
 
     [Header("Graphics")]
     [Space]
 
+    public UnitCardPresenter cardPrefab;
     public TerritoryGraphics TerritoryGraphics;
 
     [Header("Bonus Group")]
     [Space]
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
+
+    public class Unit
+    {
+        public int attack;
+        public int health;
+    }
+
+    public List<Unit> units = new();
+
+    
         
     void Awake()
     {
-        /*
+
         foreach(Territory area in territories)
         {
             waypoint.routes.Add(area.waypoint);
         }
         waypoint.CreateLines();
-        */
+
     }
 
     public void AddUnits()
@@ -116,7 +117,7 @@ public class Territory : MonoBehaviour
     }
     public void AddCard(UnitData data, Unit unit)
     {
-        UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
+        UnitCardPresenter card = Instantiate(cardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
         card.SetData(data);
         if(unit != null)
         {
@@ -193,18 +194,12 @@ public class Territory : MonoBehaviour
 
     public void ShowAttackOptions()
     {
-        foreach(Territory t in enemyTerritories)
-        {
-            t.TerritoryGraphics.attackImage.enabled = true;
-        }
+        waypoint.SetLines(enemyTerritories, true);
     }
 
     public void HideAttackOptions()
     {
-        foreach (Territory t in enemyTerritories)
-        {
-            t.TerritoryGraphics.attackImage.enabled = false;
-        }
+        waypoint.SetLines(enemyTerritories, false);
     }
 
     public void UpdateEnemyTerritories()
@@ -214,7 +209,7 @@ public class Territory : MonoBehaviour
         {
             if (player != area.player || area.player.Name == "neutral")
             {
-                enemyTerritories.Add(area);
+                enemyTerritories.Add(area.waypoint.transform.position);
             }
         }
     }
