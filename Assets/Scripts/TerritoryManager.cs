@@ -47,10 +47,6 @@ public class TerritoryManager : MonoBehaviour
             {
                 continue;
             }
-            else
-            {
-                print("x" + child.name + 'x');
-            }
 
             Territory territory = child.GetComponent<Territory>();
             if (!territory)
@@ -70,6 +66,16 @@ public class TerritoryManager : MonoBehaviour
 
             territories.Add(territory);
             bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
+        }
+        // neighbors
+        foreach (Transform child in transform)
+        {
+            Territory territory = child.GetComponent<Territory>();
+            foreach(ProvinceData data in child.GetComponent<ProvinceData>().neighbors)
+            {
+
+                territory.territories.Add(data.gameObject.GetComponent<Territory>());
+            }
         }
     }
 
