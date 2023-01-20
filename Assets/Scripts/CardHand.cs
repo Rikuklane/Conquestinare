@@ -9,13 +9,19 @@ public class CardHand : MonoBehaviour
     public Dictionary<string, List<CardPresenterAbstractLogic>> cardHands = new();
     public CardPresenterAbstractLogic cardSelected;
     public UnitCardPresenter unitCardPrefab;
+    public float speed = 5f;
+    public ParticleSystem particleSystem;
     private Vector3 cardSelectLastPosition;
 
     private void Update()
     {
         if(cardSelected != null)
         {
-            cardSelected.CardInstance.transform.position = Input.mousePosition;
+            //particleSystem.Stop();
+            cardSelected.CardInstance.transform.position = Vector3.Lerp(cardSelected.CardInstance.transform.position, Input.mousePosition, Time.deltaTime * speed);
+            particleSystem.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.CardInstance.transform.position);
+            //particleSystem.Play();
+            //cardSelected.CardInstance.transform.position = Input.mousePosition;
             if (Input.GetMouseButtonDown(1))
             {
                 NewCardSelected(null);
@@ -28,6 +34,7 @@ public class CardHand : MonoBehaviour
         if(cardSelected)
         {
             PlayCard(cardSelected);
+            particleSystem.transform.parent = transform;
             Destroy(cardSelected.CardInstance.gameObject);
             cardSelected = null;
         }
@@ -39,12 +46,15 @@ public class CardHand : MonoBehaviour
         if(cardSelected != null)
         {
             StartCoroutine(cardSelected.MoveBack(cardSelectLastPosition, 0.7f));
-        }
+        } 
         cardSelected = cardSelect;
         if (cardSelect == null)
         {
             return;
         }
+        particleSystem.transform.parent = cardSelected.CardInstance.transform;
+        particleSystem.transform.position = cardSelected.CardInstance.transform.position;
+
         cardSelectLastPosition = cardSelect.transform.position;
         // deselect others
         foreach (CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().Name])
@@ -60,6 +70,7 @@ public class CardHand : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        particleSystem = Instantiate(particleSystem, transform);
     }
 
     public void CreateCardHands(Player[] players)
