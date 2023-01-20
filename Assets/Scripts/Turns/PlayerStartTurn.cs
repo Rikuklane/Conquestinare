@@ -11,8 +11,8 @@ namespace Turns
             CardHand.Instance.HideCurrentHand();
             AttackLogic.Instance.canHover = false;
             turnManager.nextTurnButton.gameObject.SetActive(false);
-            FadeCanvasGroup.Instance.ActivateStartScreenWithFade();
-            return EnterState(turnManager, player);
+            AttackGUI.instance.GetComponent<FadeCanvasGroup>().ActivateStartScreenWithFade();
+            return base.EnterState(turnManager, player);
         }
 
         public override IEnumerator EndState(TurnManager turnManager, Player player)
