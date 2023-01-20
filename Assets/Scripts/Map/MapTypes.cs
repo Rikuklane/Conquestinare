@@ -51,6 +51,7 @@ namespace MapDataModel
         public string name; // short form of province name
         public string formName;
         public string fullName; // full state name.
+        public int[] neighbors;
     }
 
     [System.Serializable]
