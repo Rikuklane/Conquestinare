@@ -15,7 +15,7 @@ namespace Turns
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             CardSelector.Instance.SetActive(false);
-            turnManager.SwitchTurnState(turnManager.PlaceUnitsTurn);
+            turnManager.SwitchTurnState(turnManager.BattleTurn);
             return base.EndState(turnManager, player);
         }
     }

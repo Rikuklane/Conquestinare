@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8983058b2a997c04dbad0533caaf74a7, type: 3}
-  m_Name: warCry
+  m_Name: WarCry
   m_EditorClassIdentifier: 
   volumeMin: 0.7
   volumeMax: 1

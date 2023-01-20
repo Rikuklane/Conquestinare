@@ -6,7 +6,9 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public UnitData unitData;
+    [HideInInspector]
     public int attack;
+    [HideInInspector]
     public int health;
 
     private void Awake()
