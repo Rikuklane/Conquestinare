@@ -152,24 +152,30 @@ public class AttackGUI : MonoBehaviour
         }
         Vector3 origin = animationFrom.transform.position;
         yield return StartCoroutine(MoveUsingCurve(animationFrom, animationTo, 0.5f));
+        bool cardDestroyed = false;
         // simulate dealing damage
         if (isDefenderTurn)
         {
             int playerAttack = defender.GetUnitAtIndex(0).attack;
             attacker.AttackUnit(0, playerAttack);
-            AttackCard(attacker, isDefenderTurn);
+            cardDestroyed = AttackCard(attacker, isDefenderTurn);
         }
         else
         {
             int enemyAttack = attacker.GetUnitAtIndex(0).attack;
             defender.AttackUnit(0, enemyAttack);
-            AttackCard(defender, isDefenderTurn);
+            cardDestroyed = AttackCard(defender, isDefenderTurn);
         }
+        if(!cardDestroyed)
+        {
+            yield return StartCoroutine(MoveBack(animationTo, animationTo.transform.TransformPoint(new Vector3(0, 15f * (isDefenderTurn ? -1 : 1), 0)), 0.2f));
+        }
+
         yield return StartCoroutine(MoveBack(animationFrom, origin, 0.3f));
         AttackLogic.Instance.SimulateBattle();
     }
 
-    void AttackCard(Territory territory, bool isDefenderTurn)
+    bool AttackCard(Territory territory, bool isDefenderTurn)
     {
         if (isDefenderTurn)
         {
@@ -177,9 +183,11 @@ public class AttackGUI : MonoBehaviour
             {
                 Destroy(arena1Cards[0].gameObject);
                 arena1Cards.RemoveAt(0);
+                return true;
             } else
             {
                 arena1Cards[0].SetHealth(territory.units[0].health);
+                return false;
             }
         }
         else
@@ -188,9 +196,11 @@ public class AttackGUI : MonoBehaviour
             {
                 Destroy(arena2Cards[0].gameObject);
                 arena2Cards.RemoveAt(0);
+                return true;
             } else
             {
                 arena2Cards[0].SetHealth(territory.units[0].health);
+                return false;
             }
         }
     }
@@ -206,6 +216,10 @@ public class AttackGUI : MonoBehaviour
         Vector3[] v = new Vector3[4];
         rectTransform.GetWorldCorners(v);
 
+        var initialParent = animationFrom.transform.parent;
+
+        animationFrom.transform.parent = animationFrom.transform.parent.parent;
+
         Vector3 target;
         if(origin.y > rectTransform.transform.position.y)
         {
@@ -215,6 +229,7 @@ public class AttackGUI : MonoBehaviour
         {
             target = new Vector3((v[0].x + v[3].x) / 2, v[0].y, v[0].z);
         }
+        bool triggered = false;
         float timePassed = 0f;
         while (timePassed <= duration)
         {
@@ -222,8 +237,15 @@ public class AttackGUI : MonoBehaviour
             float percent = Mathf.Clamp01(timePassed / duration);
             float curvePercent = animationCurve.Evaluate(percent);
             animationFrom.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
+            if(curvePercent >= 0.7 && !triggered)
+            {
+                triggered = true;
+                bool isDefenderTurn = origin.y < target.y;
+                StartCoroutine(MoveBack(animationTo, animationTo.transform.TransformPoint(new Vector3(0, 15f * (isDefenderTurn ? 1 : -1), 0)), 0.1f));
+            }
             yield return null;
         }
+        animationFrom.transform.parent = initialParent;
     }
 
     IEnumerator MoveBack(UnitCardPresenter animationFrom, Vector3 animationTo, float duration)
