@@ -88,12 +88,12 @@ public class TerritoryGraphics : MonoBehaviour
         }
         AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(true);
         if (presentUnits.Count < 2) {
-            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " card | " + GetComponent<Territory>().getSummary();
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " card\n" + GetComponent<Territory>().getSummary();
 
         }
         else
         {
-            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards | " + GetComponent<Territory>().getSummary();
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards\n" + GetComponent<Territory>().getSummary();
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
         StartCoroutine(AttackGUI.instance.ScrollToRight(2f));
@@ -140,6 +140,7 @@ public class TerritoryGraphics : MonoBehaviour
         foreach(UnitCardPresenter unit in presentUnits)
         {
             Image icon = Instantiate(TerritoryManager.instance.iconPrefab, iconsParent.transform);
+            icon.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
             icon.sprite = unit.unitData.sprite;
             icons.Add(icon);
         }
