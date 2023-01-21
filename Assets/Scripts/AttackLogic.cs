@@ -246,6 +246,7 @@ public class AttackLogic : MonoBehaviour
                 TerritoryManager.instance.ShowBonus((int)selectedTerritory.bonusGroup, false);
             }
             // LOSE
+            selectedTerritory.HideAttackOptions();
             selectedTerritory.UpdateEnemyTerritories();
             selectedTerritory.enemyTerritories.Clear();
         }
