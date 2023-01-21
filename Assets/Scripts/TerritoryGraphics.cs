@@ -24,6 +24,7 @@ public class TerritoryGraphics : MonoBehaviour
 
     private List<Image> icons = new();
     private Renderer _renderer;
+    private Coroutine scrollCoroutine = null;
 
     private void Awake()
     {
@@ -96,7 +97,8 @@ public class TerritoryGraphics : MonoBehaviour
             AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards\n" + GetComponent<Territory>().getSummary();
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
-        StartCoroutine(AttackGUI.instance.ScrollToRight(2f));
+        if (scrollCoroutine != null) StopCoroutine(scrollCoroutine);
+        scrollCoroutine = StartCoroutine(AttackGUI.instance.ScrollToRight(1f+1*presentUnits.Count/6));
         OpenAnimation.enabled = true;
         showingCards = true;
     }

@@ -23,6 +23,8 @@ public class AttackGUI : MonoBehaviour
     public List<UnitCardPresenter> arena2Cards = new();
 
     public AnimationCurve animationCurve;
+    public AnimationCurve scrollCurve;
+
 
     void Awake()
     {
@@ -252,7 +254,8 @@ public class AttackGUI : MonoBehaviour
         {
             timePassed += Time.deltaTime;
             float percent = Mathf.Clamp01(timePassed / duration);
-            HoverScrollRect.normalizedPosition = Vector2.Lerp(Vector2.zero, new Vector2(1, 0), percent);
+            float curvePercent = scrollCurve.Evaluate(percent);
+            HoverScrollRect.normalizedPosition = Vector2.Lerp(Vector2.zero, new Vector2(1, 0), curvePercent);
             yield return null;
         }
     }
