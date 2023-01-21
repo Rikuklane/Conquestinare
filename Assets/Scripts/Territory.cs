@@ -58,6 +58,18 @@ public class Territory : MonoBehaviour
         }
     }
 
+    public string getSummary()
+    {
+        int attack = 0;
+        int health = 0;
+        foreach (Unit unit in units)
+        {
+            attack += unit.attack;
+            health += unit.health;
+        }
+        return attack.ToString() + "AD/" + health.ToString() + "HP";
+    }
+
     public void CastSpellOnUnits(SpellData spellData)
     {
         for (int repetition = 0; repetition < spellData.repetition; repetition++)

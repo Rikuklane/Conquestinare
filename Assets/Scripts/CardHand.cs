@@ -65,6 +65,7 @@ public class CardHand : MonoBehaviour
             }
         }
         cardSelect.TriggerSelected();
+        cardSelect.CardInstance.transform.parent = transform.parent;
     }
 
     private void Awake()

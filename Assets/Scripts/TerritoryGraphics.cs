@@ -86,6 +86,15 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(true);
         }
+        AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(true);
+        if (presentUnits.Count < 2) {
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " card | " + GetComponent<Territory>().getSummary();
+
+        }
+        else
+        {
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards | " + GetComponent<Territory>().getSummary();
+        }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
         OpenAnimation.enabled = true;
         showingCards = true;
@@ -99,6 +108,7 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(false);
         }
+        AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(false);
         //AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
         CloseAnimation.enabled = true;
         showingCards = false;

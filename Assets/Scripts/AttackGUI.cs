@@ -10,6 +10,7 @@ public class AttackGUI : MonoBehaviour
 
     public Button attackButton;
     public GameObject TerritoryHoverPanel;
+    public TextMeshProUGUI TerritoryHoverText;
     public GameObject ArenaPanel;
     public GameObject ArenaTopPanel;
     public GameObject ArenaBottomPanel;
