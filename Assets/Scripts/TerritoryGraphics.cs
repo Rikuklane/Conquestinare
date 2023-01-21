@@ -96,6 +96,7 @@ public class TerritoryGraphics : MonoBehaviour
             AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards | " + GetComponent<Territory>().getSummary();
         }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
+        StartCoroutine(AttackGUI.instance.ScrollToRight(2f));
         OpenAnimation.enabled = true;
         showingCards = true;
     }

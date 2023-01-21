@@ -10,6 +10,7 @@ public class AttackGUI : MonoBehaviour
 
     public Button attackButton;
     public GameObject TerritoryHoverPanel;
+    public ScrollRect HoverScrollRect;
     public TextMeshProUGUI TerritoryHoverText;
     public GameObject ArenaPanel;
     public GameObject ArenaTopPanel;
@@ -240,6 +241,18 @@ public class AttackGUI : MonoBehaviour
             float percent = Mathf.Clamp01(timePassed / duration);
             float curvePercent = animationCurve.Evaluate(percent);
             animationFrom.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
+            yield return null;
+        }
+    }
+
+    public IEnumerator ScrollToRight(float duration)
+    {
+        float timePassed = 0f;
+        while (timePassed <= duration)
+        {
+            timePassed += Time.deltaTime;
+            float percent = Mathf.Clamp01(timePassed / duration);
+            HoverScrollRect.normalizedPosition = Vector2.Lerp(Vector2.zero, new Vector2(1, 0), percent);
             yield return null;
         }
     }

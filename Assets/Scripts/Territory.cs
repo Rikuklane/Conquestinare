@@ -125,7 +125,7 @@ public class Territory : MonoBehaviour
     }
     public void AddCard(UnitData data, Unit unit)
     {
-        UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
+        UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform.GetChild(0).GetChild(0));
         card.SetData(data);
         if(unit != null)
         {
