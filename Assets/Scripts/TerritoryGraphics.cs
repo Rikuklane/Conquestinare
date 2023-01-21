@@ -24,6 +24,7 @@ public class TerritoryGraphics : MonoBehaviour
 
     private List<Image> icons = new();
     private Renderer _renderer;
+    private Coroutine scrollCoroutine = null;
 
     private void Awake()
     {
@@ -86,7 +87,18 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(true);
         }
+        AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(true);
+        if (presentUnits.Count < 2) {
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " card\n" + GetComponent<Territory>().getSummary();
+
+        }
+        else
+        {
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards\n" + GetComponent<Territory>().getSummary();
+        }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
+        if (scrollCoroutine != null) StopCoroutine(scrollCoroutine);
+        scrollCoroutine = StartCoroutine(AttackGUI.instance.ScrollToRight(1f+1*presentUnits.Count/6));
         OpenAnimation.enabled = true;
         showingCards = true;
     }
@@ -99,6 +111,7 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(false);
         }
+        AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(false);
         //AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
         CloseAnimation.enabled = true;
         showingCards = false;
@@ -129,6 +142,7 @@ public class TerritoryGraphics : MonoBehaviour
         foreach(UnitCardPresenter unit in presentUnits)
         {
             Image icon = Instantiate(TerritoryManager.instance.iconPrefab, iconsParent.transform);
+            icon.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
             icon.sprite = unit.unitData.sprite;
             icons.Add(icon);
         }

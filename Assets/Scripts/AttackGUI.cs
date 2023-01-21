@@ -10,6 +10,8 @@ public class AttackGUI : MonoBehaviour
 
     public Button attackButton;
     public GameObject TerritoryHoverPanel;
+    public ScrollRect HoverScrollRect;
+    public TextMeshProUGUI TerritoryHoverText;
     public GameObject ArenaPanel;
     public GameObject ArenaTopPanel;
     public GameObject ArenaBottomPanel;
@@ -21,6 +23,8 @@ public class AttackGUI : MonoBehaviour
     public List<UnitCardPresenter> arena2Cards = new();
 
     public AnimationCurve animationCurve;
+    public AnimationCurve scrollCurve;
+
 
     void Awake()
     {
@@ -47,15 +51,8 @@ public class AttackGUI : MonoBehaviour
         // calculations for horizontal layout group simulation
         float cardSpacing = 75f;
         float xAddition = 0;
-        float xAttackersStart;
-        if (attackers.TerritoryGraphics.presentUnits.Count % 2 == 0)
-        {
-            xAttackersStart = -(attackers.TerritoryGraphics.presentUnits.Count / 2 - 0.5f) * cardSpacing;
-        }
-        else
-        {
-            xAttackersStart = -(attackers.TerritoryGraphics.presentUnits.Count / 2) * cardSpacing;
-        }
+        float xAttackersStart = -140;
+
         //Debug.Log(xAttackersStart);
         // Create top panel of cards (attacker)
         foreach (UnitCardPresenter unit in attackers.TerritoryGraphics.presentUnits)
@@ -70,15 +67,7 @@ public class AttackGUI : MonoBehaviour
         }
         // calculations for horizontal layout group simulation
         xAddition = 0;
-        float xDefendersStart;
-        if (defenders.TerritoryGraphics.presentUnits.Count % 2 == 0)
-        {
-            xDefendersStart = -(defenders.TerritoryGraphics.presentUnits.Count / 2 - 0.5f) * cardSpacing;
-        }
-        else
-        {
-            xDefendersStart = -(defenders.TerritoryGraphics.presentUnits.Count / 2) * cardSpacing;
-        }
+        float xDefendersStart = -140;
         // Create bottom panel of cards (defender)
         foreach (UnitCardPresenter unit in defenders.TerritoryGraphics.presentUnits)
         {
@@ -136,7 +125,6 @@ public class AttackGUI : MonoBehaviour
             animationFrom = arena1Cards[0];
             animationTo = arena2Cards[0];
         }
-        Vector3 origin = animationFrom.transform.position;
         /*
         // option 1 - leantween
         RectTransform rectTransform = animationTo.GetComponent<RectTransform>();
@@ -152,7 +140,18 @@ public class AttackGUI : MonoBehaviour
         LeanTween.move(animationFrom.gameObject, target, 1f).setOnComplete(() => { LeanTween.move(animationFrom.gameObject, origin, 2f); });
         */
         // option 2 - manual
-        yield return StartCoroutine(MoveUsingCurve(animationFrom, animationTo, 1f));
+        // hidden cards attacking
+        print(animationFrom.transform.localPosition.x);
+        if(animationFrom.transform.localPosition.x > 100f)
+        {
+            Vector3 target = animationFrom.transform.position;
+            print("here" + animationFrom.transform.position);
+            target.x = 550f;
+            yield return StartCoroutine(MoveBack(animationFrom, target, 0.3f));
+
+        }
+        Vector3 origin = animationFrom.transform.position;
+        yield return StartCoroutine(MoveUsingCurve(animationFrom, animationTo, 0.5f));
         // simulate dealing damage
         if (isDefenderTurn)
         {
@@ -166,7 +165,7 @@ public class AttackGUI : MonoBehaviour
             defender.AttackUnit(0, enemyAttack);
             AttackCard(defender, isDefenderTurn);
         }
-        yield return StartCoroutine(MoveBack(animationFrom, origin, 0.6f));
+        yield return StartCoroutine(MoveBack(animationFrom, origin, 0.3f));
         AttackLogic.Instance.SimulateBattle();
     }
 
@@ -239,6 +238,19 @@ public class AttackGUI : MonoBehaviour
             float percent = Mathf.Clamp01(timePassed / duration);
             float curvePercent = animationCurve.Evaluate(percent);
             animationFrom.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
+            yield return null;
+        }
+    }
+
+    public IEnumerator ScrollToRight(float duration)
+    {
+        float timePassed = 0f;
+        while (timePassed <= duration)
+        {
+            timePassed += Time.deltaTime;
+            float percent = Mathf.Clamp01(timePassed / duration);
+            float curvePercent = scrollCurve.Evaluate(percent);
+            HoverScrollRect.normalizedPosition = Vector2.Lerp(Vector2.zero, new Vector2(1, 0), curvePercent);
             yield return null;
         }
     }
