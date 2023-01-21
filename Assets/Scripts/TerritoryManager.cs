@@ -150,6 +150,10 @@ public class TerritoryManager : MonoBehaviour
             territory.startUnits = territoryUnits;
             territory.AddUnits();
         }
+        foreach (Territory territory in territories)
+        {
+            territory.UpdateNeighborTerritories();
+        }
     }
 
     private void Shuffle(List<Territory> territories)

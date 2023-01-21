@@ -54,8 +54,8 @@ public class AttackLogic : MonoBehaviour
 
     public void DeselectAll()
     {
-        if (selectedTerritory) selectedTerritory.HideAttackOptions();
-        if (attackTerritory) attackTerritory.HideAttackOptions();
+        if (selectedTerritory) selectedTerritory.HideAttackOptions(isReorganizeTurn);
+        if (attackTerritory) attackTerritory.HideAttackOptions(isReorganizeTurn);
         selectedTerritory = null;
         attackTerritory = null;
         AttackGUI.instance.AttackCleanup();
@@ -70,7 +70,7 @@ public class AttackLogic : MonoBehaviour
         {
             return;
         }
-        newSelected.UpdateEnemyTerritories();
+        newSelected.UpdateNeighborTerritories();
         // first select
         if (selectedTerritory == null)
         {
@@ -78,7 +78,7 @@ public class AttackLogic : MonoBehaviour
             attackTerritory = null;
             if (!isPlayerTerritory) return;
             selectedTerritory = newSelected;
-            selectedTerritory.ShowAttackOptions();
+            selectedTerritory.ShowAttackOptions(isReorganizeTurn);
             AudioController.Instance.warCry.Play();
         // selected starting territory - deselect all
         } else if (newSelected == selectedTerritory){
@@ -98,7 +98,7 @@ public class AttackLogic : MonoBehaviour
                     // change current selected
                     DeselectAll();
                     selectedTerritory = newSelected;
-                    newSelected.ShowAttackOptions();
+                    newSelected.ShowAttackOptions(isReorganizeTurn);
                 }
             }
             else
@@ -182,12 +182,12 @@ public class AttackLogic : MonoBehaviour
 
     void ResetLines()
     {
-        selectedTerritory.HideAttackOptions();
-        attackTerritory.HideAttackOptions();
-        attackTerritory.UpdateEnemyTerritories();
+        selectedTerritory.HideAttackOptions(isReorganizeTurn);
+        attackTerritory.HideAttackOptions(isReorganizeTurn);
+        attackTerritory.UpdateNeighborTerritories();
         foreach (Territory territory in attackTerritory.territories)
         {
-            territory.UpdateEnemyTerritories();
+            territory.UpdateNeighborTerritories();
         }
     }
 
@@ -228,7 +228,7 @@ public class AttackLogic : MonoBehaviour
         {
             AudioController.Instance.cardHit.Play();
             // Win without territory gain
-            attackTerritory.UpdateEnemyTerritories();
+            attackTerritory.UpdateNeighborTerritories();
             // if player had bonus, remove visuals
             if (attackTerritory.TerritoryGraphics.isShowBonus)
             {
@@ -246,8 +246,8 @@ public class AttackLogic : MonoBehaviour
                 TerritoryManager.instance.ShowBonus((int)selectedTerritory.bonusGroup, false);
             }
             // LOSE
-            selectedTerritory.HideAttackOptions();
-            selectedTerritory.UpdateEnemyTerritories();
+            selectedTerritory.HideAttackOptions(isReorganizeTurn);
+            selectedTerritory.UpdateNeighborTerritories();
             selectedTerritory.enemyTerritories.Clear();
         }
         AttackCleanup();
@@ -260,8 +260,8 @@ public class AttackLogic : MonoBehaviour
     private void AttackCleanup()
     {
         // cleanup
-        selectedTerritory.HideAttackOptions();
-        attackTerritory.HideAttackOptions();
+        selectedTerritory.HideAttackOptions(isReorganizeTurn);
+        attackTerritory.HideAttackOptions(isReorganizeTurn);
 
         selectedTerritory.UpdateTerritoryImage();
         attackTerritory.UpdateTerritoryImage();
