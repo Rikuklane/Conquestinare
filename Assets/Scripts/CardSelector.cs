@@ -53,11 +53,13 @@ public class CardSelector : MonoBehaviour
             {
                 CreateUnitCard(cardData as UnitData, CardStateController.Instance.CardInMarket);
             }
-            else if (cardData.GetType() == typeof(SpellData))
+        }
+        foreach (var cardData in _cardSelection)
+        {
+            if (cardData.GetType() == typeof(SpellData))
             {
                 CreateSpellCard(cardData as SpellData, CardStateController.Instance.CardInMarket);
             }
-            
         }
         SetActive(true);
     }
