@@ -170,7 +170,6 @@ public class AttackGUI : MonoBehaviour
         {
             yield return StartCoroutine(MoveBack(animationTo, animationTo.transform.TransformPoint(new Vector3(0, 15f * (isDefenderTurn ? -1 : 1), 0)), 0.2f));
         }
-
         yield return StartCoroutine(MoveBack(animationFrom, origin, 0.3f));
         AttackLogic.Instance.SimulateBattle();
     }
