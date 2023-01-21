@@ -19,8 +19,9 @@ namespace Turns
         public override IEnumerator EndState(TurnManager turnManager, Player player)
         {
             // TODO press end turn button (Next player turn)
+            AttackLogic.Instance.isReorganizeTriggered = false;
             AttackLogic.Instance.isReorganizeTurn = false;
-            AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
+            AttackLogic.Instance.DeselectAll();
             Events.NextPlayer();
             return base.EndState(turnManager, player);
         }

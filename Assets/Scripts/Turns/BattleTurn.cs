@@ -19,7 +19,8 @@ namespace Turns
         {
             // TODO press next phase button
             // temporary bug fix
-            AttackGUI.instance.attackButton.gameObject.SetActive(false);
+            AttackLogic.Instance.isReorganizeTriggered = false;
+            AttackLogic.Instance.DeselectAll();
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
         }
