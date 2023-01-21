@@ -18,7 +18,7 @@ public class CardSelector : MonoBehaviour
     {
         Instance = this;
         _layoutGroup = gameObject.GetComponent<HorizontalLayoutGroup>();
-        gameObject.transform.DetachChildren();
+        //gameObject.transform.DetachChildren();
         Events.OnReceiveUnitsSelection += ReceiveUnitsSelection;
         Events.OnMarketSelection += MarketSelection;
         SetActive(false);
@@ -65,16 +65,16 @@ public class CardSelector : MonoBehaviour
     public void SetActive(bool value)
     {
         gameObject.SetActive(value);
-        _layoutGroup.gameObject.SetActive(value);
+        //_layoutGroup.gameObject.SetActive(value);
     }
 
     private void DestroyExistingChildren()
     {
-        foreach (var child in GetComponentsInChildren<UnitCardPresenter>())
+        foreach (var child in transform.GetComponentsInChildren<UnitCardPresenter>())
         {
             Destroy(child.gameObject);
         }
-        foreach (var child in GetComponentsInChildren<SpellCardPresenter>())
+        foreach (var child in transform.GetComponentsInChildren<SpellCardPresenter>())
         {
             Destroy(child.gameObject);
         }
@@ -82,14 +82,14 @@ public class CardSelector : MonoBehaviour
 
     private void CreateUnitCard(UnitData unitData, AbstractCardState state)
     {
-        var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
+        var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform.GetChild(0).GetChild(0));
         unitCard.cardLogic.SwitchState(state);
         unitCard.SetData(unitData);
     }
     
     private void CreateSpellCard(SpellData spellData, AbstractCardState state)
     {
-        var spellCard = Instantiate(spellCardPrefab, transform.position, Quaternion.identity, transform);
+        var spellCard = Instantiate(spellCardPrefab, transform.position, Quaternion.identity, transform.GetChild(0).GetChild(0));
         spellCard.cardLogic.SwitchState(state);
         spellCard.SetData(spellData);
     }
