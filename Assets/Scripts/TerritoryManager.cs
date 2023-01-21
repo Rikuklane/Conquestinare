@@ -58,8 +58,10 @@ public class TerritoryManager : MonoBehaviour
                 territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
                 territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
                 territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
+                territoryGraphics.markerImage = canvas.transform.Find("MarkerHover").GetComponent<Image>();
                 territoryGraphics.attackImage.enabled = false;
                 territoryGraphics.defenseImage.enabled = false;
+                territoryGraphics.markerImage.enabled = false;
                 territoryGraphics.OpenAnimation = OpenAnimation;
                 territoryGraphics.CloseAnimation = CloseAnimation;
             }

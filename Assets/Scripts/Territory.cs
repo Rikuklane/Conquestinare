@@ -39,7 +39,7 @@ public class Territory : MonoBehaviour
     [Space]
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
-
+    private bool defenseActivated = false;
  
 
     
@@ -190,7 +190,8 @@ public class Territory : MonoBehaviour
 
     public void ShowReorganizeOptionsRecursive(bool value)
     {
-        if (TerritoryGraphics.defenseImage.enabled == value) return;
+        if (defenseActivated == value) return;
+        defenseActivated = value;
         TerritoryGraphics.defenseImage.enabled = value;
         foreach (Territory t in allyTerritories)
         {
@@ -201,7 +202,8 @@ public class Territory : MonoBehaviour
 
     public void ShowAttackOptions(bool isReorganizeTurn)
     {
-        if(isReorganizeTurn)
+        TerritoryGraphics.markerImage.enabled = true;
+        if (isReorganizeTurn)
         {
             ShowReorganizeOptionsRecursive(true);
             TerritoryGraphics.defenseImage.enabled = false;
@@ -217,10 +219,11 @@ public class Territory : MonoBehaviour
 
     public void HideAttackOptions(bool isReorganizeTurn)
     {
-        if(isReorganizeTurn)
+        TerritoryGraphics.markerImage.enabled = false;
+        if (isReorganizeTurn)
         {
             ShowReorganizeOptionsRecursive(false);
-            TerritoryGraphics.defenseImage.enabled = true;
+            //TerritoryGraphics.defenseImage.enabled = false;
         }
         else
         {
