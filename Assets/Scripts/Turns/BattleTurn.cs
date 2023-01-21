@@ -19,7 +19,13 @@ namespace Turns
         {
             // TODO press next phase button
             // temporary bug fix
-            AttackLogic.Instance.isReorganizeTriggered = false;
+            if (AttackLogic.Instance.isReorganizeTriggered)
+            {
+                AttackLogic.Instance.isReorganizeTriggered = false;
+                if (AttackLogic.Instance.attackTerritory) AttackLogic.Instance.attackTerritory.UpdateTerritoryImage();
+                if (AttackLogic.Instance.selectedTerritory) AttackLogic.Instance.selectedTerritory.TerritoryGraphics.hideCards();
+                AttackLogic.Instance.canHover = true;
+            }
             AttackLogic.Instance.DeselectAll();
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
