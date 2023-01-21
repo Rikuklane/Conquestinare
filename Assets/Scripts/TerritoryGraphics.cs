@@ -11,6 +11,7 @@ public class TerritoryGraphics : MonoBehaviour
     public GameObject iconsParent;
     public Image attackImage;
     public Image defenseImage;
+    public Image markerImage;
     [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
     [HideInInspector]

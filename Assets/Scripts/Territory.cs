@@ -15,7 +15,9 @@ public class Territory : MonoBehaviour
     public List<Territory> territories = new();
     [HideInInspector]
     public List<Territory> enemyTerritories = new();
-       
+    [HideInInspector]
+    public List<Territory> allyTerritories = new();
+
     [Header("Units")]
     [Space]
     [HideInInspector]
@@ -37,7 +39,7 @@ public class Territory : MonoBehaviour
     [Space]
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
-
+    private bool defenseActivated = false;
  
 
     
@@ -48,7 +50,7 @@ public class Territory : MonoBehaviour
 
     public void AddUnits()
     {
-        UpdateEnemyTerritories();
+        UpdateNeighborTerritories();
         foreach (UnitData unit in startUnits)
 
         {
@@ -151,7 +153,7 @@ public class Territory : MonoBehaviour
         units.Add(newUnit);
         UpdateTerritoryImage();
 
-        UpdateEnemyTerritories();
+        UpdateNeighborTerritories();
 
         card.cardLogic.isSelected = false;
         //TODO
@@ -186,30 +188,64 @@ public class Territory : MonoBehaviour
         TerritoryGraphics.SetColor(player.color);
     }
 
-    public void ShowAttackOptions()
+    public void ShowReorganizeOptionsRecursive(bool value)
     {
-        foreach (Territory t in enemyTerritories)
+        if (defenseActivated == value) return;
+        defenseActivated = value;
+        TerritoryGraphics.defenseImage.enabled = value;
+        foreach (Territory t in allyTerritories)
         {
-            t.TerritoryGraphics.attackImage.enabled = true;
+            t.ShowReorganizeOptionsRecursive(value);
         }
     }
 
-    public void HideAttackOptions()
+
+    public void ShowAttackOptions(bool isReorganizeTurn)
     {
-        foreach (Territory t in enemyTerritories)
+        TerritoryGraphics.markerImage.enabled = true;
+        if (isReorganizeTurn)
         {
-            t.TerritoryGraphics.attackImage.enabled = false;
+            ShowReorganizeOptionsRecursive(true);
+            TerritoryGraphics.defenseImage.enabled = false;
+        } else
+        {
+            foreach (Territory t in enemyTerritories)
+            {
+                t.TerritoryGraphics.attackImage.enabled = true;
+            }
+        }
+
+    }
+
+    public void HideAttackOptions(bool isReorganizeTurn)
+    {
+        TerritoryGraphics.markerImage.enabled = false;
+        if (isReorganizeTurn)
+        {
+            ShowReorganizeOptionsRecursive(false);
+            //TerritoryGraphics.defenseImage.enabled = false;
+        }
+        else
+        {
+            foreach (Territory t in enemyTerritories)
+            {
+                t.TerritoryGraphics.attackImage.enabled = false;
+            }
         }
     }
 
-    public void UpdateEnemyTerritories()
+    public void UpdateNeighborTerritories()
     {
         enemyTerritories.Clear();
+        allyTerritories.Clear();
         foreach(Territory area in territories)
         {
             if (player != area.player || area.player.Name == "neutral")
             {
                 enemyTerritories.Add(area);
+            } else
+            {
+                allyTerritories.Add(area);
             }
         }
     }

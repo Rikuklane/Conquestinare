@@ -52,6 +52,16 @@ public class AttackLogic : MonoBehaviour
         }
     }
 
+    public void DeselectAll()
+    {
+        if (selectedTerritory) selectedTerritory.HideAttackOptions(isReorganizeTurn);
+        if (attackTerritory) attackTerritory.HideAttackOptions(isReorganizeTurn);
+        selectedTerritory = null;
+        attackTerritory = null;
+        AttackGUI.instance.AttackCleanup();
+        
+    }
+
     public void SelectTerritory(Territory newSelected)
     {
         bool isPlayerTerritory = newSelected.player == Events.RequestPlayer();
@@ -60,46 +70,54 @@ public class AttackLogic : MonoBehaviour
         {
             return;
         }
-        newSelected.UpdateEnemyTerritories();
-
+        newSelected.UpdateNeighborTerritories();
+        // first select
         if (selectedTerritory == null)
         {
+            // just in case
+            attackTerritory = null;
             if (!isPlayerTerritory) return;
             selectedTerritory = newSelected;
-            selectedTerritory.ShowAttackOptions();
+            selectedTerritory.ShowAttackOptions(isReorganizeTurn);
             AudioController.Instance.warCry.Play();
-            return;
-
-        } if (selectedTerritory == newSelected){
+        // selected starting territory - deselect all
+        } else if (newSelected == selectedTerritory){
             // disable attackOptions
-            selectedTerritory.HideAttackOptions();
-            selectedTerritory = null;
-            return;
+            DeselectAll();
         }
-        // check if territories are connected
-        bool territoriesConnected = selectedTerritory.territories.Contains(newSelected);
-        if (!isPlayerTerritory)
-        {
-            if (selectedTerritory.GetUnitsCount() == 0) return;
-            if (!territoriesConnected) return;
-            attackTerritory = newSelected;
-            AudioController.Instance.warCry.Play();
-            AttackGUI.instance.attackButton.gameObject.SetActive(true);
-        }
-        else
-        {
-
-            if (isReorganizeTurn && territoriesConnected)
+        else {
+            if (isPlayerTerritory)
             {
-                attackTerritory = newSelected;
-                TriggerReorganize();
-
-            } else
+                if (isReorganizeTurn)
+                {
+                    attackTerritory = newSelected;
+                    TriggerReorganize();
+                }
+                else
+                {
+                    // change current selected
+                    DeselectAll();
+                    selectedTerritory = newSelected;
+                    newSelected.ShowAttackOptions(isReorganizeTurn);
+                }
+            }
+            else
             {
-                // change selected
-                selectedTerritory.HideAttackOptions();
-                newSelected.ShowAttackOptions();
-                selectedTerritory = newSelected;
+                // check if territories are connected
+                bool isTerritoryNeighbor = selectedTerritory.territories.Contains(newSelected);
+                // cant attack if not neighbor || bug || cant manipulate other territories in reorganize turn ||  bug fix, cant attack enemy territory with enemy territory
+
+                if (!isTerritoryNeighbor || selectedTerritory.GetUnitsCount() == 0 || isReorganizeTurn || selectedTerritory.player == newSelected.player)
+                {
+                    DeselectAll();
+                // TODO cant attack neutral with only 1 troop
+                } //else if (newSelected.player.Name == "neutral" && selectedTerritory.GetUnitsCount() == 1) return;
+                else
+                {
+                    attackTerritory = newSelected;
+                    AudioController.Instance.warCry.Play();
+                    AttackGUI.instance.attackButton.gameObject.SetActive(true);
+                }
             }
         }
 
@@ -164,12 +182,12 @@ public class AttackLogic : MonoBehaviour
 
     void ResetLines()
     {
-        selectedTerritory.HideAttackOptions();
-        attackTerritory.HideAttackOptions();
-        attackTerritory.UpdateEnemyTerritories();
+        selectedTerritory.HideAttackOptions(isReorganizeTurn);
+        attackTerritory.HideAttackOptions(isReorganizeTurn);
+        attackTerritory.UpdateNeighborTerritories();
         foreach (Territory territory in attackTerritory.territories)
         {
-            territory.UpdateEnemyTerritories();
+            territory.UpdateNeighborTerritories();
         }
     }
 
@@ -210,7 +228,7 @@ public class AttackLogic : MonoBehaviour
         {
             AudioController.Instance.cardHit.Play();
             // Win without territory gain
-            attackTerritory.UpdateEnemyTerritories();
+            attackTerritory.UpdateNeighborTerritories();
             // if player had bonus, remove visuals
             if (attackTerritory.TerritoryGraphics.isShowBonus)
             {
@@ -228,7 +246,8 @@ public class AttackLogic : MonoBehaviour
                 TerritoryManager.instance.ShowBonus((int)selectedTerritory.bonusGroup, false);
             }
             // LOSE
-            selectedTerritory.UpdateEnemyTerritories();
+            selectedTerritory.HideAttackOptions(isReorganizeTurn);
+            selectedTerritory.UpdateNeighborTerritories();
             selectedTerritory.enemyTerritories.Clear();
         }
         AttackCleanup();
@@ -241,8 +260,8 @@ public class AttackLogic : MonoBehaviour
     private void AttackCleanup()
     {
         // cleanup
-        selectedTerritory.HideAttackOptions();
-        attackTerritory.HideAttackOptions();
+        selectedTerritory.HideAttackOptions(isReorganizeTurn);
+        attackTerritory.HideAttackOptions(isReorganizeTurn);
 
         selectedTerritory.UpdateTerritoryImage();
         attackTerritory.UpdateTerritoryImage();
