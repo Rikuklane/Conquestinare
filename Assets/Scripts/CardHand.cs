@@ -9,13 +9,25 @@ public class CardHand : MonoBehaviour
     public Dictionary<string, List<CardPresenterAbstractLogic>> cardHands = new();
     public CardPresenterAbstractLogic cardSelected;
     public UnitCardPresenter unitCardPrefab;
+    public float speed = 5f;
+    public ParticleSystem particleSystem;
     private Vector3 cardSelectLastPosition;
+    private int currentNumberParticles;
 
     private void Update()
     {
         if(cardSelected != null)
         {
-            cardSelected.CardInstance.transform.position = Input.mousePosition;
+            //particleSystem.Stop();
+            cardSelected.cardInstance.transform.position = Vector3.Lerp(cardSelected.cardInstance.transform.position, Input.mousePosition, Time.deltaTime * speed);
+            particleSystem.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.cardInstance.transform.position);
+            if(particleSystem.particleCount > currentNumberParticles)
+            {
+                AudioController.Instance.sparkle.Play();
+            }
+            currentNumberParticles = particleSystem.particleCount;
+            //particleSystem.Play();
+            //cardSelected.CardInstance.transform.position = Input.mousePosition;
             if (Input.GetMouseButtonDown(1))
             {
                 NewCardSelected(null);
@@ -28,7 +40,8 @@ public class CardHand : MonoBehaviour
         if(cardSelected)
         {
             PlayCard(cardSelected);
-            Destroy(cardSelected.CardInstance.gameObject);
+            particleSystem.transform.parent = transform;
+            Destroy(cardSelected.cardInstance.gameObject);
             cardSelected = null;
         }
     }
@@ -39,12 +52,15 @@ public class CardHand : MonoBehaviour
         if(cardSelected != null)
         {
             StartCoroutine(cardSelected.MoveBack(cardSelectLastPosition, 0.7f));
-        }
+        } 
         cardSelected = cardSelect;
         if (cardSelect == null)
         {
             return;
         }
+        particleSystem.transform.parent = cardSelected.cardInstance.transform;
+        particleSystem.transform.position = cardSelected.cardInstance.transform.position;
+
         cardSelectLastPosition = cardSelect.transform.position;
         // deselect others
         foreach (CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().Name])
@@ -55,11 +71,13 @@ public class CardHand : MonoBehaviour
             }
         }
         cardSelect.TriggerSelected();
+        cardSelect.cardInstance.transform.parent = transform.parent;
     }
 
     private void Awake()
     {
         Instance = this;
+        particleSystem = Instantiate(particleSystem, transform);
     }
 
     public void CreateCardHands(Player[] players)
@@ -78,7 +96,7 @@ public class CardHand : MonoBehaviour
         {
             foreach (CardPresenterAbstractLogic card in cardHands[currentPlayer.Name])
             {
-                card.CardInstance.gameObject.SetActive(false);
+                card.cardInstance.gameObject.SetActive(false);
             }
         }
     }
@@ -88,7 +106,7 @@ public class CardHand : MonoBehaviour
         //   - add cards from new player
         foreach(CardPresenterAbstractLogic card in cardHands[player.Name])
         {
-            card.CardInstance.gameObject.SetActive(true);
+            card.cardInstance.gameObject.SetActive(true);
         }
     }
 

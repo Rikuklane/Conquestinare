@@ -11,6 +11,8 @@ public class TerritoryGraphics : MonoBehaviour
     public GameObject iconsParent;
     public Image attackImage;
     public Image defenseImage;
+    public Image markerImage;
+    public GameObject ShowBonusPrefab;
     [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
     [HideInInspector]
@@ -23,6 +25,9 @@ public class TerritoryGraphics : MonoBehaviour
 
     private List<Image> icons = new();
     private Renderer _renderer;
+    private Coroutine scrollCoroutine = null;
+    private int lastSelected = -1;
+    private GameObject bonusInstance = null;
 
     private void Awake()
     {
@@ -30,7 +35,7 @@ public class TerritoryGraphics : MonoBehaviour
         if (color != null) _renderer.material.color = color;
     }
 
-    internal void CheckSelected()
+    internal void CheckSelected(CardPresenterAbstractLogic currentSelected)
     {
         int numberSelected = 0;
         foreach (UnitCardPresenter card in presentUnits)
@@ -40,27 +45,12 @@ public class TerritoryGraphics : MonoBehaviour
                 numberSelected += 1;
             }
         }
-        // cant select last one
-        if (presentUnits.Count - numberSelected == 1)
+        // deselect first selected
+        if (presentUnits.Count > 1 && presentUnits.Count == numberSelected)
         {
-            foreach (UnitCardPresenter card in presentUnits)
-            {
-                if (!card.cardLogic.isSelected)
-                {
-                    card.cardLogic.ChangeInteractable(false);
-                }
-            }
+            presentUnits[lastSelected].cardLogic.TriggerSelected();
         }
-        else
-        {
-            // change others to interactable
-            foreach (UnitCardPresenter card in presentUnits)
-            {
-                card.cardLogic.ChangeInteractable(true);
-            }
-        }
-
-
+        lastSelected = presentUnits.IndexOf(currentSelected.transform.parent.GetComponent<UnitCardPresenter>());
     }
 
     public void ShowBonus(bool showBonus)
@@ -68,16 +58,22 @@ public class TerritoryGraphics : MonoBehaviour
         isShowBonus = showBonus;
         if (showBonus)
         {
+            bonusInstance = Instantiate(ShowBonusPrefab, iconsParent.transform.parent.position, Quaternion.identity, iconsParent.transform.parent);
             //iconsParent.GetComponent<Image>().enabled = true;
         }
         else
         {
+            Destroy(bonusInstance);
             //iconsParent.GetComponent<Image>().enabled = false;
         }
     }
 
     public void showCards()
     {
+        if(!AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+        {
+            AudioController.Instance.place.Play();
+        }
         if (AttackGUI.instance.TerritoryHoverPanel.activeSelf)
             return;
         foreach (UnitCardPresenter unit in presentUnits)
@@ -85,7 +81,18 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(true);
         }
+        AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(true);
+        if (presentUnits.Count < 2) {
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " card\n" + GetComponent<Territory>().getSummary();
+
+        }
+        else
+        {
+            AttackGUI.instance.TerritoryHoverText.text = presentUnits.Count + " cards\n" + GetComponent<Territory>().getSummary();
+        }
         AttackGUI.instance.TerritoryHoverPanel.SetActive(true);
+        if (scrollCoroutine != null) StopCoroutine(scrollCoroutine);
+        scrollCoroutine = StartCoroutine(AttackGUI.instance.ScrollToRight(1f+1*presentUnits.Count/6));
         OpenAnimation.enabled = true;
         showingCards = true;
     }
@@ -98,6 +105,7 @@ public class TerritoryGraphics : MonoBehaviour
             //unit.transform.parent = parent.transform;
             unit.gameObject.SetActive(false);
         }
+        AttackGUI.instance.TerritoryHoverText.gameObject.SetActive(false);
         //AttackGUI.instance.TerritoryHoverPanel.SetActive(false);
         CloseAnimation.enabled = true;
         showingCards = false;
@@ -128,6 +136,7 @@ public class TerritoryGraphics : MonoBehaviour
         foreach(UnitCardPresenter unit in presentUnits)
         {
             Image icon = Instantiate(TerritoryManager.instance.iconPrefab, iconsParent.transform);
+            icon.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
             icon.sprite = unit.unitData.sprite;
             icons.Add(icon);
         }

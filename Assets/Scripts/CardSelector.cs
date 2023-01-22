@@ -11,14 +11,15 @@ public class CardSelector : MonoBehaviour
     public UnitCardPresenter unitCardPrefab;
     public SpellCardPresenter spellCardPrefab;
     public static CardSelector Instance;
-    private List<UnitData> _unitSelection;
     private List<CardData> _cardSelection;
     private HorizontalLayoutGroup _layoutGroup;
+    private readonly List<SpellCardPresenter> _selectedSpells = new();
+    private readonly List<UnitCardPresenter> _selectedUnits = new();
     private void Awake()
     {
         Instance = this;
         _layoutGroup = gameObject.GetComponent<HorizontalLayoutGroup>();
-        gameObject.transform.DetachChildren();
+        //gameObject.transform.DetachChildren();
         Events.OnReceiveUnitsSelection += ReceiveUnitsSelection;
         Events.OnMarketSelection += MarketSelection;
         SetActive(false);
@@ -32,32 +33,29 @@ public class CardSelector : MonoBehaviour
 
     private void ReceiveUnitsSelection(int cardsCount)
     {
-        _unitSelection = CardCollection.Instance.GetSelectionOfUnits(cardsCount);
-        DestroyExistingChildren();
-        
-        foreach (var unitData in _unitSelection)
-        {
-            CreateUnitCard(unitData, CardStateController.Instance.CardInSelection);
-        }
-        SetActive(true);
+        _cardSelection = new List<CardData>(CardCollection.Instance.GetSelectionOfUnits(cardsCount));
+        CardSelection(CardStateController.Instance.CardInSelection);
     }
     
     private void MarketSelection(int cardsCount)
     {
         _cardSelection = CardCollection.Instance.GetSelectionOfCards(cardsCount);
+        CardSelection(CardStateController.Instance.CardInMarket);
+    }
+
+    private void CardSelection(AbstractCardState cardState)
+    {
         DestroyExistingChildren();
-        
         foreach (var cardData in _cardSelection)
         {
             if (cardData.GetType() == typeof(UnitData))
             {
-                CreateUnitCard(cardData as UnitData, CardStateController.Instance.CardInMarket);
+                CreateUnitCard(cardData as UnitData, cardState);
             }
             else if (cardData.GetType() == typeof(SpellData))
             {
-                CreateSpellCard(cardData as SpellData, CardStateController.Instance.CardInMarket);
+                CreateSpellCard(cardData as SpellData, cardState);
             }
-            
         }
         SetActive(true);
     }
@@ -65,16 +63,18 @@ public class CardSelector : MonoBehaviour
     public void SetActive(bool value)
     {
         gameObject.SetActive(value);
-        _layoutGroup.gameObject.SetActive(value);
+        //_layoutGroup.gameObject.SetActive(value);
     }
 
     private void DestroyExistingChildren()
     {
-        foreach (var child in GetComponentsInChildren<UnitCardPresenter>())
+        _selectedSpells.Clear();
+        _selectedUnits.Clear();
+        foreach (var child in transform.GetComponentsInChildren<UnitCardPresenter>())
         {
             Destroy(child.gameObject);
         }
-        foreach (var child in GetComponentsInChildren<SpellCardPresenter>())
+        foreach (var child in transform.GetComponentsInChildren<SpellCardPresenter>())
         {
             Destroy(child.gameObject);
         }
@@ -82,15 +82,20 @@ public class CardSelector : MonoBehaviour
 
     private void CreateUnitCard(UnitData unitData, AbstractCardState state)
     {
-        var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform);
+        var unitCard = Instantiate(unitCardPrefab, transform.position, Quaternion.identity, transform.GetChild(0).GetChild(0));
         unitCard.cardLogic.SwitchState(state);
         unitCard.SetData(unitData);
+        _selectedUnits.Add(unitCard);
     }
     
     private void CreateSpellCard(SpellData spellData, AbstractCardState state)
     {
-        var spellCard = Instantiate(spellCardPrefab, transform.position, Quaternion.identity, transform);
+        var spellCard = Instantiate(spellCardPrefab, transform.position, Quaternion.identity, transform.GetChild(0).GetChild(0));
         spellCard.cardLogic.SwitchState(state);
         spellCard.SetData(spellData);
+        _selectedSpells.Add(spellCard);
     }
+
+    public List<SpellCardPresenter> selectedSpells => _selectedSpells;
+    public List<UnitCardPresenter> selectedUnits => _selectedUnits;
 }

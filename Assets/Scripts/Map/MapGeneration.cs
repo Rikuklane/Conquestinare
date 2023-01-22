@@ -21,6 +21,20 @@ public class MapGeneration : MonoBehaviour
     {
         
     }
+    [ContextMenu("AddBonusGroups")]
+    private void AddBonusGroups()
+    {
+        var json = Resources.Load<TextAsset>("worldequalized").text;
+        MapData mapData = JsonUtility.FromJson<MapData>(json);
+
+        GameObject[] provinces = mapData.cells.provinces.Select(province =>
+        {
+            if (province.name == null) return new GameObject();
+            GameObject provinceObject = new();
+            GetComponent<TerritoryManager>().transform.Find("province " + province.name).GetComponent<Territory>().bonusGroup = province.state - 1;
+            return provinceObject;
+        }).ToArray();
+    }
     [ContextMenu("Generate")]
     private void GenerateMap()
     {
@@ -45,6 +59,7 @@ public class MapGeneration : MonoBehaviour
             provinceObject.AddComponent(typeof(MeshRenderer));
             provinceObject.AddComponent(typeof(MeshFilter));
             provinceObject.AddComponent(typeof(MeshCollider));
+            provinceObject.AddComponent(typeof(ProvinceData));
 
             provinceObject.name = "province " + province.name;
             provinceObject.transform.parent = gameObject.transform;
@@ -55,6 +70,7 @@ public class MapGeneration : MonoBehaviour
 
         GameObject[] cells = mapData.cells.cells.Select(cell =>
         {
+
             Vector3[] vertices = cell.v.Select(vertID => {
                 var vert = mapData.vertices[vertID];
                 int[] provincePos = mapData.cells.cells[mapData.cells.provinces[cell.province].center].p;
@@ -76,7 +92,6 @@ public class MapGeneration : MonoBehaviour
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-
             GameObject cellObject = new();
             cellObject.name = cell.i.ToString();
             MeshRenderer renderer = cellObject.AddComponent(typeof(MeshRenderer)) as MeshRenderer;
@@ -85,6 +100,19 @@ public class MapGeneration : MonoBehaviour
 
             cellObject.transform.parent = provinces[cell.province].transform;
             cellObject.transform.position = new Vector3(cell.p[0], cell.p[1], 0);
+
+            if (cell.province == 0) return cellObject;
+
+            foreach (int neighborCellIndex in cell.c)
+            {
+                Cell neighborCell = mapData.cells.cells[neighborCellIndex];
+                if (neighborCell.province == 0) continue;
+                if (cell.province == neighborCell.province) continue;
+
+                ProvinceData provinceData = provinces[cell.province].transform.GetComponent<ProvinceData>();
+                ProvinceData neighborProvinceData = provinces[neighborCell.province].transform.GetComponent<ProvinceData>();
+                provinceData.neighbors.Add(neighborProvinceData);
+            }
 
             return cellObject;
         }).ToArray();
@@ -115,7 +143,12 @@ public class MapGeneration : MonoBehaviour
 
             collider.sharedMesh = province.GetComponent<MeshFilter>().mesh;
 
+            ProvinceData provinceData = province.GetComponent<ProvinceData>();
+            provinceData.neighbors = provinceData.neighbors.Distinct().ToList();
+
             province.SetActive(true);
+
+            if (province.transform.childCount == 0) DestroyImmediate(province);
         }
     }
 }

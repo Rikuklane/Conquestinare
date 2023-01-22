@@ -28,7 +28,7 @@ public class SpellCardPresenter : MonoBehaviour
         spellData = data;
         if (spellData != null)
         {
-            cardLogic.CardData = spellData;
+            cardLogic.cardData = spellData;
             SetData();
         }
     }

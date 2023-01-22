@@ -8,7 +8,11 @@ namespace Turns
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
             AttackLogic.Instance.canHover = false;
-            Events.DisplayMarketSelection(3);
+            Events.DisplayMarketSelection(10);
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.MarketTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 

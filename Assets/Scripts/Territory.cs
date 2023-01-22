@@ -8,58 +8,79 @@ using Random = System.Random;
 
 public class Territory : MonoBehaviour
 {
-    public Waypoint waypoint;
     public Player player;
 
-    [Header("Territories")]
+    [Header("Neighbours")]
     [Space]
     public List<Territory> territories = new();
-    public List<Vector3> enemyTerritories = new();
-       
+    [HideInInspector]
+    public List<Territory> enemyTerritories = new();
+    [HideInInspector]
+    public List<Territory> allyTerritories = new();
+
     [Header("Units")]
     [Space]
+    [HideInInspector]
     public List<UnitData> startUnits = new();
-
-    [Header("Graphics")]
-    [Space]
-
-    public UnitCardPresenter cardPrefab;
-    public TerritoryGraphics TerritoryGraphics;
-
-    [Header("Bonus Group")]
-    [Space]
-    public TerritoryManager.BonusGroup bonusGroup;
-    private readonly Random _random = new();
-
     public class Unit
     {
         public int attack;
         public int health;
+        
+        public Unit() { }
+
+        public Unit(int attack, int health)
+        {
+            this.attack = attack;
+            this.health = health;
+        }
     }
 
     public List<Unit> units = new();
 
-    
-        
-    void Awake()
-    {
+    [Header("Graphics")]
+    [Space]
 
-        foreach(Territory area in territories)
-        {
-            waypoint.routes.Add(area.waypoint);
-        }
-        waypoint.CreateLines();
+    public TerritoryGraphics TerritoryGraphics;
 
-    }
+    [Header("Bonus Group")]
+    [Space]
+    public int bonusGroup;
+    private readonly Random _random = new();
+    private bool defenseActivated = false;
 
     public void AddUnits()
     {
-        UpdateEnemyTerritories();
+        UpdateNeighborTerritories();
         foreach (UnitData unit in startUnits)
-
         {
             AddCard(unit, null);
         }
+    }
+
+    public string getSummary()
+    {
+        int attack = 0;
+        int health = 0;
+        foreach (Unit unit in units)
+        {
+            attack += unit.attack;
+            health += unit.health;
+        }
+        return attack.ToString() + "AD/" + health.ToString() + "HP";
+    }
+
+    public Unit GetAttackHealth()
+    {
+        int attack = 0;
+        int health = 0;
+        foreach (Unit unit in units)
+        {
+            attack += unit.attack;
+            health += unit.health;
+        }
+
+        return new Unit(attack, health);
     }
 
     public void CastSpellOnUnits(SpellData spellData)
@@ -117,7 +138,7 @@ public class Territory : MonoBehaviour
     }
     public void AddCard(UnitData data, Unit unit)
     {
-        UnitCardPresenter card = Instantiate(cardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform);
+        UnitCardPresenter card = Instantiate(CardHand.Instance.unitCardPrefab, AttackGUI.instance.TerritoryHoverPanel.transform.GetChild(0).GetChild(0));
         card.SetData(data);
         if(unit != null)
         {
@@ -157,7 +178,7 @@ public class Territory : MonoBehaviour
         units.Add(newUnit);
         UpdateTerritoryImage();
 
-        UpdateEnemyTerritories();
+        UpdateNeighborTerritories();
 
         card.cardLogic.isSelected = false;
         //TODO
@@ -192,26 +213,86 @@ public class Territory : MonoBehaviour
         TerritoryGraphics.SetColor(player.color);
     }
 
-    public void ShowAttackOptions()
+    public void ShowReorganizeOptionsRecursive(bool value)
     {
-        waypoint.SetLines(enemyTerritories, true);
+        if (defenseActivated == value) return;
+        defenseActivated = value;
+        TerritoryGraphics.defenseImage.enabled = value;
+        foreach (Territory t in allyTerritories)
+        {
+            t.ShowReorganizeOptionsRecursive(value);
+        }
     }
 
-    public void HideAttackOptions()
+
+    public void ShowAttackOptions(bool isReorganizeTurn)
     {
-        waypoint.SetLines(enemyTerritories, false);
+        TerritoryGraphics.markerImage.enabled = true;
+        if (isReorganizeTurn)
+        {
+            ShowReorganizeOptionsRecursive(true);
+            TerritoryGraphics.defenseImage.enabled = false;
+        } else
+        {
+            foreach (Territory t in enemyTerritories)
+            {
+                t.TerritoryGraphics.attackImage.enabled = true;
+            }
+        }
+
     }
 
-    public void UpdateEnemyTerritories()
+    public void HideAttackOptions(bool isReorganizeTurn)
+    {
+        TerritoryGraphics.markerImage.enabled = false;
+        if (isReorganizeTurn)
+        {
+            ShowReorganizeOptionsRecursive(false);
+            //TerritoryGraphics.defenseImage.enabled = false;
+        }
+        else
+        {
+            foreach (Territory t in enemyTerritories)
+            {
+                t.TerritoryGraphics.attackImage.enabled = false;
+            }
+        }
+    }
+
+    public void UpdateNeighborTerritories()
     {
         enemyTerritories.Clear();
+        allyTerritories.Clear();
         foreach(Territory area in territories)
         {
             if (player != area.player || area.player.Name == "neutral")
             {
-                enemyTerritories.Add(area.waypoint.transform.position);
+                enemyTerritories.Add(area);
+            } else
+            {
+                allyTerritories.Add(area);
             }
         }
+    }
+
+    public void MoveCardToTerritory(CardPresenterAbstractLogic cardSelected, Vector3 targetPos)
+    {
+        LeanTween.move(cardSelected.cardInstance.gameObject, targetPos, 0.1f)
+            .setOnComplete(() =>
+            {
+                AudioController.Instance.place.Play();
+                cardSelected.childGameObject.transform.localPosition = Vector3.zero;
+                if (cardSelected.cardData.GetType() == typeof(UnitData))
+                {
+                    AddCard((UnitData)cardSelected.cardData, null);
+                }
+                else if (cardSelected.cardData.GetType() == typeof(SpellData))
+                {
+                    CastSpellOnUnits((SpellData)cardSelected.cardData);
+                }
+                CardHand.Instance.DestroySelected();
+
+            });
     }
 
     private void OnMouseOver()
@@ -224,25 +305,11 @@ public class Territory : MonoBehaviour
                 if (CardHand.Instance.cardSelected)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.CardData.GetType() == typeof(SpellData)))
+                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.cardData.GetType() == typeof(SpellData)))
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.1f)
-                        .setOnComplete(() =>
-                        {
-                            cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
-                            if (cardSelected.CardData.GetType() == typeof(UnitData))
-                            {
-                                AddCard((UnitData)cardSelected.CardData, null);
-                            }
-                            else if (cardSelected.CardData.GetType() == typeof(SpellData))
-                            {
-                                CastSpellOnUnits((SpellData)cardSelected.CardData);
-                            }
-                            CardHand.Instance.DestroySelected();
-
-                        });
+                        MoveCardToTerritory(cardSelected, targetPos);
                     }
                 }
                 else

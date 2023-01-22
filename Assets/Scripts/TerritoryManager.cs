@@ -10,7 +10,7 @@ public class TerritoryManager : MonoBehaviour
     public List<UnitData> unitsStartPool = new();
 
     private List<List<UnitData>> playerUnitPools = new();
-    private List<int> bonusTerritoryTotals = new List<int>() { 0, 0 };
+    private List<int> bonusTerritoryTotals = new();
     private int playerIndex = -1;
 
     public ScalingAnimation OpenAnimation;
@@ -31,9 +31,17 @@ public class TerritoryManager : MonoBehaviour
         {
             unitsStartPool.Add(unitsStartPool[0]);
         }
-        Events.OnRequestTerritory += GetPlayerTerritories;
+        Events.OnRequestTerritory += GetPlayerTerritoriesCount;
         Events.OnRequestBonus += GetPlayerBonus;
 
+        bonusTerritoryTotals = new List<int>() { 0, 0, 0, 0, 0, 0 };
+        foreach (Transform child in transform)
+        {
+            Territory territory = child.GetComponent<Territory>();
+            if (!territory) continue;
+            //print(territory.bonusGroup);
+            bonusTerritoryTotals[territory.bonusGroup] += 1;
+        }
     }
     [ContextMenu("New territories")]
     private void AddTerritories()
@@ -47,10 +55,6 @@ public class TerritoryManager : MonoBehaviour
             {
                 continue;
             }
-            else
-            {
-                print("x" + child.name + 'x');
-            }
 
             Territory territory = child.GetComponent<Territory>();
             if (!territory)
@@ -62,8 +66,10 @@ public class TerritoryManager : MonoBehaviour
                 territoryGraphics.iconsParent = canvas.transform.Find("TerritoryIcons").gameObject;
                 territoryGraphics.attackImage = canvas.transform.Find("AttackHover").GetComponent<Image>();
                 territoryGraphics.defenseImage = canvas.transform.Find("DefenseHover").GetComponent<Image>();
+                territoryGraphics.markerImage = canvas.transform.Find("MarkerHover").GetComponent<Image>();
                 territoryGraphics.attackImage.enabled = false;
                 territoryGraphics.defenseImage.enabled = false;
+                territoryGraphics.markerImage.enabled = false;
                 territoryGraphics.OpenAnimation = OpenAnimation;
                 territoryGraphics.CloseAnimation = CloseAnimation;
             }
@@ -71,24 +77,40 @@ public class TerritoryManager : MonoBehaviour
             territories.Add(territory);
             bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
         }
+        // neighbors
+        foreach (Transform child in transform)
+        {
+            Territory territory = child.GetComponent<Territory>();
+            foreach(ProvinceData data in child.GetComponent<ProvinceData>().neighbors)
+            {
+
+                territory.territories.Add(data.gameObject.GetComponent<Territory>());
+            }
+        }
     }
 
-    private int GetPlayerTerritories(Player player)
+    private int GetPlayerTerritoriesCount(Player player)
     {
-        int terrAmount = 0;
+        return GetPlayerTerritories(player).Count;
+    }
+    
+    public List<Territory> GetPlayerTerritories(Player player)
+    {
+        List<Territory> playerTerritories = new List<Territory>();
         foreach(Territory territory in territories)
         {
             if(territory.player == player)
             {
-                terrAmount++;
+                playerTerritories.Add(territory);
             }
         }
-        return terrAmount;
+        return playerTerritories;
     }
 
     private int GetPlayerBonus(Player player)
     {
-        List<int> playerBonusTerritories = new List<int>() { 0, 0};
+        List<int> playerBonusTerritories = new List<int>();
+        bonusTerritoryTotals.ForEach(b => playerBonusTerritories.Add(0));
         foreach (Territory territory in territories)
         {
             if (territory.player == player)
@@ -112,7 +134,7 @@ public class TerritoryManager : MonoBehaviour
 
     public void ShowBonus(int BonusTypeNumber, bool showBonus)
     {
-        BonusGroup bonusGroup = (BonusGroup)BonusTypeNumber;
+        int bonusGroup = BonusTypeNumber;
         foreach (Territory territory in territories)
         {
             if (territory.bonusGroup == bonusGroup)
@@ -125,7 +147,7 @@ public class TerritoryManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Events.OnRequestTerritory -= GetPlayerTerritories;
+        Events.OnRequestTerritory -= GetPlayerTerritoriesCount;
         Events.OnRequestBonus += GetPlayerBonus;
     }
 
@@ -143,6 +165,10 @@ public class TerritoryManager : MonoBehaviour
             territory.player = player;
             territory.startUnits = territoryUnits;
             territory.AddUnits();
+        }
+        foreach (Territory territory in territories)
+        {
+            territory.UpdateNeighborTerritories();
         }
     }
 

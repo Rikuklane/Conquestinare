@@ -10,6 +10,8 @@ public class AttackGUI : MonoBehaviour
 
     public Button attackButton;
     public GameObject TerritoryHoverPanel;
+    public ScrollRect HoverScrollRect;
+    public TextMeshProUGUI TerritoryHoverText;
     public GameObject ArenaPanel;
     public GameObject ArenaTopPanel;
     public GameObject ArenaBottomPanel;
@@ -21,6 +23,8 @@ public class AttackGUI : MonoBehaviour
     public List<UnitCardPresenter> arena2Cards = new();
 
     public AnimationCurve animationCurve;
+    public AnimationCurve scrollCurve;
+
 
     void Awake()
     {
@@ -47,15 +51,8 @@ public class AttackGUI : MonoBehaviour
         // calculations for horizontal layout group simulation
         float cardSpacing = 75f;
         float xAddition = 0;
-        float xAttackersStart;
-        if (attackers.TerritoryGraphics.presentUnits.Count % 2 == 0)
-        {
-            xAttackersStart = -(attackers.TerritoryGraphics.presentUnits.Count / 2 - 0.5f) * cardSpacing;
-        }
-        else
-        {
-            xAttackersStart = -(attackers.TerritoryGraphics.presentUnits.Count / 2) * cardSpacing;
-        }
+        float xAttackersStart = -140;
+
         //Debug.Log(xAttackersStart);
         // Create top panel of cards (attacker)
         foreach (UnitCardPresenter unit in attackers.TerritoryGraphics.presentUnits)
@@ -70,15 +67,7 @@ public class AttackGUI : MonoBehaviour
         }
         // calculations for horizontal layout group simulation
         xAddition = 0;
-        float xDefendersStart;
-        if (defenders.TerritoryGraphics.presentUnits.Count % 2 == 0)
-        {
-            xDefendersStart = -(defenders.TerritoryGraphics.presentUnits.Count / 2 - 0.5f) * cardSpacing;
-        }
-        else
-        {
-            xDefendersStart = -(defenders.TerritoryGraphics.presentUnits.Count / 2) * cardSpacing;
-        }
+        float xDefendersStart = -140;
         // Create bottom panel of cards (defender)
         foreach (UnitCardPresenter unit in defenders.TerritoryGraphics.presentUnits)
         {
@@ -136,7 +125,6 @@ public class AttackGUI : MonoBehaviour
             animationFrom = arena1Cards[0];
             animationTo = arena2Cards[0];
         }
-        Vector3 origin = animationFrom.transform.position;
         /*
         // option 1 - leantween
         RectTransform rectTransform = animationTo.GetComponent<RectTransform>();
@@ -152,25 +140,41 @@ public class AttackGUI : MonoBehaviour
         LeanTween.move(animationFrom.gameObject, target, 1f).setOnComplete(() => { LeanTween.move(animationFrom.gameObject, origin, 2f); });
         */
         // option 2 - manual
-        yield return StartCoroutine(MoveUsingCurve(animationFrom, animationTo, 1f));
+        // hidden cards attacking
+        print(animationFrom.transform.localPosition.x);
+        if(animationFrom.transform.localPosition.x > 100f)
+        {
+            Vector3 target = animationFrom.transform.position;
+            print("here" + animationFrom.transform.position);
+            target.x = 550f;
+            yield return StartCoroutine(MoveBack(animationFrom, target, 0.3f));
+
+        }
+        Vector3 origin = animationFrom.transform.position;
+        yield return StartCoroutine(MoveUsingCurve(animationFrom, animationTo, 0.5f));
+        bool cardDestroyed = false;
         // simulate dealing damage
         if (isDefenderTurn)
         {
             int playerAttack = defender.GetUnitAtIndex(0).attack;
             attacker.AttackUnit(0, playerAttack);
-            AttackCard(attacker, isDefenderTurn);
+            cardDestroyed = AttackCard(attacker, isDefenderTurn);
         }
         else
         {
             int enemyAttack = attacker.GetUnitAtIndex(0).attack;
             defender.AttackUnit(0, enemyAttack);
-            AttackCard(defender, isDefenderTurn);
+            cardDestroyed = AttackCard(defender, isDefenderTurn);
         }
-        yield return StartCoroutine(MoveBack(animationFrom, origin, 0.6f));
+        if(!cardDestroyed)
+        {
+            yield return StartCoroutine(MoveBack(animationTo, animationTo.transform.TransformPoint(new Vector3(0, 15f * (isDefenderTurn ? -1 : 1), 0)), 0.2f));
+        }
+        yield return StartCoroutine(MoveBack(animationFrom, origin, 0.3f));
         AttackLogic.Instance.SimulateBattle();
     }
 
-    void AttackCard(Territory territory, bool isDefenderTurn)
+    bool AttackCard(Territory territory, bool isDefenderTurn)
     {
         if (isDefenderTurn)
         {
@@ -178,9 +182,11 @@ public class AttackGUI : MonoBehaviour
             {
                 Destroy(arena1Cards[0].gameObject);
                 arena1Cards.RemoveAt(0);
+                return true;
             } else
             {
                 arena1Cards[0].SetHealth(territory.units[0].health);
+                return false;
             }
         }
         else
@@ -189,9 +195,11 @@ public class AttackGUI : MonoBehaviour
             {
                 Destroy(arena2Cards[0].gameObject);
                 arena2Cards.RemoveAt(0);
+                return true;
             } else
             {
                 arena2Cards[0].SetHealth(territory.units[0].health);
+                return false;
             }
         }
     }
@@ -207,6 +215,10 @@ public class AttackGUI : MonoBehaviour
         Vector3[] v = new Vector3[4];
         rectTransform.GetWorldCorners(v);
 
+        var initialParent = animationFrom.transform.parent;
+
+        animationFrom.transform.parent = animationFrom.transform.parent.parent;
+
         Vector3 target;
         if(origin.y > rectTransform.transform.position.y)
         {
@@ -216,15 +228,24 @@ public class AttackGUI : MonoBehaviour
         {
             target = new Vector3((v[0].x + v[3].x) / 2, v[0].y, v[0].z);
         }
+        bool triggered = false;
         float timePassed = 0f;
+        AudioController.Instance.battleHit.Play();
         while (timePassed <= duration)
         {
             timePassed += Time.deltaTime;
             float percent = Mathf.Clamp01(timePassed / duration);
             float curvePercent = animationCurve.Evaluate(percent);
             animationFrom.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
+            if(curvePercent >= 0.7 && !triggered)
+            {
+                triggered = true;
+                bool isDefenderTurn = origin.y < target.y;
+                StartCoroutine(MoveBack(animationTo, animationTo.transform.TransformPoint(new Vector3(0, 15f * (isDefenderTurn ? 1 : -1), 0)), 0.1f));
+            }
             yield return null;
         }
+        animationFrom.transform.parent = initialParent;
     }
 
     IEnumerator MoveBack(UnitCardPresenter animationFrom, Vector3 animationTo, float duration)
@@ -243,11 +264,25 @@ public class AttackGUI : MonoBehaviour
         }
     }
 
+    public IEnumerator ScrollToRight(float duration)
+    {
+        float timePassed = 0f;
+        while (timePassed <= duration)
+        {
+            timePassed += Time.deltaTime;
+            float percent = Mathf.Clamp01(timePassed / duration);
+            float curvePercent = scrollCurve.Evaluate(percent);
+            HoverScrollRect.normalizedPosition = Vector2.Lerp(Vector2.zero, new Vector2(1, 0), curvePercent);
+            yield return null;
+        }
+    }
+
     public void AttackCleanup()
     {
         ArenaPanel.gameObject.SetActive(false);
         attackButton.gameObject.SetActive(false);
         // weird fix
         TerritoryHoverPanel.gameObject.SetActive(false);
+        TerritoryHoverText.gameObject.SetActive(false);
     }
 }
