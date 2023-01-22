@@ -280,8 +280,8 @@ public class Territory : MonoBehaviour
                         .setOnComplete(() =>
                         {
                             AudioController.Instance.place.Play();
-                            cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
-                            if (cardSelected.CardData.GetType() == typeof(UnitData))
+                            cardSelected.childGameObject.transform.localPosition = Vector3.zero;
+                            if (cardSelected.cardData.GetType() == typeof(UnitData))
                             {
                                 AddCard((UnitData)cardSelected.cardData, null);
                             }

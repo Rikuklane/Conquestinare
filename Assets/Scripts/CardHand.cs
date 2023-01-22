@@ -19,8 +19,8 @@ public class CardHand : MonoBehaviour
         if(cardSelected != null)
         {
             //particleSystem.Stop();
-            cardSelected.CardInstance.transform.position = Vector3.Lerp(cardSelected.CardInstance.transform.position, Input.mousePosition, Time.deltaTime * speed);
-            particleSystem.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.CardInstance.transform.position);
+            cardSelected.cardInstance.transform.position = Vector3.Lerp(cardSelected.cardInstance.transform.position, Input.mousePosition, Time.deltaTime * speed);
+            particleSystem.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.cardInstance.transform.position);
             if(particleSystem.particleCount > currentNumberParticles)
             {
                 AudioController.Instance.sparkle.Play();
