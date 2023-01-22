@@ -283,5 +283,6 @@ public class AttackGUI : MonoBehaviour
         attackButton.gameObject.SetActive(false);
         // weird fix
         TerritoryHoverPanel.gameObject.SetActive(false);
+        TerritoryHoverText.gameObject.SetActive(false);
     }
 }
