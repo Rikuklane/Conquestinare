@@ -24,7 +24,7 @@ public class NpcBehaviour : MonoBehaviour
 
     public async void PlayerStartTurnActions()
     {
-        await Task.Delay(700);
+        await Task.Delay(1500);
         turnStartScreen.FadeOut();
     }
     
@@ -100,14 +100,16 @@ public class NpcBehaviour : MonoBehaviour
                 continue;
             }
             AttackLogic.Instance.SelectTerritory(bestTerritory);
-            await Task.Delay(200);
+            await Task.Delay(500);
             AttackLogic.Instance.SelectTerritory(territory);
-            await Task.Delay(200);
+            await Task.Delay(500);
             AttackGUI.instance.attackButton.onClick.Invoke();
-            await Task.Delay(5000);
+            await Task.Delay(3000);
             var units = bestTerritory.TerritoryGraphics.presentUnits.ToList();
             units.OrderBy(unit => unit.attack + unit.health).First().cardLogic.SelectCard();
-            await Task.Delay(1000);
+            await Task.Delay(500);
+            AttackGUI.instance.attackButton.onClick.Invoke();
+            await Task.Delay(500);
         }
 
         // TODO while conquering always leave more units in a place where there are more enemy territories around
