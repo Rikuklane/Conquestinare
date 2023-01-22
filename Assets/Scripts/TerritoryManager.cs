@@ -10,7 +10,7 @@ public class TerritoryManager : MonoBehaviour
     public List<UnitData> unitsStartPool = new();
 
     private List<List<UnitData>> playerUnitPools = new();
-    private List<int> bonusTerritoryTotals = new() { 0, 0 };
+    private List<int> bonusTerritoryTotals = new();
     private int playerIndex = -1;
 
     public ScalingAnimation OpenAnimation;
@@ -34,6 +34,14 @@ public class TerritoryManager : MonoBehaviour
         Events.OnRequestTerritory += GetPlayerTerritoriesCount;
         Events.OnRequestBonus += GetPlayerBonus;
 
+        bonusTerritoryTotals = new List<int>() { 0, 0, 0, 0, 0, 0 };
+        foreach (Transform child in transform)
+        {
+            Territory territory = child.GetComponent<Territory>();
+            if (!territory) continue;
+            //print(territory.bonusGroup);
+            bonusTerritoryTotals[territory.bonusGroup] += 1;
+        }
     }
     [ContextMenu("New territories")]
     private void AddTerritories()
@@ -101,7 +109,8 @@ public class TerritoryManager : MonoBehaviour
 
     private int GetPlayerBonus(Player player)
     {
-        List<int> playerBonusTerritories = new List<int>() { 0, 0};
+        List<int> playerBonusTerritories = new List<int>();
+        bonusTerritoryTotals.ForEach(b => playerBonusTerritories.Add(0));
         foreach (Territory territory in territories)
         {
             if (territory.player == player)
@@ -125,7 +134,7 @@ public class TerritoryManager : MonoBehaviour
 
     public void ShowBonus(int BonusTypeNumber, bool showBonus)
     {
-        BonusGroup bonusGroup = (BonusGroup)BonusTypeNumber;
+        int bonusGroup = BonusTypeNumber;
         foreach (Territory territory in territories)
         {
             if (territory.bonusGroup == bonusGroup)

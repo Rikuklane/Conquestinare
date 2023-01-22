@@ -12,6 +12,7 @@ public class TerritoryGraphics : MonoBehaviour
     public Image attackImage;
     public Image defenseImage;
     public Image markerImage;
+    public GameObject ShowBonusPrefab;
     [HideInInspector]
     public List<UnitCardPresenter> presentUnits = new();
     [HideInInspector]
@@ -26,6 +27,7 @@ public class TerritoryGraphics : MonoBehaviour
     private Renderer _renderer;
     private Coroutine scrollCoroutine = null;
     private int lastSelected = -1;
+    private GameObject bonusInstance = null;
 
     private void Awake()
     {
@@ -56,10 +58,12 @@ public class TerritoryGraphics : MonoBehaviour
         isShowBonus = showBonus;
         if (showBonus)
         {
+            bonusInstance = Instantiate(ShowBonusPrefab, iconsParent.transform.parent.position, Quaternion.identity, iconsParent.transform.parent);
             //iconsParent.GetComponent<Image>().enabled = true;
         }
         else
         {
+            Destroy(bonusInstance);
             //iconsParent.GetComponent<Image>().enabled = false;
         }
     }
