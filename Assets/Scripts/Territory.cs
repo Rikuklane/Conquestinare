@@ -314,6 +314,8 @@ public class Territory : MonoBehaviour
                 }
                 else
                 {
+                    if (Events.RequestPlayer().isNpc) return;
+                    if (Turns.TurnManager.Instance.settingsPanel.activeSelf) return;
                     AttackLogic.Instance.SelectTerritory(this);
                 }
 
