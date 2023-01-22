@@ -17,8 +17,8 @@ namespace MapDataModel
     public class Vertex
     {
         public int[] p; // vertex coordinates [x, y]
-        public int[] v; // indexes of cells adjacent to vertex (3)
-        public int[] c; // indexes of vertices adjacent to vertex (3)
+        public int[] v; // indexes of vertices adjacent to vertex (3) 
+        public int[] c; // indexes of cells adjacent to vertex (3)
     }
 
 
