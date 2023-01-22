@@ -75,11 +75,15 @@ public class TerritoryManager : MonoBehaviour
             }
 
             territories.Add(territory);
-            bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
+            //bonusTerritoryTotals[(int)territory.bonusGroup] += 1;
         }
         // neighbors
         foreach (Transform child in transform)
         {
+            if (child.name.Equals("province "))
+            {
+                continue;
+            }
             Territory territory = child.GetComponent<Territory>();
             foreach(ProvinceData data in child.GetComponent<ProvinceData>().neighbors)
             {
