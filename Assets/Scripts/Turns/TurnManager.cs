@@ -17,6 +17,7 @@ namespace Turns
         public Image playerColorImage;
         public TextMeshProUGUI goldGainText;
         public TextMeshProUGUI goldLossText;
+        public GameObject settingsPanel;
 
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -63,6 +64,10 @@ namespace Turns
         
         private void Start()
         {
+            float volumeSlider = PlayerPrefs.GetFloat("volumeSlider", 1f);
+            Debug.Log("Volume slider" + volumeSlider);
+            AudioController.Instance.volumeSliderValue = volumeSlider;
+            AudioController.Instance.mixer.SetFloat("Master", Mathf.Log(volumeSlider) * 20f);
             foreach (var player in Players)
             {
                 SetPlayerGold(player, 2);
@@ -78,9 +83,9 @@ namespace Turns
 
         private void Update()
         {
-            if(Input.GetKey("escape"))
+            if(Input.GetKeyDown("escape"))
             {
-                SceneManager.LoadScene(0);
+                settingsPanel.SetActive(!settingsPanel.activeSelf);
             }
         }
 

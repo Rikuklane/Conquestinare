@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioController : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class AudioController : MonoBehaviour
     public AudioClipGroup sparkle;
     public AudioClipGroup cardHover;
 
+    public float volumeSliderValue = 1;
+    public AudioMixer mixer;
     public static AudioController Instance;
 
     private void Awake()
