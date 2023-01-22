@@ -40,13 +40,6 @@ public class Territory : MonoBehaviour
     public TerritoryManager.BonusGroup bonusGroup;
     private readonly Random _random = new();
     private bool defenseActivated = false;
- 
-
-    
-        
-    void Awake()
-    {
-    }
 
     public void AddUnits()
     {

@@ -31,7 +31,7 @@ public class TerritoryManager : MonoBehaviour
         {
             unitsStartPool.Add(unitsStartPool[0]);
         }
-        Events.OnRequestTerritory += GetPlayerTerritories;
+        Events.OnRequestTerritory += GetPlayerTerritoriesCount;
         Events.OnRequestBonus += GetPlayerBonus;
 
     }
@@ -81,17 +81,22 @@ public class TerritoryManager : MonoBehaviour
         }
     }
 
-    private int GetPlayerTerritories(Player player)
+    private int GetPlayerTerritoriesCount(Player player)
     {
-        int terrAmount = 0;
+        return GetPlayerTerritories(player).Count;
+    }
+    
+    public List<Territory> GetPlayerTerritories(Player player)
+    {
+        List<Territory> playerTerritories = new List<Territory>();
         foreach(Territory territory in territories)
         {
             if(territory.player == player)
             {
-                terrAmount++;
+                playerTerritories.Add(territory);
             }
         }
-        return terrAmount;
+        return playerTerritories;
     }
 
     private int GetPlayerBonus(Player player)
@@ -133,7 +138,7 @@ public class TerritoryManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Events.OnRequestTerritory -= GetPlayerTerritories;
+        Events.OnRequestTerritory -= GetPlayerTerritoriesCount;
         Events.OnRequestBonus += GetPlayerBonus;
     }
 
