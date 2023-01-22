@@ -41,7 +41,7 @@ public class CardHand : MonoBehaviour
         {
             PlayCard(cardSelected);
             particleSystem.transform.parent = transform;
-            Destroy(cardSelected.CardInstance.gameObject);
+            Destroy(cardSelected.cardInstance.gameObject);
             cardSelected = null;
         }
     }
@@ -58,8 +58,8 @@ public class CardHand : MonoBehaviour
         {
             return;
         }
-        particleSystem.transform.parent = cardSelected.CardInstance.transform;
-        particleSystem.transform.position = cardSelected.CardInstance.transform.position;
+        particleSystem.transform.parent = cardSelected.cardInstance.transform;
+        particleSystem.transform.position = cardSelected.cardInstance.transform.position;
 
         cardSelectLastPosition = cardSelect.transform.position;
         // deselect others
@@ -71,7 +71,7 @@ public class CardHand : MonoBehaviour
             }
         }
         cardSelect.TriggerSelected();
-        cardSelect.CardInstance.transform.parent = transform.parent;
+        cardSelect.cardInstance.transform.parent = transform.parent;
     }
 
     private void Awake()
@@ -96,7 +96,7 @@ public class CardHand : MonoBehaviour
         {
             foreach (CardPresenterAbstractLogic card in cardHands[currentPlayer.Name])
             {
-                card.CardInstance.gameObject.SetActive(false);
+                card.cardInstance.gameObject.SetActive(false);
             }
         }
     }
@@ -106,7 +106,7 @@ public class CardHand : MonoBehaviour
         //   - add cards from new player
         foreach(CardPresenterAbstractLogic card in cardHands[player.Name])
         {
-            card.CardInstance.gameObject.SetActive(true);
+            card.cardInstance.gameObject.SetActive(true);
         }
     }
 

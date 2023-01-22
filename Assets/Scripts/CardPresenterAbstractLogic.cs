@@ -18,10 +18,10 @@ public class CardPresenterAbstractLogic: MonoBehaviour
 
     public void SetVariables(GameObject cardInstance, GameObject child, CardData cardData)
     {
-        CardInstance = cardInstance;
-        ChildGameObject = child;
-        _defaultColor = ChildGameObject.GetComponent<Image>().color;
-        CardData = cardData;
+        this.cardInstance = cardInstance;
+        childGameObject = child;
+        _defaultColor = childGameObject.GetComponent<Image>().color;
+        this.cardData = cardData;
         if (_currentState == null)
         {
             SwitchState(CardStateController.Instance.CardInHand);
@@ -32,17 +32,17 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     {
         cardButton.interactable = isInteract;
         isInteractable = isInteract;
-        ChildGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
+        childGameObject.GetComponent<Image>().color = isInteract ? _defaultColor : _notInteractableColor;
     }
 
     public void SwitchState(AbstractCardState state)
     {
         _currentState = state;
         cardButton.onClick.RemoveAllListeners();
-        cardButton.onClick.AddListener(Selected);
+        cardButton.onClick.AddListener(SelectCard);
     }
 
-    private void Selected()
+    public void SelectCard()
     {
         StartCoroutine(_currentState.CardOnClick(this));
     }
@@ -59,54 +59,54 @@ public class CardPresenterAbstractLogic: MonoBehaviour
             y = 10;
             if(_currentState.GetType() == typeof(CardInHand))
             {
-                LeanTween.scale(CardInstance, new Vector3(0.5f, 0.5f, 0.5f), 0.25f);
+                LeanTween.scale(cardInstance, new Vector3(0.5f, 0.5f, 0.5f), 0.25f);
                 CanvasGroup canvasGroup = cardButton.gameObject.AddComponent<CanvasGroup>();
                 canvasGroup.blocksRaycasts = false;
             }
         } else
         {
             alpha = 0.6f;
-            if (CardInstance.GetComponent<CanvasGroup>() != null)
+            if (cardInstance.GetComponent<CanvasGroup>() != null)
             {
-                LeanTween.scale(CardInstance, new Vector3(1f, 1f, 1f), 0.25f);
-                Destroy(CardInstance.GetComponent<CanvasGroup>());
+                LeanTween.scale(cardInstance, new Vector3(1f, 1f, 1f), 0.25f);
+                Destroy(cardInstance.GetComponent<CanvasGroup>());
             }
         }
 
-        LeanTween.moveLocal(ChildGameObject, new Vector3(0, y, 0), 0.2f);
+        LeanTween.moveLocal(childGameObject, new Vector3(0, y, 0), 0.2f);
         _defaultColor.a = alpha;
 
-        ChildGameObject.GetComponent<Image>().color = _defaultColor;
+        childGameObject.GetComponent<Image>().color = _defaultColor;
     }
     public IEnumerator MoveBack(Vector3 target, float duration)
     {
         //animationTo.transform.SetParent(transform, true);
-        Vector3 origin = CardInstance.transform.position;
+        Vector3 origin = cardInstance.transform.position;
         float timePassed = 0f;
         while (timePassed <= duration)
         {
             timePassed += Time.deltaTime;
             float percent = Mathf.Clamp01(timePassed / duration);
             float curvePercent = animationCurve.Evaluate(percent);
-            CardInstance.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
+            cardInstance.transform.position = Vector3.LerpUnclamped(origin, target, curvePercent);
             yield return null;
         }
         if(isSelected)
         {
             TriggerSelected();
         }
-        CardInstance.transform.parent = CardHand.Instance.transform.GetChild(0).GetChild(0).transform;
+        cardInstance.transform.parent = CardHand.Instance.transform.GetChild(0).GetChild(0).transform;
     }
 
     public void FadeCard()
     {
         _defaultColor.a = 0.6f;
-        ChildGameObject.GetComponent<Image>().color = _defaultColor;
+        childGameObject.GetComponent<Image>().color = _defaultColor;
     }
 
-    public GameObject ChildGameObject { get; private set;}
-    public GameObject CardInstance { get; private set; }
-    public CardData CardData { get; set; }
+    public GameObject childGameObject { get; private set;}
+    public GameObject cardInstance { get; private set; }
+    public CardData cardData { get; set; }
 
     private void OnBecameVisible()
     {
