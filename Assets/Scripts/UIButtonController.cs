@@ -30,7 +30,13 @@ public class UIButtonController : MonoBehaviour
             }
         }
         PlayerPrefs.SetInt("playerNumber", numberOfPlayers);
+        PlayerPrefs.SetFloat("volumeSlider", AudioController.Instance.volumeSliderValue);
         SceneManager.LoadScene(1);
+    }
+    public void BackToMenu()
+    {
+        PlayerPrefs.SetFloat("volumeSlider", AudioController.Instance.volumeSliderValue);
+        SceneManager.LoadScene(0);
     }
 
     public void Exit()
