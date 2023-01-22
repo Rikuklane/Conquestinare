@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6154526930140269476
 CanvasRenderer:
@@ -176,7 +176,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6154526930316547114
 CanvasRenderer:
@@ -284,9 +284,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7616e10bd4eb2c8478eb70b284cd882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickUIButton: {fileID: 11400000, guid: 0342f9f9812050542a48d736276007d5, type: 2}
-  hoverUIButton: {fileID: 11400000, guid: e76dd9bc4947aba43a49d70b7a186cdf, type: 2}
-  hoverButtonSound: {fileID: 8300000, guid: 633fa38f0b831a14f87cba312766c284, type: 3}
+  numberOfPlayers: 1
+  numberOfNpc: 1
+  inputPlayer: {fileID: 0}
+  inputNpc: {fileID: 0}
 --- !u!82 &1727599698
 AudioSource:
   m_ObjectHideFlags: 0
