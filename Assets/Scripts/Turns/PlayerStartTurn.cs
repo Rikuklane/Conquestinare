@@ -18,7 +18,12 @@ namespace Turns
             AttackGUI.instance.GetComponent<FadeCanvasGroup>().ActivateStartScreenWithFade();
             if (player.isNpc)
             {
+                BlockingImage.Instance.ActivateBlockingImage(true);
                 NpcBehaviour.Instance.PlayerStartTurnActions();
+            }
+            else
+            {
+                BlockingImage.Instance.ActivateBlockingImage(false);
             }
             return base.EnterState(turnManager, player);
         }
