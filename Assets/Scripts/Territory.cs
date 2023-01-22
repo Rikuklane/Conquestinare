@@ -26,6 +26,14 @@ public class Territory : MonoBehaviour
     {
         public int attack;
         public int health;
+        
+        public Unit() { }
+
+        public Unit(int attack, int health)
+        {
+            this.attack = attack;
+            this.health = health;
+        }
     }
 
     public List<Unit> units = new();
@@ -45,7 +53,6 @@ public class Territory : MonoBehaviour
     {
         UpdateNeighborTerritories();
         foreach (UnitData unit in startUnits)
-
         {
             AddCard(unit, null);
         }
@@ -61,6 +68,19 @@ public class Territory : MonoBehaviour
             health += unit.health;
         }
         return attack.ToString() + "AD/" + health.ToString() + "HP";
+    }
+
+    public Unit GetAttackHealth()
+    {
+        int attack = 0;
+        int health = 0;
+        foreach (Unit unit in units)
+        {
+            attack += unit.attack;
+            health += unit.health;
+        }
+
+        return new Unit(attack, health);
     }
 
     public void CastSpellOnUnits(SpellData spellData)
@@ -255,6 +275,26 @@ public class Territory : MonoBehaviour
         }
     }
 
+    public void MoveCardToTerritory(CardPresenterAbstractLogic cardSelected, Vector3 targetPos)
+    {
+        LeanTween.move(cardSelected.cardInstance.gameObject, targetPos, 0.1f)
+            .setOnComplete(() =>
+            {
+                AudioController.Instance.place.Play();
+                cardSelected.childGameObject.transform.localPosition = Vector3.zero;
+                if (cardSelected.cardData.GetType() == typeof(UnitData))
+                {
+                    AddCard((UnitData)cardSelected.cardData, null);
+                }
+                else if (cardSelected.cardData.GetType() == typeof(SpellData))
+                {
+                    CastSpellOnUnits((SpellData)cardSelected.cardData);
+                }
+                CardHand.Instance.DestroySelected();
+
+            });
+    }
+
     private void OnMouseOver()
     {
         if (AttackLogic.Instance.canHover)
@@ -269,22 +309,7 @@ public class Territory : MonoBehaviour
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                        LeanTween.move(cardSelected.cardInstance.gameObject, targetPos, 0.1f)
-                        .setOnComplete(() =>
-                        {
-                            AudioController.Instance.place.Play();
-                            cardSelected.childGameObject.transform.localPosition = Vector3.zero;
-                            if (cardSelected.cardData.GetType() == typeof(UnitData))
-                            {
-                                AddCard((UnitData)cardSelected.cardData, null);
-                            }
-                            else if (cardSelected.cardData.GetType() == typeof(SpellData))
-                            {
-                                CastSpellOnUnits((SpellData)cardSelected.cardData);
-                            }
-                            CardHand.Instance.DestroySelected();
-
-                        });
+                        MoveCardToTerritory(cardSelected, targetPos);
                     }
                 }
                 else
