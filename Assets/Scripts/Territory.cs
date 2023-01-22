@@ -279,6 +279,7 @@ public class Territory : MonoBehaviour
                         LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.1f)
                         .setOnComplete(() =>
                         {
+                            AudioController.Instance.place.Play();
                             cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
                             if (cardSelected.CardData.GetType() == typeof(UnitData))
                             {

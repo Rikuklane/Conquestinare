@@ -66,6 +66,10 @@ public class TerritoryGraphics : MonoBehaviour
 
     public void showCards()
     {
+        if(!AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+        {
+            AudioController.Instance.place.Play();
+        }
         if (AttackGUI.instance.TerritoryHoverPanel.activeSelf)
             return;
         foreach (UnitCardPresenter unit in presentUnits)

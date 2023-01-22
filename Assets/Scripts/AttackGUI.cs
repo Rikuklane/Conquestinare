@@ -230,6 +230,7 @@ public class AttackGUI : MonoBehaviour
         }
         bool triggered = false;
         float timePassed = 0f;
+        AudioController.Instance.battleHit.Play();
         while (timePassed <= duration)
         {
             timePassed += Time.deltaTime;

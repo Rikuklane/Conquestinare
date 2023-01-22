@@ -12,6 +12,7 @@ public class CardHand : MonoBehaviour
     public float speed = 5f;
     public ParticleSystem particleSystem;
     private Vector3 cardSelectLastPosition;
+    private int currentNumberParticles;
 
     private void Update()
     {
@@ -20,6 +21,11 @@ public class CardHand : MonoBehaviour
             //particleSystem.Stop();
             cardSelected.CardInstance.transform.position = Vector3.Lerp(cardSelected.CardInstance.transform.position, Input.mousePosition, Time.deltaTime * speed);
             particleSystem.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.CardInstance.transform.position);
+            if(particleSystem.particleCount > currentNumberParticles)
+            {
+                AudioController.Instance.sparkle.Play();
+            }
+            currentNumberParticles = particleSystem.particleCount;
             //particleSystem.Play();
             //cardSelected.CardInstance.transform.position = Input.mousePosition;
             if (Input.GetMouseButtonDown(1))
