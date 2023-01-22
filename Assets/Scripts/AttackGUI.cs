@@ -230,6 +230,7 @@ public class AttackGUI : MonoBehaviour
         }
         bool triggered = false;
         float timePassed = 0f;
+        AudioController.Instance.battleHit.Play();
         while (timePassed <= duration)
         {
             timePassed += Time.deltaTime;
@@ -282,5 +283,6 @@ public class AttackGUI : MonoBehaviour
         attackButton.gameObject.SetActive(false);
         // weird fix
         TerritoryHoverPanel.gameObject.SetActive(false);
+        TerritoryHoverText.gameObject.SetActive(false);
     }
 }

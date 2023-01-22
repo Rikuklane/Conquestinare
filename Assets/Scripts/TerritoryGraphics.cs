@@ -25,6 +25,7 @@ public class TerritoryGraphics : MonoBehaviour
     private List<Image> icons = new();
     private Renderer _renderer;
     private Coroutine scrollCoroutine = null;
+    private int lastSelected = -1;
 
     private void Awake()
     {
@@ -32,7 +33,7 @@ public class TerritoryGraphics : MonoBehaviour
         if (color != null) _renderer.material.color = color;
     }
 
-    internal void CheckSelected()
+    internal void CheckSelected(CardPresenterAbstractLogic currentSelected)
     {
         int numberSelected = 0;
         foreach (UnitCardPresenter card in presentUnits)
@@ -42,27 +43,12 @@ public class TerritoryGraphics : MonoBehaviour
                 numberSelected += 1;
             }
         }
-        // cant select last one
-        if (presentUnits.Count - numberSelected == 1)
+        // deselect first selected
+        if (presentUnits.Count > 1 && presentUnits.Count == numberSelected)
         {
-            foreach (UnitCardPresenter card in presentUnits)
-            {
-                if (!card.cardLogic.isSelected)
-                {
-                    card.cardLogic.ChangeInteractable(false);
-                }
-            }
+            presentUnits[lastSelected].cardLogic.TriggerSelected();
         }
-        else
-        {
-            // change others to interactable
-            foreach (UnitCardPresenter card in presentUnits)
-            {
-                card.cardLogic.ChangeInteractable(true);
-            }
-        }
-
-
+        lastSelected = presentUnits.IndexOf(currentSelected.transform.parent.GetComponent<UnitCardPresenter>());
     }
 
     public void ShowBonus(bool showBonus)
@@ -80,6 +66,10 @@ public class TerritoryGraphics : MonoBehaviour
 
     public void showCards()
     {
+        if(!AttackGUI.instance.TerritoryHoverPanel.activeSelf)
+        {
+            AudioController.Instance.place.Play();
+        }
         if (AttackGUI.instance.TerritoryHoverPanel.activeSelf)
             return;
         foreach (UnitCardPresenter unit in presentUnits)

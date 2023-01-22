@@ -51,7 +51,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
     {
         if (!isInteractable) return;
         isSelected = !isSelected;
-
+        AudioController.Instance.place.Play();
         float alpha = 1f;
         float y = 0;
         if (isSelected)

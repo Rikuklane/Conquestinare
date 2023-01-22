@@ -8,6 +8,8 @@ namespace Turns
     {
         public override IEnumerator EnterState(TurnManager turnManager, Player player)
         {
+            AudioController.Instance.startTurn.Play();
+            AudioController.Instance.coin.Play();
             TurnManager.Instance.goldGainText.gameObject.SetActive(true);
             LeanTween.moveLocalY(TurnManager.Instance.goldGainText.gameObject, -45, 0.8f);
             CardHand.Instance.HideCurrentHand();
