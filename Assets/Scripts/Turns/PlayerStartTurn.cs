@@ -14,6 +14,10 @@ namespace Turns
             AttackLogic.Instance.canHover = false;
             turnManager.nextTurnButton.gameObject.SetActive(false);
             AttackGUI.instance.GetComponent<FadeCanvasGroup>().ActivateStartScreenWithFade();
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.PlayerStartTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 
@@ -28,7 +32,6 @@ namespace Turns
 
         IEnumerator MoveGoldGain()
         {
-
             yield return null;
         }
     }

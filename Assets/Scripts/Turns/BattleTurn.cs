@@ -12,6 +12,10 @@ namespace Turns
             // TODO now only see the map and be able to attack
             AttackLogic.Instance.canHover = true;
             TerritoryManager.instance.gameObject.SetActive(true);
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.BattleTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 

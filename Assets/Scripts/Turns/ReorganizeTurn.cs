@@ -13,6 +13,10 @@ namespace Turns
             // TODO only interact with your own territories
             //EndState(turnManager, player);
             AttackLogic.Instance.isReorganizeTurn = true;
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.ReOrganizeTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 

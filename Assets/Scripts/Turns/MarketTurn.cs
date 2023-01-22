@@ -9,6 +9,10 @@ namespace Turns
         {
             AttackLogic.Instance.canHover = false;
             Events.DisplayMarketSelection(10);
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.MarketTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 

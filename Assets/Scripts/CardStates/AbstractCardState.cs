@@ -25,7 +25,7 @@ namespace CardStates
                         card.CardInstance.transform.SetParent(CardHand.Instance.transform.GetChild(0).GetChild(0), false);
                         card.ChildGameObject.transform.localPosition = Vector3.zero;
                         card.FadeCard();
-                        if (endTurn) TurnManager.Instance.TriggerEndStateButton();
+                        if (endTurn) TurnManager.Instance.TriggerTurnEndStateButton();
                     }
                 );
         }

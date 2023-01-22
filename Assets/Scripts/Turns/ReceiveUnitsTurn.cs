@@ -11,6 +11,10 @@ namespace Turns
         {
             CardHand.Instance.LoadHand(player);
             Events.DisplayUnitSelection(3);
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.ReceiveUnitsTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 
