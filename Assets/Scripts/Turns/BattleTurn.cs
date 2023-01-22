@@ -12,6 +12,10 @@ namespace Turns
             // TODO now only see the map and be able to attack
             AttackLogic.Instance.canHover = true;
             TerritoryManager.instance.gameObject.SetActive(true);
+            if (player.isNpc)
+            {
+                NpcBehaviour.Instance.BattleTurnActions();
+            }
             return base.EnterState(turnManager, player);
         }
 
@@ -19,7 +23,14 @@ namespace Turns
         {
             // TODO press next phase button
             // temporary bug fix
-            AttackGUI.instance.attackButton.gameObject.SetActive(false);
+            if (AttackLogic.Instance.isReorganizeTriggered)
+            {
+                AttackLogic.Instance.isReorganizeTriggered = false;
+                if (AttackLogic.Instance.attackTerritory) AttackLogic.Instance.attackTerritory.UpdateTerritoryImage();
+                if (AttackLogic.Instance.selectedTerritory) AttackLogic.Instance.selectedTerritory.TerritoryGraphics.hideCards();
+                AttackLogic.Instance.canHover = true;
+            }
+            AttackLogic.Instance.DeselectAll();
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
         }

@@ -7,11 +7,12 @@ namespace CardStates
         public override IEnumerator CardOnClick(CardPresenterAbstractLogic card)
         {
             var currentPlayer = Events.RequestPlayer();
-            var cardCost = card.CardData.cost;
+            var cardCost = card.cardData.cost;
             var currentGold = Events.RequestGold(currentPlayer);
             if (cardCost > currentGold) return base.CardOnClick(card);
             Events.SetGold(currentPlayer, currentGold - cardCost);
             AudioController.Instance.coin.Play();
+            AudioController.Instance.cardChoiceSelect.Play();
             NextState(card);
             return base.CardOnClick(card);
         }

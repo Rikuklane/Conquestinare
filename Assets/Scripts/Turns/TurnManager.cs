@@ -16,6 +16,8 @@ namespace Turns
         public TextMeshProUGUI goldAmountText;
         public Image playerColorImage;
         public TextMeshProUGUI goldGainText;
+        public TextMeshProUGUI goldLossText;
+        public GameObject settingsPanel;
 
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -28,16 +30,22 @@ namespace Turns
         private Player[] samplePlayers = { new("PlayerMustafa"), new("xxGamerBoyX"), new("CasualGamer"), new("BOT")};
         public Player[] Players;
         private int _currentPlayerIndex;
-        int playerNumber = 2;
 
         private void setupPlayers()
         {
-            playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
+            int playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
+            int npcNumber = PlayerPrefs.GetInt("npcNumber", 1);; // TODO add this to menu
             Debug.Log("Player number" + playerNumber);
-            Player[] newPlayers = new Player[playerNumber];
+            Debug.Log("Npc number" + npcNumber);
+            Player[] newPlayers = new Player[playerNumber+npcNumber];
             for(int i = 0; i < playerNumber; i++)
             {
                 newPlayers[i] = samplePlayers[i];
+                Debug.Log(newPlayers[i].Name);
+            }
+            for(int i = playerNumber; i < playerNumber+npcNumber; i++)
+            {
+                newPlayers[i] = new Player($"AI BOT {i - playerNumber + 1}", true);
                 Debug.Log(newPlayers[i].Name);
             }
             Players = newPlayers;
@@ -51,11 +59,15 @@ namespace Turns
             Events.OnRequestGold += GetPlayerGold;
             Events.OnSetGold += SetPlayerGold;
             Events.OnNextPlayerStartTurn += SetNextPlayerTurn;
-            nextTurnButton.onClick.AddListener(TriggerEndStateButton);
+            nextTurnButton.onClick.AddListener(TriggerTurnEndStateButton);
         }
         
         private void Start()
         {
+            float volumeSlider = PlayerPrefs.GetFloat("volumeSlider", 1f);
+            Debug.Log("Volume slider" + volumeSlider);
+            AudioController.Instance.volumeSliderValue = volumeSlider;
+            AudioController.Instance.mixer.SetFloat("Master", Mathf.Log(volumeSlider) * 20f);
             foreach (var player in Players)
             {
                 SetPlayerGold(player, 2);
@@ -71,9 +83,9 @@ namespace Turns
 
         private void Update()
         {
-            if(Input.GetKey("escape"))
+            if(Input.GetKeyDown("escape"))
             {
-                SceneManager.LoadScene(0);
+                settingsPanel.SetActive(!settingsPanel.activeSelf);
             }
         }
 
@@ -116,9 +128,20 @@ namespace Turns
         }
     
         private void SetPlayerGold(Player player, int gold)
-        {
-            player.gold = gold;
+        {            
             // Changing the gold amount seen on screen if the change was on the current player
+            if (gold < player.gold)
+            {
+                goldLossText.gameObject.SetActive(true);
+                goldLossText.text = "-" + (player.gold - gold);
+                LeanTween.moveLocalY(goldLossText.gameObject, -45, 0.5f).setOnComplete(()=> { 
+                    goldLossText.gameObject.SetActive(false);
+                    LeanTween.moveLocalY(goldLossText.gameObject, 0, 0.1f);
+                });
+            } else
+            {
+            }
+            player.gold = gold;
             goldAmountText.text = GetCurrentPlayer().gold.ToString();
         }
 
@@ -129,12 +152,12 @@ namespace Turns
             turnNameText.text = _currentState.ToString();
         }
 
-        public void TriggerEndStateButton()
+        public void TriggerTurnEndStateButton()
         {
             AudioController.Instance.clickUIButton.Play();
-            TriggerEndState();
+            TriggerTurnEndState();
         }
-        public void TriggerEndState()
+        public void TriggerTurnEndState()
         {
             StartCoroutine(_currentState.EndState(this, GetCurrentPlayer()));
         }

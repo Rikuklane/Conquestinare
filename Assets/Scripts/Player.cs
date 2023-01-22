@@ -11,7 +11,8 @@ public class Player
     private int _bonusFromAreasController;
     private Random _random = new Random();
     private Color _color;
-
+    private bool _isNpc;
+    
     public Player(string playerName)
     {
         Name = playerName;
@@ -19,6 +20,16 @@ public class Player
         _color.r = (float) _random.NextDouble();
         _color.g = (float) _random.NextDouble();
         _color.a = 1;
+    }
+    
+    public Player(string playerName, bool isNpc)
+    {
+        Name = playerName;
+        _color.b = (float) _random.NextDouble();
+        _color.r = (float) _random.NextDouble();
+        _color.g = (float) _random.NextDouble();
+        _color.a = 1;
+        _isNpc = isNpc;
     }
 
     public Player(string playerName, Color color)
@@ -33,6 +44,7 @@ public class Player
     public int gold { get; set; }
     public int territories { get; set; }
     public CardData cards { get; set; }
+    public bool isNpc => _isNpc;
 
     // This method defines the value of unit cards given at the start of the round
     public int GetPrestige()

@@ -43,11 +43,11 @@ public class FadeCanvasGroup : MonoBehaviour
         if(!fadeIn)
         {
             canvasGroup.gameObject.SetActive(false);
-            TurnManager.Instance.TriggerEndState();
+            TurnManager.Instance.TriggerTurnEndState();
         }
     }
 
-    private void FadeOut()
+    public void FadeOut()
     {
         StartCoroutine(DoFade(false, 0.3f));
     }
