@@ -29,16 +29,22 @@ namespace Turns
         private Player[] samplePlayers = { new("PlayerMustafa"), new("xxGamerBoyX"), new("CasualGamer"), new("BOT")};
         public Player[] Players;
         private int _currentPlayerIndex;
-        int playerNumber = 2;
 
         private void setupPlayers()
         {
-            playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
+            int playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
+            int npcNumber = PlayerPrefs.GetInt("npcNumber", 1);; // TODO add this to menu
             Debug.Log("Player number" + playerNumber);
-            Player[] newPlayers = new Player[playerNumber];
+            Debug.Log("Npc number" + npcNumber);
+            Player[] newPlayers = new Player[playerNumber+npcNumber];
             for(int i = 0; i < playerNumber; i++)
             {
                 newPlayers[i] = samplePlayers[i];
+                Debug.Log(newPlayers[i].Name);
+            }
+            for(int i = playerNumber; i < playerNumber+npcNumber; i++)
+            {
+                newPlayers[i] = new Player($"AI BOT {i - playerNumber + 1}", true);
                 Debug.Log(newPlayers[i].Name);
             }
             Players = newPlayers;
@@ -52,7 +58,7 @@ namespace Turns
             Events.OnRequestGold += GetPlayerGold;
             Events.OnSetGold += SetPlayerGold;
             Events.OnNextPlayerStartTurn += SetNextPlayerTurn;
-            nextTurnButton.onClick.AddListener(TriggerEndStateButton);
+            nextTurnButton.onClick.AddListener(TriggerTurnEndStateButton);
         }
         
         private void Start()
@@ -141,12 +147,12 @@ namespace Turns
             turnNameText.text = _currentState.ToString();
         }
 
-        public void TriggerEndStateButton()
+        public void TriggerTurnEndStateButton()
         {
             AudioController.Instance.clickUIButton.Play();
-            TriggerEndState();
+            TriggerTurnEndState();
         }
-        public void TriggerEndState()
+        public void TriggerTurnEndState()
         {
             StartCoroutine(_currentState.EndState(this, GetCurrentPlayer()));
         }
