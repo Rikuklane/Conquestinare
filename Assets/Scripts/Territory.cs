@@ -45,7 +45,7 @@ public class Territory : MonoBehaviour
 
     [Header("Bonus Group")]
     [Space]
-    public TerritoryManager.BonusGroup bonusGroup;
+    public int bonusGroup;
     private readonly Random _random = new();
     private bool defenseActivated = false;
 

@@ -21,6 +21,20 @@ public class MapGeneration : MonoBehaviour
     {
         
     }
+    [ContextMenu("AddBonusGroups")]
+    private void AddBonusGroups()
+    {
+        var json = Resources.Load<TextAsset>("worldequalized").text;
+        MapData mapData = JsonUtility.FromJson<MapData>(json);
+
+        GameObject[] provinces = mapData.cells.provinces.Select(province =>
+        {
+            if (province.name == null) return new GameObject();
+            GameObject provinceObject = new();
+            GetComponent<TerritoryManager>().transform.Find("province " + province.name).GetComponent<Territory>().bonusGroup = province.state - 1;
+            return provinceObject;
+        }).ToArray();
+    }
     [ContextMenu("Generate")]
     private void GenerateMap()
     {
