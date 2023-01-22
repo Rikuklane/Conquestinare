@@ -10,7 +10,7 @@ public class TerritoryManager : MonoBehaviour
     public List<UnitData> unitsStartPool = new();
 
     private List<List<UnitData>> playerUnitPools = new();
-    private List<int> bonusTerritoryTotals = new List<int>() { 0, 0 };
+    private List<int> bonusTerritoryTotals = new() { 0, 0 };
     private int playerIndex = -1;
 
     public ScalingAnimation OpenAnimation;

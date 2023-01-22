@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Security;
 using System.Threading;
@@ -23,7 +24,7 @@ public class NpcBehaviour : MonoBehaviour
 
     public async void PlayerStartTurnActions()
     {
-        await Task.Delay(700);
+        await Task.Delay(1500);
         turnStartScreen.FadeOut();
     }
     
@@ -54,7 +55,6 @@ public class NpcBehaviour : MonoBehaviour
         var npc = Events.RequestPlayer();
         var cardHand = CardHand.Instance.cardHands[npc.Name];
         var npcTerritories = TerritoryManager.instance.GetPlayerTerritories(npc);
-        var enemyTerritories = TerritoryManager.instance.territories.Except(npcTerritories);
         
         float handPower = 0;
         if (cardHand.Count > 0)
@@ -64,28 +64,57 @@ public class NpcBehaviour : MonoBehaviour
                 if (card.cardData.GetType() == typeof(UnitData))
                 {
                     var unit = (UnitData)card.cardData;
-                    handPower += calculateUnitPower(unit.attack, unit.health);
+                    handPower += CalculateUnitPower(unit.attack, unit.health);
                 }
             }
         }
 
+        List<Territory> bestPossibilities = new();
+        Territory bestTerritory = npcTerritories.First();
+
         foreach (var territory in npcTerritories)
         {
-            // TODO take into account possibilities
             List<Territory> possibilities = FilterBestTerritoriesToAttackFrom(territory, handPower);
+            if (possibilities.Count > bestPossibilities.Count)
+            {
+                bestPossibilities = possibilities;
+                bestTerritory = territory;
+            }
         }
         
+        // place cards from hand
+        while (cardHand.Count != 0)
+        {
+            cardHand[0].SelectCard();
+            bestTerritory.MoveCardToTerritory(cardHand[0], bestTerritory.transform.position);
+            await Task.Delay(500);
+        }
 
-        npcTerritories.OrderByDescending(x => FilterBestTerritoriesToAttackFrom(x, handPower));
-        // await Task.Delay(300);
-        // TODO implement battle
-        //  - get rid of cards in hand
-        //  - conquer some territories
-        //  - while conquering always leave more units in a place where there are more enemy territories around
+        // attack the possibilities from the territory
+        foreach (var territory in bestPossibilities)
+        {
+            Territory.Unit enemy = territory.GetAttackHealth();
+            Territory.Unit bot = bestTerritory.GetAttackHealth();
+            if (1.5 * bot.attack <= enemy.health || bot.health <= enemy.attack)
+            {
+                continue;
+            }
+            AttackLogic.Instance.SelectTerritory(bestTerritory);
+            await Task.Delay(500);
+            AttackLogic.Instance.SelectTerritory(territory);
+            await Task.Delay(500);
+            AttackGUI.instance.attackButton.onClick.Invoke();
+            await Task.Delay(3000);
+            var units = bestTerritory.TerritoryGraphics.presentUnits.ToList();
+            units.OrderBy(unit => unit.attack + unit.health).First().cardLogic.SelectCard();
+            await Task.Delay(500);
+            AttackGUI.instance.attackButton.onClick.Invoke();
+            await Task.Delay(500);
+        }
 
-        // TODO add some logic to look which of the areas are most valuable to conquer
-        //  - most likely by bonus groups that the ai has
-        // TurnManager.Instance.TriggerTurnEndStateButton();
+        // TODO while conquering always leave more units in a place where there are more enemy territories around
+        
+        TurnManager.Instance.TriggerTurnEndStateButton();
     }
     
     public async void ReOrganizeTurnActions()
@@ -117,10 +146,11 @@ public class NpcBehaviour : MonoBehaviour
 
     private List<Territory> FilterBestTerritoriesToAttackFrom(Territory territory, float power)
     {
+        // TODO take into account the bonus areas somehow in this method to count as a double value?
         List<Territory> possibleTargets = new();
         foreach (var territoryUnit in territory.units)
         {
-            power += calculateUnitPower(territoryUnit.attack, territoryUnit.health);
+            power += CalculateUnitPower(territoryUnit.attack, territoryUnit.health);
         }
 
         if (territory.enemyTerritories.Count == 0)
@@ -129,10 +159,10 @@ public class NpcBehaviour : MonoBehaviour
         }
 
         var orderedEnemyTerritories = territory.enemyTerritories
-            .OrderBy(x => calculateUnitsPowers(x.units));
+            .OrderBy(x => CalculateUnitsPowers(x.units));
         foreach (Territory enemyTerritory in orderedEnemyTerritories)
         {
-            power = power - calculateUnitsPowers(enemyTerritory.units) - 1.5f;
+            power = power - CalculateUnitsPowers(enemyTerritory.units) - 2;
             if (power > 0)
             {
                 possibleTargets.Add(enemyTerritory);
@@ -145,17 +175,17 @@ public class NpcBehaviour : MonoBehaviour
         return possibleTargets;
     }
     
-    private float calculateUnitsPowers(List<Territory.Unit> units)
+    private float CalculateUnitsPowers(List<Territory.Unit> units)
     {
         float power = 0;
         foreach (var unit in units)
         {
-            power += calculateUnitPower(unit.attack, unit.health);
+            power += CalculateUnitPower(unit.attack, unit.health);
         }
         return power;
     }
 
-    private float calculateUnitPower(int attack, int health)
+    private float CalculateUnitPower(int attack, int health)
     {
         return (float)(attack + health) / 2;
     }
