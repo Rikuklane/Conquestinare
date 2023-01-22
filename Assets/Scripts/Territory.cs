@@ -272,21 +272,21 @@ public class Territory : MonoBehaviour
                 if (CardHand.Instance.cardSelected)
                 {
                     CardPresenterAbstractLogic cardSelected = CardHand.Instance.cardSelected;
-                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.CardData.GetType() == typeof(SpellData)))
+                    if (cardSelected && (player == Events.RequestPlayer() || cardSelected.cardData.GetType() == typeof(SpellData)))
                     {
                         Vector3 targetPos = Camera.main.WorldToScreenPoint(transform.position);
                         //Vector3 targetPos = transform.InverseTransformVector(AttackGUI.instance.transform.position - transform.position);
-                        LeanTween.move(cardSelected.CardInstance.gameObject, targetPos, 0.1f)
+                        LeanTween.move(cardSelected.cardInstance.gameObject, targetPos, 0.1f)
                         .setOnComplete(() =>
                         {
-                            cardSelected.ChildGameObject.transform.localPosition = Vector3.zero;
-                            if (cardSelected.CardData.GetType() == typeof(UnitData))
+                            cardSelected.childGameObject.transform.localPosition = Vector3.zero;
+                            if (cardSelected.cardData.GetType() == typeof(UnitData))
                             {
-                                AddCard((UnitData)cardSelected.CardData, null);
+                                AddCard((UnitData)cardSelected.cardData, null);
                             }
-                            else if (cardSelected.CardData.GetType() == typeof(SpellData))
+                            else if (cardSelected.cardData.GetType() == typeof(SpellData))
                             {
-                                CastSpellOnUnits((SpellData)cardSelected.CardData);
+                                CastSpellOnUnits((SpellData)cardSelected.cardData);
                             }
                             CardHand.Instance.DestroySelected();
 
