@@ -37,23 +37,20 @@ public class AttackGUI : MonoBehaviour
         WinScreenText.text = player.name + " is defeated";
         Player[] newPlayers = new Player[Turns.TurnManager.Instance.Players.Length-1];
         bool found = false;
-        for (int i = 0; i < Turns.TurnManager.Instance.Players.Length; i++)
+        for (int i = 0; i < Turns.TurnManager.Instance.Players.Length - 1; i++)
         {
             if (Turns.TurnManager.Instance.Players[i].name == player.name)
             {
-                found = true;
-            } else
-            {
-                if(found)
+                Player temp = Turns.TurnManager.Instance.Players[i];
+                for (int j = i; j < Turns.TurnManager.Instance.Players.Length - 1; j++)
                 {
-                    newPlayers[i-1] = Turns.TurnManager.Instance.Players[i];
+                    Turns.TurnManager.Instance.Players[j] = Turns.TurnManager.Instance.Players[j+1];
                 }
-                else
-                {
-                    newPlayers[i-1] = Turns.TurnManager.Instance.Players[i];
-                }
-            }
+
+            } 
+            newPlayers[i] = Turns.TurnManager.Instance.Players[i];
         }
+        Turns.TurnManager.Instance.Players = newPlayers;
     }
 
     public void ShowBattle(Territory attackers, Territory defenders)
