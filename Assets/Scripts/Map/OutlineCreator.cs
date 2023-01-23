@@ -7,6 +7,7 @@ public class OutlineCreator : MonoBehaviour
 {
     public float lineWidth = 5;
     public Material material;
+    public Color color = new Color32(0, 0, 0, 255);
 
     void Start()
     {
@@ -67,6 +68,7 @@ public class OutlineCreator : MonoBehaviour
             lines.Add(lineObject);
 
             LineRenderer line = lineObject.GetComponent<LineRenderer>();
+            line.material.color = color;
 
             var points = bData.Select(vert => {
                 return new Vector3(vert.p[0], vert.p[1], -0.01f);

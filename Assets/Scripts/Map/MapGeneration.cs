@@ -10,6 +10,16 @@ public class MapGeneration : MonoBehaviour
     public float scale = 1f;
     public Material MeshMaterial;
 
+    private Color[] stateColors =
+    {
+        new Color32(0, 0, 0, 255),
+        new Color32(5, 235, 143, 255),
+        new Color32(235, 52, 119, 255),
+        new Color32(79, 52, 235, 255),
+        new Color32(220, 235, 52, 255),
+        new Color32(52, 201, 235, 255),
+        new Color32(52, 235, 79, 255),
+    };
 
     void Start()
     {
@@ -48,7 +58,9 @@ public class MapGeneration : MonoBehaviour
             provinceObject.AddComponent(typeof(ProvinceData));
             provinceObject.AddComponent(typeof(OutlineCreator));
             provinceObject.GetComponent<OutlineCreator>().material = MeshMaterial;
+            provinceObject.GetComponent<OutlineCreator>().color = stateColors[province.state];
             provinceObject.GetComponent<ProvinceData>().provinceName = province.fullName;
+            provinceObject.GetComponent<ProvinceData>().bonus = province.state;
 
             provinceObject.name = "province " + province.name;
             provinceObject.transform.parent = gameObject.transform;
@@ -56,6 +68,24 @@ public class MapGeneration : MonoBehaviour
             return provinceObject;
         }).ToArray();
 
+        /*
+        GameObject[] states = mapData.cells.states.Select(state =>
+        {
+            GameObject stateObject = new();
+
+            stateObject.AddComponent(typeof(OutlineCreator));
+            stateObject.AddComponent(typeof(ProvinceData));
+            stateObject.GetComponent<OutlineCreator>().lineWidth = 10f;
+            stateObject.GetComponent<OutlineCreator>().material = MeshMaterial;
+            stateObject.GetComponent<ProvinceData>().provinceName = state.name;
+
+            stateObject.name = "state " + state.name;
+            stateObject.transform.parent = gameObject.transform;
+            stateObject.transform.position = new Vector3(mapData.cells.cells[state.center].p[0], mapData.cells.cells[state.center].p[1]);
+
+            return stateObject;
+        }).ToArray();
+        */
 
         GameObject[] cells = mapData.cells.cells.Select(cell =>
         {
@@ -99,6 +129,7 @@ public class MapGeneration : MonoBehaviour
 
 
                 ProvinceData provinceData = provinces[cell.province].transform.GetComponent<ProvinceData>();
+                // ProvinceData stateData = states[cell.state].transform.GetComponent<ProvinceData>();
                 foreach (int vertexIndex in cell.v)
                 {
                     Vertex vertex = mapData.vertices[vertexIndex];
@@ -106,6 +137,12 @@ public class MapGeneration : MonoBehaviour
                     {
                         provinceData.border.Add(vertexIndex);
                     }
+                    /*
+                    if (IsStateBorder(mapData, vertex, cell.state))
+                    {
+                        stateData.border.Add(vertexIndex);
+                    }
+                    */
                 }
 
                 if (neighborCell.province == 0) continue;
@@ -152,6 +189,16 @@ public class MapGeneration : MonoBehaviour
 
             if (province.transform.childCount == 0) DestroyImmediate(province);
         }
+        /*
+        foreach (GameObject state in states)
+        {
+            ProvinceData stateData = state.GetComponent<ProvinceData>();
+            stateData.border = stateData.border.Distinct().ToList();
+            // stateData.borderLines = OrderVertices(mapData, stateData.border);
+
+            state.SetActive(true);
+        }
+        */
     }
 
     private bool IsBorder(MapData mapData, Vertex vertex, int provinceIndex)
@@ -169,6 +216,23 @@ public class MapGeneration : MonoBehaviour
         return true;
     }
 
+    /*
+    private bool IsStateBorder(MapData mapData, Vertex vertex, int stateIndex)
+    {
+        Cell[] cells = mapData.cells.cells;
+
+        int stateCells = 0;
+
+        foreach (int cellIndex in vertex.c)
+        {
+            if (cells[cellIndex].state == stateIndex) stateCells++;
+        }
+
+        if (stateCells == 0 || stateCells == 3) return false;
+        return true;
+    }
+    */
+
     private List<Vertex> OrderVertices(MapData mapData, List<int> vOriginal)
     {
         List<int> vCopy = new(vOriginal);
@@ -178,6 +242,7 @@ public class MapGeneration : MonoBehaviour
 
         while (vCopy.Count() > 0)
         {
+            Debug.Log("Hey");
             List<int> cycle = new();
             cycle.Add(vCopy[0]);
             vCopy.RemoveAt(0);
@@ -211,7 +276,7 @@ public class MapGeneration : MonoBehaviour
 
             List<int> nextCycle = LongestCycle(vertices, vBorder, cycleWithVNext);
 
-            if (nextCycle.Count() >= currentLongest.Count()) currentLongest = nextCycle;
+            if (nextCycle.Count() > currentLongest.Count()) currentLongest = nextCycle;
         }
 
         return currentLongest;

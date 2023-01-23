@@ -60,7 +60,7 @@ namespace MapDataModel
         public int i; // index
         public string name; // short form of state name
         public int center; // cell id of state center
-        public int provinces; // id-s of state provinces
+        public int[] provinces; // id-s of state provinces
         public int fullName; // full state name
     }
 
