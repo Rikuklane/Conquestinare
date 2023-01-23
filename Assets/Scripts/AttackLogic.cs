@@ -10,6 +10,7 @@ public class AttackLogic : MonoBehaviour
     public static AttackLogic Instance;
     public Territory selectedTerritory;
     public Territory attackTerritory;
+    public Player attackedPlayer =  null;
 
     public bool isReorganizeTurn = false;
     public bool isReorganizeTriggered = false;
@@ -37,18 +38,18 @@ public class AttackLogic : MonoBehaviour
             if (t.player == currentPlayer)
             {
                 playerTerritories++;
-            } else
+            } else if (attackedPlayer != null && t.player == attackedPlayer)
             {
                 enemyTerritories++;
             }
         }
         if (enemyTerritories == 0)
         {
-            AttackGUI.instance.GameOver(true);
+            AttackGUI.instance.GameOver(attackedPlayer);
         }
         if (playerTerritories == 0)
         {
-            AttackGUI.instance.GameOver(false);
+            AttackGUI.instance.GameOver(currentPlayer);
         }
     }
 
@@ -91,6 +92,7 @@ public class AttackLogic : MonoBehaviour
                 if (isReorganizeTurn)
                 {
                     attackTerritory = newSelected;
+                    attackedPlayer = attackTerritory.player;
                     TriggerReorganize();
                 }
                 else
@@ -115,6 +117,7 @@ public class AttackLogic : MonoBehaviour
                 else
                 {
                     attackTerritory = newSelected;
+                    attackedPlayer = attackTerritory.player;
                     AudioController.Instance.warCry.Play();
                     AttackGUI.instance.attackButton.gameObject.SetActive(true);
                 }
@@ -200,6 +203,7 @@ public class AttackLogic : MonoBehaviour
 
     public void HandleBattleResult(bool isWin)
     {
+        checkWin();
         // call handleBattleResult after coroutine finished
         // winCondition
         if (isWin && selectedTerritory.GetUnitsCount() > 1)
