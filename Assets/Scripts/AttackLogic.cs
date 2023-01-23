@@ -33,7 +33,7 @@ public class AttackLogic : MonoBehaviour
         int playerTerritories = 0;
         foreach(Territory t in TerritoryManager.instance.territories)
         {
-            if (t.player.Name == "neutral") continue;
+            if (t.player.name == "neutral") continue;
             if (t.player == currentPlayer)
             {
                 playerTerritories++;

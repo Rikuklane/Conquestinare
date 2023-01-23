@@ -53,7 +53,7 @@ public class NpcBehaviour : MonoBehaviour
     public async void BattleTurnActions()
     {
         var npc = Events.RequestPlayer();
-        var cardHand = CardHand.Instance.cardHands[npc.Name];
+        var cardHand = CardHand.Instance.cardHands[npc.name];
         var npcTerritories = TerritoryManager.instance.GetPlayerTerritories(npc);
         
         float handPower = 0;

@@ -22,7 +22,7 @@ public class FadeCanvasGroup : MonoBehaviour
     public void ActivateStartScreenWithFade()
     {
         Player currentPlayer = Events.RequestPlayer();
-        startText.text = String.Format("{0}'s turn", currentPlayer.Name);
+        startText.text = String.Format("{0}'s turn", currentPlayer.name);
         canvasGroup.gameObject.SetActive(true);
         StartCoroutine(DoFade(true, 1f));
     }
