@@ -208,7 +208,7 @@ public class Territory : MonoBehaviour
         // Color
         if (attack == 0 && health == 0)
         {
-            player = new Player("neutral", Color.gray);
+            player = new Player("neutral", Color.gray, false);
         }
         TerritoryGraphics.SetColor(player.color);
     }
@@ -265,7 +265,7 @@ public class Territory : MonoBehaviour
         allyTerritories.Clear();
         foreach(Territory area in territories)
         {
-            if (player != area.player || area.player.Name == "neutral")
+            if (player != area.player || area.player.name == "neutral")
             {
                 enemyTerritories.Add(area);
             } else
@@ -314,6 +314,8 @@ public class Territory : MonoBehaviour
                 }
                 else
                 {
+                    if (Events.RequestPlayer().isNpc) return;
+                    if (Turns.TurnManager.Instance.settingsPanel.activeSelf) return;
                     AttackLogic.Instance.SelectTerritory(this);
                 }
 

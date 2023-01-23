@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine.UI;
 
 public class MapGeneration : MonoBehaviour
@@ -60,6 +61,9 @@ public class MapGeneration : MonoBehaviour
             provinceObject.AddComponent(typeof(MeshFilter));
             provinceObject.AddComponent(typeof(MeshCollider));
             provinceObject.AddComponent(typeof(ProvinceData));
+            provinceObject.AddComponent(typeof(OutlineCreator));
+            provinceObject.GetComponent<OutlineCreator>().material = MeshMaterial;
+            provinceObject.GetComponent<ProvinceData>().provinceName = province.fullName;
 
             provinceObject.name = "province " + province.name;
             provinceObject.transform.parent = gameObject.transform;
@@ -106,10 +110,19 @@ public class MapGeneration : MonoBehaviour
             foreach (int neighborCellIndex in cell.c)
             {
                 Cell neighborCell = mapData.cells.cells[neighborCellIndex];
-                if (neighborCell.province == 0) continue;
                 if (cell.province == neighborCell.province) continue;
 
                 ProvinceData provinceData = provinces[cell.province].transform.GetComponent<ProvinceData>();
+                foreach (int vertexIndex in cell.v)
+                {
+                    Vertex vertex = mapData.vertices[vertexIndex];
+                    if (IsBorder(mapData, vertex, cell.province))
+                    {
+                        provinceData.border.Add(vertexIndex);
+                    }
+                }
+
+                if (neighborCell.province == 0) continue;
                 ProvinceData neighborProvinceData = provinces[neighborCell.province].transform.GetComponent<ProvinceData>();
                 provinceData.neighbors.Add(neighborProvinceData);
             }
@@ -145,10 +158,77 @@ public class MapGeneration : MonoBehaviour
 
             ProvinceData provinceData = province.GetComponent<ProvinceData>();
             provinceData.neighbors = provinceData.neighbors.Distinct().ToList();
+            provinceData.border = provinceData.border.Distinct().ToList();
+            provinceData.borderLines = OrderVertices(mapData, provinceData.border);
 
             province.SetActive(true);
 
             if (province.transform.childCount == 0) DestroyImmediate(province);
         }
+    }
+
+
+    private bool IsBorder(MapData mapData, Vertex vertex, int provinceIndex)
+    {
+        Cell[] cells = mapData.cells.cells;
+
+        int provinceCells = 0;
+
+        foreach (int cellIndex in vertex.c)
+        {
+            if (cells[cellIndex].province == provinceIndex) provinceCells++;
+        }
+
+        if (provinceCells == 0 || provinceCells == 3) return false;
+        return true;
+    }
+
+    private List<Vertex> OrderVertices(MapData mapData, List<int> vOriginal)
+    {
+        List<int> vCopy = new(vOriginal);
+        List<Vertex> borders = new();
+
+        Vertex[] vertices = mapData.vertices;
+
+        while (vCopy.Count() > 0)
+        {
+            List<int> cycle = new();
+            cycle.Add(vCopy[0]);
+            vCopy.RemoveAt(0);
+
+            cycle = LongestCycle(vertices, vOriginal, cycle);
+            cycle.ForEach(vId => vCopy.Remove(vId));
+
+            var cycleVertices = cycle.Select(vert => {
+                return vertices[vert];
+            }).ToList();
+
+            borders.AddRange(cycleVertices);
+        }
+
+        return borders;
+    }
+
+    private List<int> LongestCycle(Vertex[] vertices, List<int> vBorder, List<int> cycle)
+    {
+        if (cycle.Count() > 3 && cycle.Last() == cycle.First()) return cycle;
+        if (cycle.Count() > 1 && !vBorder.Contains(cycle.Last())) return new();
+
+        Vertex vertex = vertices[cycle.Last()];
+        List<int> currentLongest = new();
+
+        foreach (int vNext in vertex.v)
+        {
+            if (cycle.Contains(vNext) && cycle.First() != vNext) continue;
+
+            List<int> cycleWithVNext = new(cycle);
+            cycleWithVNext.Add(vNext);
+
+            List<int> nextCycle = LongestCycle(vertices, vBorder, cycleWithVNext);
+
+            if (nextCycle.Count() >= currentLongest.Count()) currentLongest = nextCycle;
+        }
+
+        return currentLongest;
     }
 }

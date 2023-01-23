@@ -12,18 +12,21 @@ public class FadeCanvasGroup : MonoBehaviour
     public CanvasGroup canvasGroup;
     public Button button;
     public TextMeshProUGUI startText;
+    private Image _image;
 
     private void Awake()
     {
         button.onClick.AddListener(FadeOut);
         button.enabled = false;
+        _image = canvasGroup.gameObject.GetComponent<Image>();
     }
 
     public void ActivateStartScreenWithFade()
     {
         Player currentPlayer = Events.RequestPlayer();
-        startText.text = String.Format("{0}'s turn", currentPlayer.Name);
+        startText.text = $"{currentPlayer.name}'s turn";
         canvasGroup.gameObject.SetActive(true);
+        _image.color = currentPlayer.color;
         StartCoroutine(DoFade(true, 1f));
     }
 
