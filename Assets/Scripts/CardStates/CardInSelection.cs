@@ -20,7 +20,6 @@ namespace CardStates
         public override IEnumerator NextState(CardPresenterAbstractLogic card)
         {
             card.SwitchState(CardStateController.Instance.CardInHand);
-            Debug.Log("Selection -> Hand");
             MoveCardToHand(card, true);
             return base.NextState(card);
         }
