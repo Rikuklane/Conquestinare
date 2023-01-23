@@ -43,9 +43,20 @@ public class AttackLogic : MonoBehaviour
                 enemyTerritories++;
             }
         }
+        if (attackedPlayer != null)
+        {
+            print(Events.RequestBonus(attackedPlayer));
+
+        }
+        print(Events.RequestBonus(currentPlayer));
+
         if (enemyTerritories == 0)
         {
-            AttackGUI.instance.GameOver(attackedPlayer);
+            if(attackedPlayer.name!="neutral")
+            {
+                AttackGUI.instance.GameOver(attackedPlayer);
+
+            }
         }
         if (playerTerritories == 0)
         {

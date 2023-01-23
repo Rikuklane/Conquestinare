@@ -131,6 +131,9 @@ public class TerritoryManager : MonoBehaviour
                 // player has bonus
                 ShowBonus(i, true);
                 bonusTotal += 2;
+            } else
+            {
+                ShowBonus(i, false);
             }
         }
         return bonusTotal;

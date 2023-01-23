@@ -99,8 +99,6 @@ public class Territory : MonoBehaviour
                 SetUnitAttackAndHealth(_random.Next(units.Count), spellData.attackChange, spellData.healthChange);
             }    
         }
-        AttackLogic.Instance.attackTerritory = this;
-        AttackLogic.Instance.checkWin();
     }
 
     private void SetUnitAttackAndHealth(int i, int attack, int health)
