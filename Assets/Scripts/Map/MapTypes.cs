@@ -17,7 +17,7 @@ namespace MapDataModel
     public class Vertex
     {
         public int[] p; // vertex coordinates [x, y]
-        public int[] v; // indexes of vertices adjacent to vertex (3)
+        public int[] v; // indexes of vertices adjacent to vertex (3) 
         public int[] c; // indexes of cells adjacent to vertex (3)
     }
 
@@ -60,7 +60,7 @@ namespace MapDataModel
         public int i; // index
         public string name; // short form of state name
         public int center; // cell id of state center
-        public int provinces; // id-s of state provinces
+        public int[] provinces; // id-s of state provinces
         public int fullName; // full state name
     }
 
