@@ -217,7 +217,7 @@ public class AttackGUI : MonoBehaviour
 
         var initialParent = animationFrom.transform.parent;
 
-        animationFrom.transform.parent = animationFrom.transform.parent.parent;
+        animationFrom.transform.SetParent(animationFrom.transform.parent.parent);
 
         Vector3 target;
         if(origin.y > rectTransform.transform.position.y)
@@ -245,7 +245,7 @@ public class AttackGUI : MonoBehaviour
             }
             yield return null;
         }
-        animationFrom.transform.parent = initialParent;
+        animationFrom.transform.SetParent(initialParent);
     }
 
     IEnumerator MoveBack(UnitCardPresenter animationFrom, Vector3 animationTo, float duration)
