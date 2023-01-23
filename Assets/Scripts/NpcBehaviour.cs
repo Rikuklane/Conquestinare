@@ -137,10 +137,16 @@ public class NpcBehaviour : MonoBehaviour
                     difference -= 1;
                 }
                 // TODO transfer units instead of this if below
-                if (difference > 1)
+                int unitsToTransfer = Mathf.Max(1, difference / 2);
+                await SelectTerritory(first, last);
+                var unitList = first.TerritoryGraphics.presentUnits.ToList();;
+                for (int i = 0; i < unitsToTransfer; i++)
                 {
-                    break;
+                    unitList[i].cardLogic.SelectCard();
+                    await Task.Delay(300);
                 }
+                AttackGUI.instance.attackButton.onClick.Invoke();
+                await Task.Delay(500);
                 npcTerritories = npcTerritories.OrderByDescending(x => x.units.Count);
                 first = npcTerritories.First();
                 last = npcTerritories.Last();
@@ -165,10 +171,7 @@ public class NpcBehaviour : MonoBehaviour
             {
                 continue;
             }
-            AttackLogic.Instance.SelectTerritory(bestTerritory);
-            await Task.Delay(500);
-            AttackLogic.Instance.SelectTerritory(territoryToAttack);
-            await Task.Delay(500);
+            await SelectTerritory(bestTerritory, territoryToAttack);
             AttackGUI.instance.attackButton.onClick.Invoke();
             await Task.Delay(3000);
             var units = bestTerritory.TerritoryGraphics.presentUnits.ToList();
@@ -195,6 +198,14 @@ public class NpcBehaviour : MonoBehaviour
         }
 
         return null;
+    }
+
+    private async Task SelectTerritory(Territory fromTerritory, Territory toTerritory)
+    {
+        AttackLogic.Instance.SelectTerritory(fromTerritory);
+        await Task.Delay(500);
+        AttackLogic.Instance.SelectTerritory(toTerritory);
+        await Task.Delay(500);
     }
 
     private List<Territory> FilterBestTerritoriesToAttackFrom(Territory territory, float power)
