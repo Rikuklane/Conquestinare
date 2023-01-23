@@ -31,16 +31,28 @@ public class AttackGUI : MonoBehaviour
         instance = this;
     }
 
-    public void GameOver(bool isWin)
+    public void GameOver(Player player)
     {
-        if (isWin)
+        WinScreen.SetActive(true);
+        WinScreenText.text = player.name + " is defeated";
+        Player[] newPlayers = new Player[Turns.TurnManager.Instance.Players.Length-1];
+        bool found = false;
+        for (int i = 0; i < Turns.TurnManager.Instance.Players.Length; i++)
         {
-            WinScreen.SetActive(true);
-            WinScreenText.text = "You Win!";
-        } else
-        {
-            WinScreen.SetActive(true);
-            WinScreenText.text = "You lose";
+            if (Turns.TurnManager.Instance.Players[i].name == player.name)
+            {
+                found = true;
+            } else
+            {
+                if(found)
+                {
+                    newPlayers[i-1] = Turns.TurnManager.Instance.Players[i];
+                }
+                else
+                {
+                    newPlayers[i-1] = Turns.TurnManager.Instance.Players[i];
+                }
+            }
         }
     }
 
