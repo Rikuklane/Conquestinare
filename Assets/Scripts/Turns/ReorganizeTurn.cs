@@ -29,5 +29,10 @@ namespace Turns
             Events.NextPlayer();
             return base.EndState(turnManager, player);
         }
+        
+        public override string ToString()
+        {
+            return "Reorganize your troops";
+        }
     }
 }

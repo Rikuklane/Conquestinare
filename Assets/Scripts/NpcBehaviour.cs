@@ -37,114 +37,175 @@ public class NpcBehaviour : MonoBehaviour
     
     public async void MarketTurnActions()
     {
-        var units = CardSelector.Instance.selectedUnits;
-        foreach (var unit in units)
+        try
         {
-            await Task.Delay(700);
-            unit.cardLogic.SelectCard();
-        }
+            var units = CardSelector.Instance.selectedUnits;
+            foreach (var unit in units)
+            {
+                await Task.Delay(700);
+                unit.cardLogic.SelectCard();
+            }
 
-        // TODO do spells later
-        var spells = CardSelector.Instance.selectedSpells;
-        await Task.Delay(500);
-        TurnManager.Instance.TriggerTurnEndStateButton();
+            // TODO do spells later
+            var spells = CardSelector.Instance.selectedSpells;
+            await Task.Delay(500);
+            TurnManager.Instance.TriggerTurnEndStateButton();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.GetType() + ": " + e.Message);
+            TurnManager.Instance.TriggerTurnEndStateButton();
+        }
     }
     
     public async void BattleTurnActions()
     {
-        var npc = Events.RequestPlayer();
-        var cardHand = CardHand.Instance.cardHands[npc.Name];
-        var npcTerritories = TerritoryManager.instance.GetPlayerTerritories(npc);
-        
-        float handPower = 0;
-        if (cardHand.Count > 0)
+        try
         {
-            foreach (var card in cardHand)
+            var npc = Events.RequestPlayer();
+            var cardHand = CardHand.Instance.cardHands[npc.name];
+            var npcTerritories = TerritoryManager.instance.GetPlayerTerritories(npc);
+            
+            float handPower = 0;
+            if (cardHand.Count > 0)
             {
-                if (card.cardData.GetType() == typeof(UnitData))
+                foreach (var card in cardHand)
                 {
-                    var unit = (UnitData)card.cardData;
-                    handPower += CalculateUnitPower(unit.attack, unit.health);
+                    if (card.cardData.GetType() == typeof(UnitData))
+                    {
+                        var unit = (UnitData)card.cardData;
+                        handPower += CalculateUnitPower(unit.attack, unit.health);
+                    }
                 }
             }
-        }
 
-        List<Territory> bestPossibilities = new();
-        Territory bestTerritory = npcTerritories.First();
+            List<Territory> bestPossibilities = new();
+            Territory bestTerritory = npcTerritories.First();
 
-        foreach (var territory in npcTerritories)
-        {
-            List<Territory> possibilities = FilterBestTerritoriesToAttackFrom(territory, handPower);
-            if (possibilities.Count > bestPossibilities.Count)
+            foreach (var territory in npcTerritories)
             {
-                bestPossibilities = possibilities;
-                bestTerritory = territory;
+                List<Territory> possibilities = FilterBestTerritoriesToAttackFrom(territory, handPower);
+                if (possibilities.Count > bestPossibilities.Count)
+                {
+                    bestPossibilities = possibilities;
+                    bestTerritory = territory;
+                }
             }
-        }
-        
-        // place cards from hand
-        while (cardHand.Count != 0)
-        {
-            cardHand[0].SelectCard();
-            bestTerritory.MoveCardToTerritory(cardHand[0], bestTerritory.transform.position);
-            await Task.Delay(500);
-        }
+            
+            // place cards from hand
+            while (cardHand.Count != 0)
+            {
+                cardHand[0].SelectCard();
+                bestTerritory.MoveCardToTerritory(cardHand[0], bestTerritory.transform.position);
+                await Task.Delay(500);
+            }
+            
+            // attack the possibilities from the territory
+            while (bestPossibilities.Count != 0)
+            {
+                bestTerritory = await AttackFromTerritory(bestTerritory, bestPossibilities);
+                if (bestTerritory == null)
+                {
+                    break;
+                }
+                bestPossibilities = FilterBestTerritoriesToAttackFrom(bestTerritory, 0);
+            }
 
-        // attack the possibilities from the territory
-        foreach (var territory in bestPossibilities)
+            TurnManager.Instance.TriggerTurnEndStateButton();
+        }
+        catch (Exception e)
         {
-            Territory.Unit enemy = territory.GetAttackHealth();
+            Debug.Log(e.GetType() + ": " + e.Message);
+            TurnManager.Instance.TriggerTurnEndStateButton();
+        }
+    }
+    
+    public async void ReOrganizeTurnActions()
+    {
+        try
+        {
+            await Task.Delay(500);
+            var npc = Events.RequestPlayer();
+            var npcTerritories = TerritoryManager.instance.GetPlayerTerritories(npc).OrderByDescending(x => x.units.Count);
+            var first = npcTerritories.First();
+            var last = npcTerritories.Last();
+            while (first.units.Count > last.units.Count + 1)
+            {
+                int difference = first.units.Count - last.units.Count;
+                if (difference % 2 == 1)
+                {
+                    difference -= 1;
+                }
+                // TODO transfer units instead of this if below
+                int unitsToTransfer = Mathf.Max(1, difference / 2);
+                await SelectTerritory(first, last);
+                var unitList = first.TerritoryGraphics.presentUnits.ToList();;
+                for (int i = 0; i < unitsToTransfer; i++)
+                {
+                    unitList[i].cardLogic.SelectCard();
+                    await Task.Delay(300);
+                }
+                AttackGUI.instance.attackButton.onClick.Invoke();
+                await Task.Delay(500);
+                npcTerritories = npcTerritories.OrderByDescending(x => x.units.Count);
+                first = npcTerritories.First();
+                last = npcTerritories.Last();
+            }
+            // TODO add some logic to look which of the areas are most valuable to protect
+            TurnManager.Instance.TriggerTurnEndStateButton();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.GetType() + ": " + e.Message);
+            TurnManager.Instance.TriggerTurnEndStateButton();
+        }
+    }
+
+    private async Task<Territory> AttackFromTerritory(Territory bestTerritory, List<Territory> bestPossibilities)
+    {
+        foreach (var territoryToAttack in bestPossibilities)
+        {
+            Territory.Unit enemy = territoryToAttack.GetAttackHealth();
             Territory.Unit bot = bestTerritory.GetAttackHealth();
             if (1.5 * bot.attack <= enemy.health || bot.health <= enemy.attack)
             {
                 continue;
             }
-            AttackLogic.Instance.SelectTerritory(bestTerritory);
-            await Task.Delay(500);
-            AttackLogic.Instance.SelectTerritory(territory);
-            await Task.Delay(500);
+            await SelectTerritory(bestTerritory, territoryToAttack);
             AttackGUI.instance.attackButton.onClick.Invoke();
             await Task.Delay(3000);
             var units = bestTerritory.TerritoryGraphics.presentUnits.ToList();
             if (units.Count > 1)
             {
-                units.OrderBy(unit => unit.attack + unit.health).First().cardLogic.SelectCard();
+                // TODO while conquering always leave more units in a place where there are more enemy territories around
+                if (bestTerritory.enemyTerritories.Count == 0)
+                {
+                    units = units.OrderBy(unit => unit.attack + unit.health).ToList();
+                    for (var i = 0; i < units.Count - 1; i++)
+                    {
+                        units[i].cardLogic.SelectCard();
+                        await Task.Delay(300);
+                    }
+                    AttackGUI.instance.attackButton.onClick.Invoke();
+                    await Task.Delay(500);
+                    return territoryToAttack;
+                }
+                units.OrderBy(unit => unit.health + unit.attack * 0.5f).First().cardLogic.SelectCard();
                 await Task.Delay(500);
                 AttackGUI.instance.attackButton.onClick.Invoke();
                 await Task.Delay(500);
             }
         }
 
-        // TODO while conquering always leave more units in a place where there are more enemy territories around
-        
-        TurnManager.Instance.TriggerTurnEndStateButton();
+        return null;
     }
-    
-    public async void ReOrganizeTurnActions()
+
+    private async Task SelectTerritory(Territory fromTerritory, Territory toTerritory)
     {
+        AttackLogic.Instance.SelectTerritory(fromTerritory);
         await Task.Delay(500);
-        var npc = Events.RequestPlayer();
-        var npcTerritories = TerritoryManager.instance.GetPlayerTerritories(npc).OrderByDescending(x => x.units.Count);
-        var first = npcTerritories.First();
-        var last = npcTerritories.Last();
-        while (first.units.Count > last.units.Count + 1)
-        {
-            int difference = first.units.Count - last.units.Count;
-            if (difference % 2 == 1)
-            {
-                difference -= 1;
-            }
-            // TODO transfer units instead of this if below
-            if (difference > 1)
-            {
-                break;
-            }
-            npcTerritories = npcTerritories.OrderByDescending(x => x.units.Count);
-            first = npcTerritories.First();
-            last = npcTerritories.Last();
-        }
-        // TODO add some logic to look which of the areas are most valuable to protect
-        TurnManager.Instance.TriggerTurnEndStateButton();
+        AttackLogic.Instance.SelectTerritory(toTerritory);
+        await Task.Delay(500);
     }
 
     private List<Territory> FilterBestTerritoriesToAttackFrom(Territory territory, float power)

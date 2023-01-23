@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CardHand : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class CardHand : MonoBehaviour
     public CardPresenterAbstractLogic cardSelected;
     public UnitCardPresenter unitCardPrefab;
     public float speed = 5f;
-    public ParticleSystem particleSystem;
+    [FormerlySerializedAs("particleSystem")] public ParticleSystem particleSystemHand;
     private Vector3 cardSelectLastPosition;
     private int currentNumberParticles;
 
@@ -20,12 +21,12 @@ public class CardHand : MonoBehaviour
         {
             //particleSystem.Stop();
             cardSelected.cardInstance.transform.position = Vector3.Lerp(cardSelected.cardInstance.transform.position, Input.mousePosition, Time.deltaTime * speed);
-            particleSystem.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.cardInstance.transform.position);
-            if(particleSystem.particleCount > currentNumberParticles)
+            particleSystemHand.transform.position = Camera.main.ScreenToWorldPoint(cardSelected.cardInstance.transform.position);
+            if(particleSystemHand.particleCount > currentNumberParticles)
             {
                 AudioController.Instance.sparkle.Play();
             }
-            currentNumberParticles = particleSystem.particleCount;
+            currentNumberParticles = particleSystemHand.particleCount;
             //particleSystem.Play();
             //cardSelected.CardInstance.transform.position = Input.mousePosition;
             if (Input.GetMouseButtonDown(1))
@@ -40,7 +41,7 @@ public class CardHand : MonoBehaviour
         if(cardSelected)
         {
             PlayCard(cardSelected);
-            particleSystem.transform.parent = transform;
+            particleSystemHand.transform.parent = transform;
             Destroy(cardSelected.cardInstance.gameObject);
             cardSelected = null;
         }
@@ -58,12 +59,12 @@ public class CardHand : MonoBehaviour
         {
             return;
         }
-        particleSystem.transform.parent = cardSelected.cardInstance.transform;
-        particleSystem.transform.position = cardSelected.cardInstance.transform.position;
+        particleSystemHand.transform.parent = cardSelected.cardInstance.transform;
+        particleSystemHand.transform.position = cardSelected.cardInstance.transform.position;
 
         cardSelectLastPosition = cardSelect.transform.position;
         // deselect others
-        foreach (CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().Name])
+        foreach (CardPresenterAbstractLogic card in cardHands[Events.RequestPlayer().name])
         {
             if (card.isSelected)
             {
@@ -71,20 +72,20 @@ public class CardHand : MonoBehaviour
             }
         }
         cardSelect.TriggerSelected();
-        cardSelect.cardInstance.transform.parent = transform.parent;
+        cardSelect.cardInstance.transform.SetParent(transform.parent);
     }
 
     private void Awake()
     {
         Instance = this;
-        particleSystem = Instantiate(particleSystem, transform);
+        particleSystemHand = Instantiate(particleSystemHand, transform);
     }
 
     public void CreateCardHands(Player[] players)
     {
         foreach (Player player in players)
         {
-            cardHands[player.Name] = new();
+            cardHands[player.name] = new();
         }
 
     }
@@ -94,7 +95,7 @@ public class CardHand : MonoBehaviour
         // TODO hide all children
         foreach (Player currentPlayer in Turns.TurnManager.Instance.Players)
         {
-            foreach (CardPresenterAbstractLogic card in cardHands[currentPlayer.Name])
+            foreach (CardPresenterAbstractLogic card in cardHands[currentPlayer.name])
             {
                 card.cardInstance.gameObject.SetActive(false);
             }
@@ -104,7 +105,7 @@ public class CardHand : MonoBehaviour
     public void LoadHand(Player player)
     {
         //   - add cards from new player
-        foreach(CardPresenterAbstractLogic card in cardHands[player.Name])
+        foreach(CardPresenterAbstractLogic card in cardHands[player.name])
         {
             card.cardInstance.gameObject.SetActive(true);
         }
@@ -112,11 +113,11 @@ public class CardHand : MonoBehaviour
 
     public void AddCard(CardPresenterAbstractLogic card)
     {
-        cardHands[Events.RequestPlayer().Name].Add(card);
+        cardHands[Events.RequestPlayer().name].Add(card);
     }
 
     public void PlayCard(CardPresenterAbstractLogic card)
     {
-        cardHands[Events.RequestPlayer().Name].Remove(card);
+        cardHands[Events.RequestPlayer().name].Remove(card);
     }
 }

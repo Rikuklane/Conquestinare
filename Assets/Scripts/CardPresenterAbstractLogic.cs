@@ -95,7 +95,7 @@ public class CardPresenterAbstractLogic: MonoBehaviour
         {
             TriggerSelected();
         }
-        cardInstance.transform.parent = CardHand.Instance.transform.GetChild(0).GetChild(0).transform;
+        cardInstance.transform.SetParent(CardHand.Instance.transform.GetChild(0).GetChild(0).transform);
     }
 
     public void FadeCard()

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = System.Random;
 
 namespace Turns
 {
@@ -18,6 +20,7 @@ namespace Turns
         public TextMeshProUGUI goldGainText;
         public TextMeshProUGUI goldLossText;
         public GameObject settingsPanel;
+        public GameObject tutorialPanel;
 
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -25,35 +28,16 @@ namespace Turns
         public readonly MarketTurn MarketTurn = new();
         public readonly BattleTurn BattleTurn = new();
         public readonly ReorganizeTurn ReorganizeTurn = new();
-        private AbstractTurnState _currentState;
         
-        private Player[] samplePlayers = { new("PlayerMustafa"), new("xxGamerBoyX"), new("CasualGamer"), new("BOT")};
         public Player[] Players;
+        
+        private AbstractTurnState _currentState;
         private int _currentPlayerIndex;
-
-        private void setupPlayers()
-        {
-            int playerNumber = PlayerPrefs.GetInt("playerNumber", 2);
-            int npcNumber = PlayerPrefs.GetInt("npcNumber", 1);; // TODO add this to menu
-            Debug.Log("Player number" + playerNumber);
-            Debug.Log("Npc number" + npcNumber);
-            Player[] newPlayers = new Player[playerNumber+npcNumber];
-            for(int i = 0; i < playerNumber; i++)
-            {
-                newPlayers[i] = samplePlayers[i];
-                Debug.Log(newPlayers[i].Name);
-            }
-            for(int i = playerNumber; i < playerNumber+npcNumber; i++)
-            {
-                newPlayers[i] = new Player($"AI BOT {i - playerNumber + 1}", true);
-                Debug.Log(newPlayers[i].Name);
-            }
-            Players = newPlayers;
-        }
+        private readonly Random _random = new();
 
         private void Awake()
         {
-            setupPlayers();
+            SetupPlayers();
             Instance = this;
             Events.OnRequestPlayer += GetCurrentPlayer;
             Events.OnRequestGold += GetPlayerGold;
@@ -62,6 +46,62 @@ namespace Turns
             nextTurnButton.onClick.AddListener(TriggerTurnEndStateButton);
         }
         
+        private void SetupPlayers()
+        {
+            int playerNumber = PlayerPrefs.GetInt("playerNumber", 1);
+            int npcNumber = PlayerPrefs.GetInt("npcNumber", 1);
+            Debug.Log("Player count: " + playerNumber);
+            Debug.Log("Npc count: " + npcNumber);
+            List<Color> colors = CreateColors();
+            Player[] newPlayers = new Player[playerNumber+npcNumber];
+            for(int i = 0; i < playerNumber; i++)
+            {
+                newPlayers[i] = new Player($"Player {i + 1}", colors[i], false);
+            }
+            for(int i = playerNumber; i < playerNumber + npcNumber; i++)
+            {
+                newPlayers[i] = new Player($"AI BOT {i - playerNumber + 1}", colors[i], true);
+            }
+            Players = newPlayers;
+        }
+
+        private List<Color> CreateColors()
+        {
+            List<int> colorNumbers = new()
+            {
+                235, 64, 52,
+                235, 217, 52,
+                122, 235, 52,
+                52, 235, 177,
+                52, 92, 235,
+                125, 52, 235,
+                235, 52, 183,
+                87, 58, 28,
+                62, 64, 21,
+                64, 21, 49
+            };
+            List<Color> colors = new List<Color>();
+            for (int i = 0; i < colorNumbers.Count; i+=3)
+            {
+                Color color = new Color
+                {
+                    r = colorNumbers[i] / 255f,
+                    g = colorNumbers[i+1] / 255f,
+                    b = colorNumbers[i+2] / 255f,
+                    a = 1
+                };
+                colors.Add(color);
+            }
+            
+            var n = colors.Count;  
+            while (n > 1) {  
+                n--;  
+                var k = _random.Next(n + 1);  
+                (colors[k], colors[n]) = (colors[n], colors[k]);
+            } 
+            return colors;
+        }
+
         private void Start()
         {
             float volumeSlider = PlayerPrefs.GetFloat("volumeSlider", 1f);
@@ -72,7 +112,8 @@ namespace Turns
             {
                 SetPlayerGold(player, 2);
             }
-            playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
+            
+            SetPlayerColor();
 
             TerritoryManager.instance.RandomShuffleTerritories(Players);
             CardHand.Instance.CreateCardHands(Players);
@@ -86,6 +127,7 @@ namespace Turns
             if(Input.GetKeyDown("escape"))
             {
                 settingsPanel.SetActive(!settingsPanel.activeSelf);
+                tutorialPanel.SetActive(!tutorialPanel.activeSelf);
             }
         }
 
@@ -115,11 +157,18 @@ namespace Turns
             }
             if(playerColorImage != null)
             {
-                playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
+                SetPlayerColor();
             }
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
             goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
+        }
+
+        private void SetPlayerColor()
+        {
+            Color newColor = GetCurrentPlayer().color;
+            newColor.a = 0.6f;
+            playerColorImage.GetComponent<Image>().color = newColor;
         }
 
         private int GetPlayerGold(Player player)
@@ -163,7 +212,7 @@ namespace Turns
         }
         private void UpdatePlayerNameAndGold()
         {
-            playerNameText.text = GetCurrentPlayer().Name;
+            playerNameText.text = GetCurrentPlayer().name;
             goldAmountText.text = GetCurrentPlayer().gold.ToString();
         }
     }
