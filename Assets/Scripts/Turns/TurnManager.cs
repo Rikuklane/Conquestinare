@@ -20,6 +20,7 @@ namespace Turns
         public TextMeshProUGUI goldGainText;
         public TextMeshProUGUI goldLossText;
         public GameObject settingsPanel;
+        public GameObject tutorialPanel;
 
         public static TurnManager Instance;
         public readonly PlayerStartTurn PlayerStartTurn = new();
@@ -126,6 +127,7 @@ namespace Turns
             if(Input.GetKeyDown("escape"))
             {
                 settingsPanel.SetActive(!settingsPanel.activeSelf);
+                tutorialPanel.SetActive(!tutorialPanel.activeSelf);
             }
         }
 
