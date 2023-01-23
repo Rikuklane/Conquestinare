@@ -99,34 +99,18 @@ public class NpcBehaviour : MonoBehaviour
                 bestTerritory.MoveCardToTerritory(cardHand[0], bestTerritory.transform.position);
                 await Task.Delay(500);
             }
-
+            
             // attack the possibilities from the territory
-            foreach (var territory in bestPossibilities)
+            while (bestPossibilities.Count != 0)
             {
-                Territory.Unit enemy = territory.GetAttackHealth();
-                Territory.Unit bot = bestTerritory.GetAttackHealth();
-                if (1.5 * bot.attack <= enemy.health || bot.health <= enemy.attack)
+                bestTerritory = await AttackFromTerritory(bestTerritory, bestPossibilities);
+                if (bestTerritory == null)
                 {
-                    continue;
+                    break;
                 }
-                AttackLogic.Instance.SelectTerritory(bestTerritory);
-                await Task.Delay(500);
-                AttackLogic.Instance.SelectTerritory(territory);
-                await Task.Delay(500);
-                AttackGUI.instance.attackButton.onClick.Invoke();
-                await Task.Delay(3000);
-                var units = bestTerritory.TerritoryGraphics.presentUnits.ToList();
-                if (units.Count > 1)
-                {
-                    units.OrderBy(unit => unit.attack + unit.health).First().cardLogic.SelectCard();
-                    await Task.Delay(500);
-                    AttackGUI.instance.attackButton.onClick.Invoke();
-                    await Task.Delay(500);
-                }
+                bestPossibilities = FilterBestTerritoriesToAttackFrom(bestTerritory, 0);
             }
 
-            // TODO while conquering always leave more units in a place where there are more enemy territories around
-            
             TurnManager.Instance.TriggerTurnEndStateButton();
         }
         catch (Exception e)
@@ -169,6 +153,48 @@ public class NpcBehaviour : MonoBehaviour
             Debug.Log(e.GetType() + ": " + e.Message);
             TurnManager.Instance.TriggerTurnEndStateButton();
         }
+    }
+
+    private async Task<Territory> AttackFromTerritory(Territory bestTerritory, List<Territory> bestPossibilities)
+    {
+        foreach (var territoryToAttack in bestPossibilities)
+        {
+            Territory.Unit enemy = territoryToAttack.GetAttackHealth();
+            Territory.Unit bot = bestTerritory.GetAttackHealth();
+            if (1.5 * bot.attack <= enemy.health || bot.health <= enemy.attack)
+            {
+                continue;
+            }
+            AttackLogic.Instance.SelectTerritory(bestTerritory);
+            await Task.Delay(500);
+            AttackLogic.Instance.SelectTerritory(territoryToAttack);
+            await Task.Delay(500);
+            AttackGUI.instance.attackButton.onClick.Invoke();
+            await Task.Delay(3000);
+            var units = bestTerritory.TerritoryGraphics.presentUnits.ToList();
+            if (units.Count > 1)
+            {
+                // TODO while conquering always leave more units in a place where there are more enemy territories around
+                if (bestTerritory.enemyTerritories.Count == 0)
+                {
+                    units = units.OrderBy(unit => unit.attack + unit.health).ToList();
+                    for (var i = 0; i < units.Count - 1; i++)
+                    {
+                        units[i].cardLogic.SelectCard();
+                        await Task.Delay(300);
+                    }
+                    AttackGUI.instance.attackButton.onClick.Invoke();
+                    await Task.Delay(500);
+                    return territoryToAttack;
+                }
+                units.OrderBy(unit => unit.health + unit.attack * 0.5f).First().cardLogic.SelectCard();
+                await Task.Delay(500);
+                AttackGUI.instance.attackButton.onClick.Invoke();
+                await Task.Delay(500);
+            }
+        }
+
+        return null;
     }
 
     private List<Territory> FilterBestTerritoriesToAttackFrom(Territory territory, float power)
