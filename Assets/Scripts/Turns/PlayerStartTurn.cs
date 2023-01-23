@@ -41,5 +41,10 @@ namespace Turns
         {
             yield return null;
         }
+        
+        public override string ToString()
+        {
+            return "Turn start";
+        }
     }
 }

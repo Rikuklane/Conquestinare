@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Turns
 {
@@ -33,6 +31,11 @@ namespace Turns
             AttackLogic.Instance.DeselectAll();
             turnManager.SwitchTurnState(turnManager.ReorganizeTurn);
             return base.EndState(turnManager, player);
+        }
+
+        public override string ToString()
+        {
+            return "Deploy & Fight";
         }
     }
 

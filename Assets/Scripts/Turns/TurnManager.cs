@@ -111,7 +111,8 @@ namespace Turns
             {
                 SetPlayerGold(player, 2);
             }
-            playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
+            
+            SetPlayerColor();
 
             TerritoryManager.instance.RandomShuffleTerritories(Players);
             CardHand.Instance.CreateCardHands(Players);
@@ -154,11 +155,18 @@ namespace Turns
             }
             if(playerColorImage != null)
             {
-                playerColorImage.GetComponent<Image>().color = GetCurrentPlayer().color;
+                SetPlayerColor();
             }
             SwitchTurnState(PlayerStartTurn);
             UpdatePlayerNameAndGold();
             goldGainText.text = "+" + GetCurrentPlayer().GetPrestige();
+        }
+
+        private void SetPlayerColor()
+        {
+            Color newColor = GetCurrentPlayer().color;
+            newColor.a = 0.6f;
+            playerColorImage.GetComponent<Image>().color = newColor;
         }
 
         private int GetPlayerGold(Player player)

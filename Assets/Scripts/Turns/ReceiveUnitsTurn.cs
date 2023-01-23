@@ -25,5 +25,10 @@ namespace Turns
             turnManager.SwitchTurnState(turnManager.MarketTurn);
             return base.EndState(turnManager, player);
         }
+        
+        public override string ToString()
+        {
+            return "Receive a free unit";
+        }
     }
 }

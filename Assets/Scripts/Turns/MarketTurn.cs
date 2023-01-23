@@ -22,5 +22,10 @@ namespace Turns
             turnManager.SwitchTurnState(turnManager.BattleTurn);
             return base.EndState(turnManager, player);
         }
+        
+        public override string ToString()
+        {
+            return "Marketplace";
+        }
     }
 }
