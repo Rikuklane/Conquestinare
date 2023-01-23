@@ -47,6 +47,9 @@ public class AttackLogic : MonoBehaviour
         {
             print(Events.RequestBonus(attackedPlayer));
 
+        } else
+        {
+            return;
         }
         print(Events.RequestBonus(currentPlayer));
 
@@ -181,8 +184,8 @@ public class AttackLogic : MonoBehaviour
         if(!isReorganizeTurn)
         {
             AttackGUI.instance.ChangeButtonClickAttack(true);
+            checkWin();
         }
-        checkWin();
         // cleanup card colors
         foreach (UnitCardPresenter card in selectedTerritory.TerritoryGraphics.presentUnits)
         {
